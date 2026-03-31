@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美伊衝突因果分解分析 | 2026-03-31</title>
+<style>
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+    --border: #30363d; --text: #c9d1d9; --text-dim: #8b949e;
+    --accent: #58a6ff; --red: #f85149; --orange: #d29922;
+    --green: #3fb950; --purple: #bc8cff; --cyan: #39d2c0;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.7; max-width: 1100px; margin: 0 auto; padding: 20px;
+  }
+  h1 { font-size: 1.8em; font-weight: 600; margin-bottom: 4px; }
+  h2 { font-size: 1.3em; font-weight: 600; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 1.05em; font-weight: 600; margin: 24px 0 12px; color: var(--accent); }
+
+  .header { text-align: center; padding: 40px 0 20px; }
+  .header .subtitle { color: var(--text-dim); font-size: 0.9em; margin-top: 8px; }
+  .header .date { color: var(--orange); font-weight: 600; font-size: 1.1em; margin-top: 4px; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+  .badge-fragile { background: rgba(210,153,34,0.2); color: var(--orange); border: 1px solid var(--orange); }
+  .badge-critical { background: rgba(248,81,73,0.2); color: var(--red); border: 1px solid var(--red); }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 16px 0; }
+  .card-highlight { border-left: 3px solid var(--accent); }
+  .card-warn { border-left: 3px solid var(--orange); }
+  .card-danger { border-left: 3px solid var(--red); }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+  .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .stat-box .num { font-size: 2em; font-weight: 700; }
+  .stat-box .label { font-size: 0.8em; color: var(--text-dim); margin-top: 4px; }
+
+  .bar-container { margin: 8px 0; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 0.85em; margin-bottom: 4px; }
+  .bar-track { background: var(--surface2); border-radius: 4px; height: 24px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 0.75em; font-weight: 600; transition: width 1s ease; }
+  .bar-ci { position: absolute; top: 0; height: 100%; background: rgba(255,255,255,0.08); border-left: 2px solid rgba(255,255,255,0.2); border-right: 2px solid rgba(255,255,255,0.2); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.85em; }
+  th { background: var(--surface2); padding: 10px 12px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  tr:hover td { background: rgba(88,166,255,0.04); }
+
+  .ach-matrix td { text-align: center; font-size: 0.8em; }
+  .ach-cc { color: var(--green); font-weight: 700; }
+  .ach-c { color: var(--text-dim); }
+  .ach-i { color: var(--orange); font-weight: 600; }
+  .ach-ii { color: var(--red); font-weight: 700; }
+
+  .loop-diagram { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; padding: 12px; background: var(--surface2); border-radius: 8px; font-size: 0.8em; }
+  .loop-arrow { color: var(--orange); font-weight: 700; }
+
+  .footer { text-align: center; padding: 40px 0 20px; color: var(--text-dim); font-size: 0.75em; }
+  .footer a { color: var(--accent); text-decoration: none; }
+
+  .tabs { display: flex; gap: 2px; margin-bottom: -1px; position: relative; z-index: 1; }
+  .tab { padding: 8px 16px; background: var(--surface2); border: 1px solid var(--border); border-bottom: none; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 0.85em; color: var(--text-dim); }
+  .tab.active { background: var(--surface); color: var(--text); border-bottom: 1px solid var(--surface); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  @media (max-width: 600px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    h1 { font-size: 1.4em; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 標題 -->
+<div class="header">
+  <div style="font-size:0.8em; color:var(--text-dim); letter-spacing:2px;">因果分解樹 + OSINT 情報調查</div>
+  <h1>美伊衝突分析報告</h1>
+  <div class="subtitle">
+    因果分解樹 | Monte Carlo N=10,000 | ACH 排除法
+    <br><span class="badge badge-fragile">FRAGILE 0.457</span>
+  </div>
+  <div class="date">2026-03-31 | 開戰第 32 天</div>
+</div>
+
+<!-- 關鍵數字 -->
+<div class="stat-grid">
+  <div class="stat-box">
+    <div class="num" style="color:var(--red)">79%</div>
+    <div class="label">長期化概率（超過 180 天）</div>
+  </div>
+  <div class="stat-box">
+    <div class="num" style="color:var(--orange)">21%</div>
+    <div class="label">年底前結束概率</div>
+  </div>
+  <div class="stat-box">
+    <div class="num" style="color:var(--text-dim)">~1%</div>
+    <div class="label">30 天內結束概率</div>
+  </div>
+  <div class="stat-box">
+    <div class="num" style="color:var(--accent)">$116</div>
+    <div class="label">布蘭特原油 / 桶</div>
+  </div>
+</div>
+
+<!-- 摘要 -->
+<h2>摘要</h2>
+<div class="card card-highlight">
+  <p><strong>衝突延長超過 180 天的概率約 79%。</strong>不是因為某一方不想停，而是每一條「乾淨結束」的路徑都需要多個條件同時成立，而哈梅內伊之死造成的權力真空讓所有路徑的核心條件——<em>「誰來簽停火協議？」</em>——都懸而未決。</p>
+</div>
+
+<div class="card card-warn">
+  <h3 style="margin-top:0">三項改變分析結論的 OSINT 情報</h3>
+  <ol style="padding-left:20px; margin-top:8px;">
+    <li><strong>IRGC 馬賽克防禦</strong> — 31 省自治指揮 + 預授權攻擊，設計上抗斬首。分裂 ≠ 瓦解。<em>政權崩潰路徑腰斬：16% → 8%</em></li>
+    <li><strong>日內瓦管道悖論</strong> — 開戰前 2 天核協議「在望」，但 Trump 仍然開戰。<em>談判從非 Trump 優先選項：8% → 6%</em></li>
+    <li><strong>條件不可彌合</strong> — 伊朗 5 條件 vs 美國 15 點方案，分析師共識：結構性不可彌合。<em>長期化成為 ACH 排除法冠軍。</em></li>
+  </ol>
+</div>
+
+<!-- 情境概率 -->
+<h2>情境概率分佈</h2>
+
+<div class="bar-container">
+  <div class="bar-label"><span>A：談判停火</span><span>5.8% [4.0%, 7.6%]</span></div>
+  <div class="bar-track">
+    <div class="bar-ci" style="left:4%;width:3.6%"></div>
+    <div class="bar-fill" style="width:5.8%;background:var(--accent)"></div>
+  </div>
+</div>
+<div class="bar-container">
+  <div class="bar-label"><span>B：美方單方面降溫</span><span>7.0% [3.9%, 10.3%]</span></div>
+  <div class="bar-track">
+    <div class="bar-ci" style="left:3.9%;width:6.4%"></div>
+    <div class="bar-fill" style="width:7%;background:var(--purple)"></div>
+  </div>
+</div>
+<div class="bar-container">
+  <div class="bar-label"><span>C：伊朗政權崩潰</span><span>8.0% [5.3%, 10.8%]</span></div>
+  <div class="bar-track">
+    <div class="bar-ci" style="left:5.3%;width:5.5%"></div>
+    <div class="bar-fill" style="width:8%;background:var(--cyan)"></div>
+  </div>
+</div>
+<div class="bar-container">
+  <div class="bar-label"><span>D+W：長期消耗戰 / 未知路徑</span><span>79.2%</span></div>
+  <div class="bar-track">
+    <div class="bar-fill" style="width:79.2%;background:var(--red);color:#fff">79.2%</div>
+  </div>
+</div>
+
+<div style="font-size:0.75em;color:var(--text-dim);margin-top:4px;">陰影區域 = 80% 信賴區間（Monte Carlo N=10,000，三角分佈，FRAGILE 模式區間加寬 50%）</div>
+
+<!-- 時間線 -->
+<h2>時間線概率分佈</h2>
+<div class="stat-grid" style="grid-template-columns: repeat(4, 1fr);">
+  <div class="stat-box"><div class="num" style="font-size:1.5em;color:var(--text-dim)">~1%</div><div class="label">30 天內<br>（4月底）</div></div>
+  <div class="stat-box"><div class="num" style="font-size:1.5em;color:var(--orange)">~9%</div><div class="label">90 天內<br>（6月底）</div></div>
+  <div class="stat-box"><div class="num" style="font-size:1.5em;color:var(--orange)">~21%</div><div class="label">180 天內<br>（年底）</div></div>
+  <div class="stat-box" style="border-color:var(--red)"><div class="num" style="font-size:1.5em;color:var(--red)">~79%</div><div class="label">超過 180 天<br>（長期化）</div></div>
+</div>
+
+<!-- 因果分解樹 -->
+<h2>因果分解樹</h2>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(event, 'tab-a')">A：談判停火</div>
+  <div class="tab" onclick="switchTab(event, 'tab-b')">B：美方降溫</div>
+  <div class="tab" onclick="switchTab(event, 'tab-c')">C：政權崩潰</div>
+</div>
+
+<div id="tab-a" class="tab-content active card" style="border-radius:0 8px 8px 8px">
+  <p style="font-size:0.85em;color:var(--text-dim);">P(A) = P(A1) x P(A2|A1) x P(A3|A2) = 0.20 x 0.40 x 0.75 = <strong>6.0%</strong></p>
+  <table>
+    <tr><th>節點</th><th>子問題</th><th>估計值</th><th>關鍵因素</th></tr>
+    <tr><td><strong>A1</strong></td><td>30 天內雙方坐上談判桌</td><td><span style="color:var(--red)">20%</span> [10%, 32%]</td><td>日內瓦悖論：協議「在望」但仍開戰</td></tr>
+    <tr><td><strong>A2</strong></td><td>伊朗接受核計畫限制 + IAEA 監控（given A1）</td><td><span style="color:var(--orange)">40%</span> [25%, 58%]</td><td>JCPOA 先例存在，但穆杰塔巴重傷無力簽署</td></tr>
+    <tr><td><strong>A3</strong></td><td>美國接受非政權更迭結果（given A2）</td><td><span style="color:var(--green)">75%</span> [58%, 90%]</td><td>最強環節：阿富汗/伊拉克多次先例</td></tr>
+  </table>
+</div>
+
+<div id="tab-b" class="tab-content card" style="border-radius:0 8px 8px 8px">
+  <p style="font-size:0.85em;color:var(--text-dim);">P(B) = P(B1) x P(B2|B1) x P(B3|B2) = 0.60 x 0.35 x 0.38 = <strong>8.0%</strong></p>
+  <table>
+    <tr><th>節點</th><th>子問題</th><th>估計值</th><th>關鍵因素</th></tr>
+    <tr><td><strong>B1</strong></td><td>油價 &gt;$120 持續 60 天以上</td><td><span style="color:var(--orange)">60%</span> [35%, 80%]</td><td>布蘭特 $116、海峽 95% 癱瘓、無 OPEC 替代產能</td></tr>
+    <tr><td><strong>B2</strong></td><td>美國宣布「任務完成」撤主力（given B1）</td><td><span style="color:var(--red)">35%</span> [12%, 55%]</td><td>Kharg Island 攻佔討論 = 任務蔓延風險</td></tr>
+    <tr><td><strong>B3</strong></td><td>伊朗默認停火而非追擊（given B2）</td><td><span style="color:var(--red)">38%</span> [15%, 62%]</td><td>權力真空：誰有權決定停火？</td></tr>
+  </table>
+</div>
+
+<div id="tab-c" class="tab-content card" style="border-radius:0 8px 8px 8px">
+  <p style="font-size:0.85em;color:var(--text-dim);">P(C) = P(C1) x P(C2|C1) x P(C3|C2) = 0.82 x 0.35 x 0.30 = <strong>8.6%</strong></p>
+  <table>
+    <tr><th>節點</th><th>子問題</th><th>估計值</th><th>關鍵因素</th></tr>
+    <tr><td><strong>C1</strong></td><td>IRGC 內部權力鬥爭/分裂</td><td><span style="color:var(--green)">82%</span> [62%, 94%]</td><td>Tangsiri 3/26 被殺、Artesh 摩擦、逃兵</td></tr>
+    <tr><td><strong>C2</strong></td><td>軍事抵抗瓦解（given C1）</td><td><span style="color:var(--red)">35%</span> [18%, 52%]</td><td><strong>馬賽克防禦</strong>：分裂 ≠ 瓦解</td></tr>
+    <tr><td><strong>C3</strong></td><td>新政權 180 天內形成 + 停火（given C2）</td><td><span style="color:var(--red)">30%</span> [15%, 48%]</td><td>參考類別極不穩定：伊拉克/利比亞/阿富汗結果天差地別</td></tr>
+  </table>
+</div>
+
+<!-- 三版演化 -->
+<h2>三版概率演化</h2>
+<div class="card">
+  <table>
+    <tr><th>路徑</th><th>v1 原始分析</th><th>v2 +OSINT</th><th>v3 最終版</th><th>變化</th></tr>
+    <tr><td>A：談判停火</td><td>8.2%</td><td>5.3%</td><td><strong>5.8%</strong></td><td style="color:var(--red)">-2.4pp</td></tr>
+    <tr><td>B：美方降溫</td><td>10.8%</td><td>7.7%</td><td><strong>7.0%</strong></td><td style="color:var(--red)">-3.8pp</td></tr>
+    <tr><td>C：政權崩潰</td><td>16.0%</td><td>7.6%</td><td><strong>8.0%</strong></td><td style="color:var(--red)">-8.0pp</td></tr>
+    <tr style="font-weight:700"><td>年底前結束</td><td>35.0%</td><td>20.6%</td><td><strong>20.8%</strong></td><td style="color:var(--red)">-14.2pp</td></tr>
+    <tr style="font-weight:700;color:var(--red)"><td>超過 180 天長期化</td><td>65.0%</td><td>79.4%</td><td><strong>79.2%</strong></td><td style="color:var(--red)">+14.2pp</td></tr>
+  </table>
+  <div style="font-size:0.75em;color:var(--text-dim);margin-top:8px;">v2 → v3 變化極小（±1pp），顯示模型在 OSINT 修正後已趨於穩定。</div>
+</div>
+
+<!-- 敏感度 -->
+<h2>敏感度地圖</h2>
+<div class="card">
+  <p style="font-size:0.85em;color:var(--text-dim);margin-bottom:12px;">哪些節點的估計如果偏差 ±10 個百分點，對最終結論影響最大？</p>
+  <div class="bar-container">
+    <div class="bar-label"><span>#1 A1：坐上談判桌（20%）</span><span>±6.0pp</span></div>
+    <div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--accent)">±6.0pp</div></div>
+  </div>
+  <div class="bar-container">
+    <div class="bar-label"><span>#2 C3：新政權 + 停火（30%）<span class="badge badge-critical" style="font-size:0.7em">參考類別不穩定</span></span><span>±5.7pp</span></div>
+    <div class="bar-track"><div class="bar-fill" style="width:57%;background:var(--cyan)">±5.7pp</div></div>
+  </div>
+  <div class="bar-container">
+    <div class="bar-label"><span>#3 C2：軍事抵抗瓦解（35%）</span><span>±4.9pp</span></div>
+    <div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--purple)">±4.9pp</div></div>
+  </div>
+</div>
+
+<!-- ACH 矩陣 -->
+<h2>ACH 排除法矩陣</h2>
+<div class="card ach-matrix">
+  <table>
+    <tr>
+      <th>證據</th>
+      <th>H1 談判停火<br><span style="font-weight:400;font-size:0.8em">極不可能</span></th>
+      <th>H2 政權崩潰<br><span style="font-weight:400;font-size:0.8em">不太可能</span></th>
+      <th>H3 長期化<br><span style="font-weight:400;font-size:0.8em;color:var(--green)">可能性最高</span></th>
+      <th>H4 以上皆非</th>
+    </tr>
+    <tr><td>E1：穆杰塔巴重傷但已就任最高領袖</td><td class="ach-c">C</td><td class="ach-c">C</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
+    <tr><td>E2：IRGC 馬賽克防禦（31 省自治）</td><td class="ach-i">I</td><td class="ach-c">C</td><td class="ach-cc">CC</td><td class="ach-c">-</td></tr>
+    <tr><td>E3：Larijani 被擊殺、指揮層持續被打擊</td><td class="ach-c">C</td><td class="ach-cc">CC</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
+    <tr><td>E4：IRGC-Artesh 摩擦 + 逃兵</td><td class="ach-c">-</td><td class="ach-cc">CC</td><td class="ach-i">I</td><td class="ach-c">-</td></tr>
+    <tr><td>E5：日內瓦「在望」但仍開戰</td><td class="ach-ii">II</td><td class="ach-c">-</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
+    <tr><td>E6：巴基斯坦四國峰會 3/29</td><td class="ach-c">C</td><td class="ach-c">-</td><td class="ach-c">-</td><td class="ach-c">-</td></tr>
+    <tr><td>E7：雙方條件「不可彌合」</td><td class="ach-ii">II</td><td class="ach-c">-</td><td class="ach-cc">CC</td><td class="ach-c">-</td></tr>
+    <tr><td>E8：Trump 延長打擊暫停至 4/6</td><td class="ach-c">C</td><td class="ach-c">-</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
+    <tr><td>E9：美軍 13-15 死、300+ 傷</td><td class="ach-c">C</td><td class="ach-c">-</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
+    <tr><td>E10：地面作戰未授權，82 空降師待命</td><td class="ach-c">-</td><td class="ach-c">C</td><td class="ach-cc">CC</td><td class="ach-c">-</td></tr>
+    <tr><td>E11：Trump「幾乎沒東西可打」</td><td class="ach-c">C</td><td class="ach-c">C</td><td class="ach-i">I</td><td class="ach-c">-</td></tr>
+    <tr><td>E12：Kharg Island 攻佔討論 = 無限期</td><td class="ach-i">I</td><td class="ach-c">-</td><td class="ach-cc">CC</td><td class="ach-c">-</td></tr>
+  </table>
+  <div style="margin-top:12px;font-size:0.8em;">
+    <span class="ach-cc">CC</span> = 強一致 &nbsp;
+    <span class="ach-c">C</span> = 一致 &nbsp;
+    <span class="ach-i">I</span> = 不一致 &nbsp;
+    <span class="ach-ii">II</span> = 強不一致
+  </div>
+  <div style="margin-top:8px;font-size:0.8em;color:var(--text-dim);">
+    <strong>排除順序：</strong>H1（2 個 II）→ H4（無證據）→ H2（0 個 II 但馬賽克防禦）→ <span style="color:var(--green)"><strong>H3 勝出</strong>（4 個 CC，0 個 II）</span>
+  </div>
+</div>
+
+<!-- 回饋迴路 -->
+<h2>活躍回饋迴路</h2>
+
+<div class="card card-danger">
+  <h3 style="margin-top:0;color:var(--red)">不穩定迴路：Trump 狂人策略（3/30 新增）</h3>
+  <div class="loop-diagram">
+    <span>威脅摧毀 Kharg Island</span>
+    <span class="loop-arrow">-></span>
+    <span>伊朗加強海峽封鎖</span>
+    <span class="loop-arrow">-></span>
+    <span>油價攀升</span>
+    <span class="loop-arrow">-></span>
+    <span>美國國內壓力</span>
+    <span class="loop-arrow">-></span>
+    <span>需要快速結束</span>
+    <span class="loop-arrow">-></span>
+    <span>但攻佔 Kharg = 長期化</span>
+    <span class="loop-arrow" style="color:var(--red)">!! 矛盾不收斂</span>
+  </div>
+  <p style="font-size:0.85em;color:var(--orange);margin-top:8px;">未來 48-72 小時是最高波動窗口。巴基斯坦斡旋結果將決定方向。</p>
+</div>
+
+<div class="card card-warn">
+  <h3 style="margin-top:0;color:var(--orange)">活躍迴路：油價 <-> 談判壓力</h3>
+  <div class="loop-diagram">
+    <span>高油價（$116）</span>
+    <span class="loop-arrow">-></span>
+    <span>美國急於達成協議</span>
+    <span class="loop-arrow">-></span>
+    <span>伊朗看到籌碼</span>
+    <span class="loop-arrow">-></span>
+    <span>要價更高</span>
+    <span class="loop-arrow">-></span>
+    <span>談判僵局</span>
+    <span class="loop-arrow">-></span>
+    <span>油價持續高檔</span>
+  </div>
+</div>
+
+<!-- 觸發條件 -->
+<h2>觸發條件（Tripwires）</h2>
+<div class="card">
+  <p style="font-size:0.85em;color:var(--text-dim);margin-bottom:12px;">以下任一事件觸發 → 全面重跑分析。</p>
+  <table>
+    <tr><th>觸發條件</th><th>影響</th><th>狀態</th></tr>
+    <tr><td>美伊確認直接談判</td><td>A1 跳升至 60%+</td><td><span class="badge" style="background:var(--surface2)">待定</span></td></tr>
+    <tr><td>IRGC 省級指揮官投降</td><td>C1/C2 大幅跳升</td><td><span class="badge" style="background:var(--surface2)">待定</span></td></tr>
+    <tr><td>美軍陣亡超過 100 人</td><td>B1/B2 跳升（撤軍壓力劇增）</td><td><span class="badge" style="background:var(--surface2)">目前 13-15</span></td></tr>
+    <tr><td>Trump 授權 Kharg Island 地面攻佔</td><td>H3 劇增，行動無限期</td><td><span class="badge badge-critical">密切關注</span></td></tr>
+    <tr><td>中國或俄羅斯軍事介入</td><td>所有路徑重算</td><td><span class="badge" style="background:var(--surface2)">待定</span></td></tr>
+    <tr><td>油價跌破 $80/桶</td><td>B1 大幅下降</td><td><span class="badge" style="background:var(--surface2)">目前 $116</span></td></tr>
+    <tr><td>霍爾木茲海峽重新開放</td><td>多路徑全面重估</td><td><span class="badge badge-critical">95% 癱瘓</span></td></tr>
+    <tr><td>伊朗核試驗</td><td>全面升級，新路徑出現</td><td><span class="badge" style="background:var(--surface2)">待定</span></td></tr>
+  </table>
+</div>
+
+<!-- 關鍵情報 -->
+<h2>OSINT 關鍵情報</h2>
+
+<div class="card">
+  <h3 style="margin-top:0">IRGC 接班態勢</h3>
+  <table>
+    <tr><td style="width:160px;color:var(--text-dim)">最高領袖</td><td>穆杰塔巴·哈梅內伊（56 歲） — 3/9 就任，<strong style="color:var(--red)">重傷失去雙腿</strong></td></tr>
+    <tr><td style="color:var(--text-dim)">IRGC 總司令</td><td>Ahmad Vahidi（強硬派，前國防部長） — 3/6 就任</td></tr>
+    <tr><td style="color:var(--text-dim)">聖城旅指揮官</td><td>Esmail Qaani（續任，3/30 仍有公開發言）</td></tr>
+    <tr><td style="color:var(--text-dim)">指揮結構</td><td style="color:var(--orange)">去中心化：31 省自治指揮（馬賽克防禦教義）</td></tr>
+    <tr><td style="color:var(--text-dim)">已被擊殺</td><td>哈梅內伊（2/28）、Pakpour IRGC 司令（3/1）、Larijani 國安秘書（3/17）、Tangsiri 海軍司令（3/26）</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0">斡旋進展</h3>
+  <table>
+    <tr><td style="width:160px;color:var(--text-dim)">巴基斯坦</td><td>3/29-30 伊斯蘭堡四國峰會（巴/沙/土/埃）。提議「近日內」主辦美伊直接談判</td></tr>
+    <tr><td style="color:var(--text-dim)">沙烏地阿拉伯</td><td>每日與伊朗駐利雅德大使保持安全 + 外交雙管道</td></tr>
+    <tr><td style="color:var(--text-dim)">日內瓦管道</td><td style="color:var(--red)">已失效 — UK NSA 2/26 評估「在望」，2/28 開戰</td></tr>
+    <tr><td style="color:var(--text-dim)">條件差距</td><td style="color:var(--red)">伊朗 5 項 vs 美國 15 項 — 分析師共識：「不可彌合」</td></tr>
+    <tr><td style="color:var(--text-dim)">中國</td><td>支持巴基斯坦斡旋，巴國外長 3/31 訪北京</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0">美軍部署</h3>
+  <table>
+    <tr><td style="width:160px;color:var(--text-dim)">兵力</td><td>~4,500 已部署（31st MEU + 82 空降師）。全面動員可達 10,000+</td></tr>
+    <tr><td style="color:var(--text-dim)">航母戰鬥群</td><td>3 組：Lincoln（活躍）、Ford（修理中，克里特島）、Bush（在途）</td></tr>
+    <tr><td style="color:var(--text-dim)">傷亡</td><td>13-15 陣亡、300+ 受傷。最大單次：3/2 科威特 6 死</td></tr>
+    <tr><td style="color:var(--text-dim)">地面作戰</td><td style="color:var(--orange)">尚未授權。82 空降師已到位待命。Kharg Island 攻佔方案討論中</td></tr>
+    <tr><td style="color:var(--text-dim)">空襲行動</td><td>Epic Fury：首日 1,000+ 目標。Trump 稱「幾乎沒東西可打」但行動持續</td></tr>
+    <tr><td style="color:var(--text-dim)">國會監督</td><td>戰爭權力決議 3/4 被否決（眾院 212-219）。無法約束 Trump</td></tr>
+  </table>
+</div>
+
+<!-- 局限性 -->
+<h2>誠實的局限性</h2>
+<div class="card" style="font-size:0.85em;">
+  <ul style="padding-left:20px;">
+    <li><strong>不覆蓋全新因果機制</strong> — 核武使用、中俄軍事介入、美國憲政危機等未建模</li>
+    <li><strong>Wildcard 71% 異常高</strong> — 反映每條已知路徑都需多個低概率條件同時成立，而非「未知事件概率 71%」</li>
+    <li><strong>真實結局最可能是混合路徑</strong> — 部分談判 + 部分政權重組 + 美國逐步降低參與，同時發生</li>
+    <li><strong>Trump 狂人策略迴路不收斂</strong> — 未來 48-72 小時是最高不確定性時段</li>
+    <li><strong>伊朗內部情報極度匱乏</strong> — IRGC 在哈梅內伊死後的真實狀態不透明</li>
+    <li><strong>尾端概率（&lt;5%）區間極寬</strong> — 僅供方向性參考</li>
+    <li><strong>有效期 7 天</strong>（因 48-72 小時斡旋窗口，比標準 14 天縮短）</li>
+  </ul>
+</div>
+
+<!-- 方法論 -->
+<h2>分析方法論</h2>
+<div class="card" style="font-size:0.85em;">
+  <table>
+    <tr><td style="width:120px;color:var(--text-dim)">架構</td><td>因果分解樹 — 將難以預測的問題拆解為可獨立估計的子問題，沿因果鏈機械組合</td></tr>
+    <tr><td style="color:var(--text-dim)">估計法</td><td>三錨定法：歷史基準率（強制）→ 個案調整 → 極端值檢查</td></tr>
+    <tr><td style="color:var(--text-dim)">計算</td><td>Monte Carlo N=10,000，三角分佈 [low, mid, high]，取 80% 信賴區間</td></tr>
+    <tr><td style="color:var(--text-dim)">驗證</td><td>ACH 排除法（12 證據 x 4 假說）、回饋迴路檢查、前 3 敏感節點壓力測試</td></tr>
+    <tr><td style="color:var(--text-dim)">情報</td><td>3 個平行 OSINT 偵察兵（IRGC 接班、斡旋進展、美軍部署） — 共 27 次搜尋</td></tr>
+    <tr><td style="color:var(--text-dim)">模式</td><td>FRAGILE（脆弱度指數 0.457）— 所有區間加寬 50%、Wildcard 下限 15%</td></tr>
+  </table>
+</div>
+
+<!-- 頁尾 -->
+<div class="footer">
+  <p>由<strong>因果分解樹協議</strong> + <strong>OSINT 調查員</strong>聯合產出</p>
+  <p>此為結構化概率估計，不是預測。使用者應結合自身判斷。</p>
+  <p style="margin-top:8px;">供應鏈情報系統</p>
+</div>
+
+<script>
+function switchTab(e, tabId) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+</script>
+</body>
+</html>
