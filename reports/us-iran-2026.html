@@ -3,459 +3,1584 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>美伊衝突深度分析 | 2026-03-31</title>
+<title>美伊衝突深度分析 v5.1 | 2026-04-02 | 開戰第 33 天</title>
 <style>
   :root {
     --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
     --border: #30363d; --text: #c9d1d9; --text-dim: #8b949e;
     --accent: #58a6ff; --red: #f85149; --orange: #d29922;
     --green: #3fb950; --purple: #bc8cff; --cyan: #39d2c0;
-    --pink: #f778ba;
+    --pink: #f778ba; --yellow: #e3b341;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
     background: var(--bg); color: var(--text);
-    line-height: 1.7; max-width: 1100px; margin: 0 auto; padding: 20px;
+    line-height: 1.8; max-width: 1200px; margin: 0 auto; padding: 20px;
+    font-size: 18px;
   }
-  h1 { font-size: 1.8em; font-weight: 600; margin-bottom: 4px; }
-  h2 { font-size: 1.3em; font-weight: 600; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-  h3 { font-size: 1.05em; font-weight: 600; margin: 24px 0 12px; color: var(--accent); }
-  .header { text-align: center; padding: 40px 0 20px; }
-  .header .subtitle { color: var(--text-dim); font-size: 0.9em; margin-top: 8px; }
-  .header .date { color: var(--orange); font-weight: 600; font-size: 1.1em; margin-top: 4px; }
-  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+  h1 { font-size: 2.4em; font-weight: 700; margin-bottom: 6px; }
+  h2 { font-size: 1.7em; font-weight: 700; margin: 48px 0 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 1.3em; font-weight: 600; margin: 28px 0 14px; color: var(--accent); }
+  h4 { font-size: 1.1em; font-weight: 600; margin: 0 0 8px; }
+  p { margin-bottom: 10px; }
+
+  /* Sticky Nav */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,17,23,0.95); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0; margin: 0 -20px; padding: 10px 20px;
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+    font-size: 0.78em;
+  }
+  .topnav a {
+    color: var(--text-dim); text-decoration: none; padding: 4px 10px;
+    border-radius: 6px; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .topnav a:hover { color: var(--text); background: var(--surface2); }
+  .topnav .nav-title { color: var(--accent); font-weight: 700; margin-right: 8px; font-size: 1.1em; }
+
+  /* Hero */
+  .hero {
+    text-align: center; padding: 50px 20px 30px;
+    background: linear-gradient(180deg, rgba(88,166,255,0.06) 0%, transparent 100%);
+    border-radius: 16px; margin: 20px 0 30px;
+  }
+  .hero .overtitle { font-size: 0.85em; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+  .hero .date { color: var(--orange); font-weight: 700; font-size: 1.2em; margin-top: 8px; }
+  .hero .verdict {
+    margin-top: 20px; font-size: 1.25em; font-weight: 600;
+    color: var(--red); padding: 16px 24px;
+    background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.3);
+    border-radius: 10px; display: inline-block;
+  }
+
+  /* Badges */
+  .badge { display: inline-block; padding: 3px 12px; border-radius: 14px; font-size: 0.72em; font-weight: 700; vertical-align: middle; }
   .badge-fragile { background: rgba(210,153,34,0.2); color: var(--orange); border: 1px solid var(--orange); }
   .badge-new { background: rgba(247,120,186,0.2); color: var(--pink); border: 1px solid var(--pink); }
   .badge-critical { background: rgba(248,81,73,0.2); color: var(--red); border: 1px solid var(--red); }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 16px 0; }
-  .card-highlight { border-left: 3px solid var(--accent); }
-  .card-warn { border-left: 3px solid var(--orange); }
-  .card-danger { border-left: 3px solid var(--red); }
-  .card-new { border-left: 3px solid var(--pink); }
-  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 16px 0; }
-  .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
-  .stat-box .num { font-size: 2em; font-weight: 700; }
-  .stat-box .label { font-size: 0.78em; color: var(--text-dim); margin-top: 4px; }
-  .bar-container { margin: 8px 0; }
-  .bar-label { display: flex; justify-content: space-between; font-size: 0.85em; margin-bottom: 4px; }
-  .bar-track { background: var(--surface2); border-radius: 4px; height: 24px; position: relative; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 0.75em; font-weight: 600; transition: width 1s ease; }
-  .bar-ci { position: absolute; top: 0; height: 100%; background: rgba(255,255,255,0.08); border-left: 2px solid rgba(255,255,255,0.2); border-right: 2px solid rgba(255,255,255,0.2); }
-  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.85em; }
-  th { background: var(--surface2); padding: 10px 12px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); }
-  td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .badge-green { background: rgba(63,185,80,0.2); color: var(--green); border: 1px solid var(--green); }
+  .badge-purple { background: rgba(188,140,255,0.2); color: var(--purple); border: 1px solid var(--purple); }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin: 18px 0; }
+  .card-highlight { border-left: 4px solid var(--accent); }
+  .card-warn { border-left: 4px solid var(--orange); }
+  .card-danger { border-left: 4px solid var(--red); }
+  .card-new { border-left: 4px solid var(--pink); }
+  .card-green { border-left: 4px solid var(--green); }
+  .card-purple { border-left: 4px solid var(--purple); }
+  .card-cyan { border-left: 4px solid var(--cyan); }
+
+  /* Stat Grid */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin: 18px 0; }
+  .stat-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px; text-align: center;
+  }
+  .stat-box .num { font-size: 2.2em; font-weight: 800; }
+  .stat-box .label { font-size: 0.82em; color: var(--text-dim); margin-top: 6px; line-height: 1.4; }
+
+  /* Progress Bars */
+  .bar-container { margin: 10px 0; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 0.92em; margin-bottom: 5px; align-items: center; }
+  .bar-track { background: var(--surface2); border-radius: 6px; height: 28px; position: relative; overflow: hidden; }
+  .bar-fill {
+    height: 100%; border-radius: 6px; display: flex; align-items: center;
+    padding-left: 10px; font-size: 0.82em; font-weight: 700;
+    transition: width 1s ease; min-width: fit-content;
+  }
+  .bar-ci {
+    position: absolute; top: 0; height: 100%;
+    background: rgba(255,255,255,0.07);
+    border-left: 2px solid rgba(255,255,255,0.15);
+    border-right: 2px solid rgba(255,255,255,0.15);
+  }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.92em; }
+  th { background: var(--surface2); padding: 12px 14px; text-align: left; font-weight: 700; border-bottom: 2px solid var(--border); }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
   tr:hover td { background: rgba(88,166,255,0.04); }
-  .ach-matrix td { text-align: center; font-size: 0.8em; }
-  .ach-cc { color: var(--green); font-weight: 700; }
-  .ach-c { color: var(--text-dim); }
-  .ach-i { color: var(--orange); font-weight: 600; }
-  .ach-ii { color: var(--red); font-weight: 700; }
-  .loop-diagram { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; padding: 12px; background: var(--surface2); border-radius: 8px; font-size: 0.8em; }
-  .loop-arrow { color: var(--orange); font-weight: 700; }
-  .footer { text-align: center; padding: 40px 0 20px; color: var(--text-dim); font-size: 0.75em; }
+
+  /* Tabs */
   .tabs { display: flex; gap: 2px; margin-bottom: -1px; position: relative; z-index: 1; flex-wrap: wrap; }
-  .tab { padding: 8px 14px; background: var(--surface2); border: 1px solid var(--border); border-bottom: none; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 0.82em; color: var(--text-dim); }
+  .tab {
+    padding: 10px 18px; background: var(--surface2); border: 1px solid var(--border);
+    border-bottom: none; border-radius: 8px 8px 0 0; cursor: pointer;
+    font-size: 0.88em; color: var(--text-dim); font-weight: 600;
+    transition: all 0.2s;
+  }
   .tab.active { background: var(--surface); color: var(--text); border-bottom: 1px solid var(--surface); }
+  .tab:hover { color: var(--text); }
   .tab-content { display: none; }
   .tab-content.active { display: block; }
-  .actor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
-  .actor-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-size: 0.85em; }
-  .actor-card h4 { margin: 0 0 6px; font-size: 0.95em; }
-  .actor-card .role { color: var(--text-dim); font-size: 0.8em; margin-bottom: 6px; }
-  @media (max-width: 600px) {
+
+  /* Actor Grid */
+  .actor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; }
+  .actor-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px; font-size: 0.92em;
+  }
+  .actor-card .role { color: var(--text-dim); font-size: 0.85em; margin-bottom: 8px; }
+
+  /* Evidence Cards */
+  .evidence-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(520px, 1fr)); gap: 14px; }
+  .ev-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px; position: relative;
+  }
+  .ev-card .ev-id {
+    position: absolute; top: 12px; right: 14px;
+    font-size: 0.72em; color: var(--text-dim); font-weight: 700;
+    background: var(--surface2); padding: 2px 8px; border-radius: 6px;
+  }
+  .ev-card .ev-fact { font-weight: 600; margin-bottom: 12px; padding-right: 40px; }
+  .ev-supports, .ev-contradicts { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; align-items: center; }
+  .ev-supports .ev-label { color: var(--green); font-size: 0.82em; font-weight: 600; margin-right: 4px; }
+  .ev-contradicts .ev-label { color: var(--red); font-size: 0.82em; font-weight: 600; margin-right: 4px; }
+  .ev-tag {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.78em; font-weight: 600;
+  }
+  .ev-tag-green { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+  .ev-tag-green-strong { background: rgba(63,185,80,0.25); color: var(--green); border: 2px solid var(--green); }
+  .ev-tag-red { background: rgba(248,81,73,0.15); color: var(--red); border: 1px solid rgba(248,81,73,0.3); }
+  .ev-tag-red-strong { background: rgba(248,81,73,0.25); color: var(--red); border: 2px solid var(--red); }
+  .ev-weight {
+    margin-top: 10px; display: flex; gap: 4px; align-items: center;
+  }
+  .ev-weight-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent);
+  }
+  .ev-weight-dot.empty { background: var(--surface2); border: 1px solid var(--border); }
+
+  /* Decision Tree */
+  .dtree { padding: 20px 0; }
+  .dtree-root {
+    background: var(--surface); border: 2px solid var(--red);
+    border-radius: 12px; padding: 18px 24px; text-align: center;
+    font-weight: 700; font-size: 1.1em; margin-bottom: 0;
+    position: relative;
+  }
+  .dtree-branches { padding-left: 40px; border-left: 3px solid var(--border); margin-left: 50%; }
+  .dtree-branch {
+    position: relative; padding: 16px 0 16px 30px; margin: 8px 0;
+  }
+  .dtree-branch::before {
+    content: ''; position: absolute; left: -3px; top: 28px;
+    width: 30px; height: 3px;
+  }
+  .dtree-node {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 20px;
+  }
+  .dtree-node .prob {
+    display: inline-block; padding: 2px 10px; border-radius: 8px;
+    font-weight: 700; font-size: 0.88em; margin-left: 8px;
+  }
+
+  /* Loop Diagram */
+  .loop-diagram {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin: 14px 0; padding: 14px; background: var(--surface2);
+    border-radius: 10px; font-size: 0.9em;
+  }
+  .loop-arrow { color: var(--orange); font-weight: 800; }
+
+  /* Prediction Row */
+  .pred-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .pred-id { font-weight: 700; color: var(--accent); min-width: 100px; font-size: 0.88em; }
+  .pred-bar-track { flex: 1; background: var(--surface2); border-radius: 6px; height: 22px; overflow: hidden; }
+  .pred-bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 8px; font-size: 0.78em; font-weight: 700; }
+  .pred-deadline { font-size: 0.82em; color: var(--text-dim); min-width: 80px; text-align: right; }
+
+  /* Monitoring Cards */
+  .monitor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .monitor-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px; position: relative; overflow: hidden;
+  }
+  .monitor-card .monitor-status {
+    position: absolute; top: 0; right: 0; padding: 6px 14px;
+    font-size: 0.72em; font-weight: 700; border-radius: 0 10px 0 10px;
+  }
+  .monitor-critical { background: var(--red); color: #fff; }
+  .monitor-tracking { background: var(--orange); color: #000; }
+  .monitor-new { background: var(--pink); color: #000; }
+  .monitor-watching { background: var(--surface2); color: var(--text-dim); }
+
+  /* Reasoning section */
+  .reasoning-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 24px; margin: 18px 0;
+    border-left: 4px solid var(--purple);
+  }
+  .reasoning-card .chain {
+    background: var(--surface2); border-radius: 8px; padding: 14px 18px;
+    margin: 12px 0; font-size: 0.92em;
+  }
+  .reasoning-card .chain-arrow { color: var(--purple); font-weight: 700; }
+  .reasoning-card .if-true { color: var(--green); }
+  .reasoning-card .if-false { color: var(--red); }
+
+  /* Comparison table */
+  .delta-better { color: var(--green); font-weight: 600; }
+  .delta-worse { color: var(--red); font-weight: 600; }
+  .delta-critical { color: var(--red); font-weight: 800; }
+
+  /* Footer */
+  .footer { text-align: center; padding: 50px 0 30px; color: var(--text-dim); font-size: 0.82em; border-top: 1px solid var(--border); margin-top: 40px; }
+
+  /* Scorecard */
+  .score-correct { background: rgba(63,185,80,0.1); border-left: 4px solid var(--green); }
+
+  /* Fragmentation */
+  .frag-timeline {
+    display: grid; grid-template-columns: 1fr; gap: 0;
+    margin: 20px 0; position: relative;
+  }
+  .frag-item {
+    display: flex; align-items: stretch; gap: 16px; padding: 12px 0;
+  }
+  .frag-bar {
+    height: 36px; border-radius: 6px; display: flex; align-items: center;
+    padding: 0 14px; font-size: 0.85em; font-weight: 600; color: #fff;
+    min-width: fit-content;
+  }
+  .frag-label { min-width: 200px; font-weight: 600; display: flex; align-items: center; }
+
+  /* Print */
+  @media print {
+    body { background: #fff; color: #000; }
+    .topnav { display: none; }
+    .card, .stat-box, .actor-card, .ev-card, .monitor-card, .reasoning-card { border-color: #ccc; background: #f8f8f8; }
+    .bar-track { background: #eee; }
+  }
+
+  /* Mobile */
+  @media (max-width: 700px) {
+    body { font-size: 16px; padding: 12px; }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.4em; }
     .stat-grid { grid-template-columns: repeat(2, 1fr); }
-    h1 { font-size: 1.4em; }
     .actor-grid { grid-template-columns: 1fr; }
+    .evidence-cards { grid-template-columns: 1fr; }
+    .hero { padding: 30px 12px 20px; }
+    .topnav { font-size: 0.7em; }
+    .dtree-branches { margin-left: 20px; padding-left: 20px; }
   }
 </style>
 </head>
 <body>
 
-<!-- 標題 -->
-<div class="header">
-  <div style="font-size:0.8em; color:var(--text-dim); letter-spacing:2px;">多行為者深度情報分析</div>
+<!-- Sticky Navigation -->
+<nav class="topnav">
+  <span class="nav-title">v5.1</span>
+  <a href="#summary">摘要</a>
+  <a href="#delta">版本差異</a>
+  <a href="#scorecard">預測驗證</a>
+  <a href="#scenarios">七路徑</a>
+  <a href="#pivot">4/6 決策樹</a>
+  <a href="#fragmentation">碎裂論</a>
+  <a href="#evidence">證據權重</a>
+  <a href="#actors">13 勢力</a>
+  <a href="#reasoning">關鍵推理</a>
+  <a href="#economy">經濟衝擊</a>
+  <a href="#taiwan">台灣半導體</a>
+  <a href="#monitoring">監控儀表</a>
+  <a href="#predictions">預測追蹤</a>
+</nav>
+
+<!-- ============================================================ -->
+<!-- SECTION 1: HERO / EXECUTIVE SUMMARY -->
+<!-- ============================================================ -->
+<div class="hero" id="summary">
+  <div class="overtitle">多行為者深度情報分析</div>
   <h1>美伊衝突分析報告</h1>
-  <div class="subtitle">
-    13 個勢力 | 6 條發展路徑 | 10,000 次情境模擬
-    <br><span class="badge badge-fragile">高度不確定性</span>
+  <div style="font-size:1.05em; color:var(--text-dim); margin-top:8px;">
+    13+ 行為者 &nbsp;|&nbsp; 7 條發展路徑 &nbsp;|&nbsp; 16 項證據交叉驗證
+    <br><span class="badge badge-fragile" style="margin-top:8px;">高度不確定性</span>
+    <span class="badge badge-critical" style="margin-top:8px;">4/6 最後通牒</span>
   </div>
-  <div class="date">2026-03-31 | 開戰第 32 天</div>
+  <div class="date">2026-04-02 | 開戰第 33 天</div>
+  <div class="verdict">
+    戰爭不會「結束」，會「碎裂」成多場獨立衝突
+  </div>
 </div>
 
-<!-- 關鍵數字 -->
+<!-- Key Numbers -->
 <div class="stat-grid">
-  <div class="stat-box"><div class="num" style="color:var(--red)">67%</div><div class="label">長期化<br>(&gt;180 天)</div></div>
-  <div class="stat-box"><div class="num" style="color:var(--orange)">23%</div><div class="label">年底前結束</div></div>
-  <div class="stat-box"><div class="num" style="color:var(--pink)">10%</div><div class="label">衝突擴大<br>(胡塞升級)</div></div>
-  <div class="stat-box"><div class="num" style="color:var(--text-dim)">~1%</div><div class="label">30 天內結束</div></div>
-  <div class="stat-box"><div class="num" style="color:var(--accent)">$116</div><div class="label">布蘭特原油</div></div>
-  <div class="stat-box"><div class="num" style="color:var(--accent)">13</div><div class="label">行為者數量</div></div>
+  <div class="stat-box"><div class="num" style="color:var(--red)">90%</div><div class="label">霍爾木茲封鎖率</div></div>
+  <div class="stat-box"><div class="num" style="color:var(--orange)">$101-104</div><div class="label">布蘭特原油</div></div>
+  <div class="stat-box"><div class="num" style="color:var(--red)">52%</div><div class="label">碎裂/長期化<br>概率</div></div>
+  <div class="stat-box"><div class="num" style="color:var(--green)">32%</div><div class="label">年底前結束</div></div>
+  <div class="stat-box"><div class="num" style="color:var(--accent)">13+</div><div class="label">行為者數量</div></div>
+  <div class="stat-box"><div class="num" style="color:var(--pink)">4 天</div><div class="label">距 4/6 最後通牒</div></div>
 </div>
-
-<!-- 摘要 -->
-<h2>摘要</h2>
-<div class="card card-highlight">
-  <p><strong>不是「打多久」的問題，而是「往哪個方向翻」的問題。</strong></p>
-  <p style="margin-top:8px;">經濟壓力（雙咽喉關閉 → GDP 損失 $3.5 兆）和胡塞升級（曼德海峽 → 紅海全域衝突）在互相拉扯。誰先到 tipping point，就決定結局是停火還是擴大。</p>
-</div>
-
-<div class="card card-new">
-  <h3 style="margin-top:0"><span class="badge badge-new">v4 新增</span> 多行為者情報帶來的改變</h3>
-  <ol style="padding-left:20px; margin-top:8px;">
-    <li><strong>胡塞成為最關鍵變數</strong>（±7.0pp）——取代談判和政權崩潰。曼德海峽是整個衝突的真正樞紐</li>
-    <li><strong>俄羅斯正回饋迴路</strong> — 武器+情報→伊朗撐更久→油價高→俄收入增→更多武器。唯一受益方，有動機讓戰爭持續</li>
-    <li><strong>代理人自主行動</strong> — 抵抗之弧分裂為 5 場獨立衝突。伊朗無法代他們停火。B3 從 38% 降至 25%</li>
-    <li><strong>新增 2 條路徑</strong>：經濟崩潰強迫停火（E=7.1%）+ 胡塞升級（F=9.9%）</li>
-  </ol>
-</div>
-
-<!-- 情境概率 -->
-<h2>情境概率分佈（6 路徑）</h2>
-
-<div class="bar-container">
-  <div class="bar-label"><span>A：談判停火（巴基斯坦/中國斡旋）</span><span>4.7% [3.2%, 6.2%]</span></div>
-  <div class="bar-track"><div class="bar-ci" style="left:3.2%;width:3%"></div><div class="bar-fill" style="width:4.7%;background:var(--accent)"></div></div>
-</div>
-<div class="bar-container">
-  <div class="bar-label"><span>B：美方單方面降溫</span><span>4.7% [2.6%, 6.9%]</span></div>
-  <div class="bar-track"><div class="bar-ci" style="left:2.6%;width:4.3%"></div><div class="bar-fill" style="width:4.7%;background:var(--purple)"></div></div>
-</div>
-<div class="bar-container">
-  <div class="bar-label"><span>C：伊朗政權崩潰</span><span>6.8% [4.2%, 9.4%]</span></div>
-  <div class="bar-track"><div class="bar-ci" style="left:4.2%;width:5.2%"></div><div class="bar-fill" style="width:6.8%;background:var(--cyan)"></div></div>
-</div>
-<div class="bar-container">
-  <div class="bar-label"><span>E：經濟崩潰強迫停火 <span class="badge badge-new">NEW</span></span><span>7.1% [4.7%, 9.7%]</span></div>
-  <div class="bar-track"><div class="bar-ci" style="left:4.7%;width:5%"></div><div class="bar-fill" style="width:7.1%;background:var(--green)"></div></div>
-</div>
-<div class="bar-container">
-  <div class="bar-label"><span>F：胡塞升級→更大衝突 <span class="badge badge-new">NEW</span></span><span>9.9% [6.6%, 13.1%]</span></div>
-  <div class="bar-track"><div class="bar-ci" style="left:6.6%;width:6.5%"></div><div class="bar-fill" style="width:9.9%;background:var(--pink)">9.9%</div></div>
-</div>
-<div class="bar-container">
-  <div class="bar-label"><span>D+W：長期消耗戰 / 未知路徑</span><span>66.9%</span></div>
-  <div class="bar-track"><div class="bar-fill" style="width:66.9%;background:var(--red);color:#fff">66.9%</div></div>
-</div>
-
-<div style="font-size:0.75em;color:var(--text-dim);margin-top:4px;">基於 10,000 次情境模擬 | 方括號為 80% 信賴區間</div>
-
-<!-- 時間線 -->
-<h2>時間線概率</h2>
-<div class="stat-grid" style="grid-template-columns: repeat(5, 1fr);">
-  <div class="stat-box"><div class="num" style="font-size:1.5em;color:var(--text-dim)">~1%</div><div class="label">30 天<br>(4月底)</div></div>
-  <div class="stat-box"><div class="num" style="font-size:1.5em;color:var(--orange)">~7%</div><div class="label">90 天<br>(6月底)</div></div>
-  <div class="stat-box"><div class="num" style="font-size:1.5em;color:var(--orange)">~23%</div><div class="label">180 天<br>(年底)</div></div>
-  <div class="stat-box" style="border-color:var(--red)"><div class="num" style="font-size:1.5em;color:var(--red)">~77%</div><div class="label">&gt;180 天<br>(長期化)</div></div>
-  <div class="stat-box" style="border-color:var(--pink)"><div class="num" style="font-size:1.5em;color:var(--pink)">~10%</div><div class="label">衝突擴大<br>(任何時點)</div></div>
-</div>
-
-<!-- 路徑推理 -->
-<h2>六條發展路徑推理</h2>
-
-<div class="tabs">
-  <div class="tab active" onclick="switchTab(event,'tab-a')">A 談判</div>
-  <div class="tab" onclick="switchTab(event,'tab-b')">B 降溫</div>
-  <div class="tab" onclick="switchTab(event,'tab-c')">C 崩潰</div>
-  <div class="tab" onclick="switchTab(event,'tab-e')">E 經濟強迫</div>
-  <div class="tab" onclick="switchTab(event,'tab-f')">F 胡塞升級</div>
-</div>
-
-<div id="tab-a" class="tab-content active card" style="border-radius:0 8px 8px 8px">
-  <p style="font-size:0.85em;color:var(--text-dim)">P(A) = 0.20 x 0.40 x 0.60 = <strong>4.8%</strong></p>
-  <table>
-    <tr><th>節點</th><th>子問題</th><th>估計</th><th>關鍵因素</th></tr>
-    <tr><td>A1</td><td>30 天內坐上談判桌</td><td><span style="color:var(--red)">20%</span></td><td>日內瓦悖論：「在望」仍開戰</td></tr>
-    <tr><td>A2</td><td>伊朗接受核限制（given A1）</td><td><span style="color:var(--orange)">40%</span></td><td>穆杰塔巴重傷無力簽署</td></tr>
-    <tr><td>A3</td><td>美國+海灣國家都接受（given A2）</td><td><span style="color:var(--orange)">60%</span></td><td>沙烏地/阿聯要求加入+賠償</td></tr>
-  </table>
-</div>
-
-<div id="tab-b" class="tab-content card" style="border-radius:0 8px 8px 8px">
-  <p style="font-size:0.85em;color:var(--text-dim)">P(B) = 0.60 x 0.35 x 0.25 = <strong>5.3%</strong></p>
-  <table>
-    <tr><th>節點</th><th>子問題</th><th>估計</th><th>關鍵因素</th></tr>
-    <tr><td>B1</td><td>油價 &gt;$120 持續 60 天</td><td><span style="color:var(--orange)">60%</span></td><td>海峽 79% 癱瘓</td></tr>
-    <tr><td>B2</td><td>Trump mission accomplished（given B1）</td><td><span style="color:var(--red)">35%</span></td><td>Kharg 攻佔 = 任務蔓延</td></tr>
-    <tr><td>B3</td><td>伊朗+代理人都默認停火（given B2）</td><td><span style="color:var(--red)">25%</span></td><td>胡塞/PMF 自主行動，伊朗管不住</td></tr>
-  </table>
-</div>
-
-<div id="tab-c" class="tab-content card" style="border-radius:0 8px 8px 8px">
-  <p style="font-size:0.85em;color:var(--text-dim)">P(C) = 0.82 x 0.30 x 0.30 = <strong>7.4%</strong></p>
-  <table>
-    <tr><th>節點</th><th>子問題</th><th>估計</th><th>關鍵因素</th></tr>
-    <tr><td>C1</td><td>IRGC 內部分裂</td><td><span style="color:var(--green)">82%</span></td><td>4 名高層被殺、Artesh 摩擦</td></tr>
-    <tr><td>C2</td><td>軍事抵抗瓦解（given C1）</td><td><span style="color:var(--red)">30%</span></td><td>馬賽克防禦 + 俄 S-400/情報</td></tr>
-    <tr><td>C3</td><td>新政權 180 天內停火（given C2）</td><td><span style="color:var(--red)">30%</span></td><td>ref class 極不穩定</td></tr>
-  </table>
-</div>
-
-<div id="tab-e" class="tab-content card card-new" style="border-radius:0 8px 8px 8px">
-  <p style="font-size:0.85em;color:var(--text-dim)">P(E) = 0.55 x 0.40 x 0.35 = <strong>7.7%</strong> <span class="badge badge-new">NEW</span></p>
-  <table>
-    <tr><th>節點</th><th>子問題</th><th>估計</th><th>關鍵因素</th></tr>
-    <tr><td>E1</td><td>雙咽喉維持關閉 60 天</td><td><span style="color:var(--orange)">55%</span></td><td>霍爾木茲 79% + 曼德海峽受脅</td></tr>
-    <tr><td>E2</td><td>G7/G20 緊急干預（given E1）</td><td><span style="color:var(--orange)">40%</span></td><td>GDP 損失 $3.5 兆、肥料危機</td></tr>
-    <tr><td>E3</td><td>干預成功迫使臨時停火（given E2）</td><td><span style="color:var(--red)">35%</span></td><td>干預 ≠ 成功：各方條件仍不可彌合</td></tr>
-  </table>
-</div>
-
-<div id="tab-f" class="tab-content card card-new" style="border-radius:0 8px 8px 8px">
-  <p style="font-size:0.85em;color:var(--text-dim)">P(F) = 0.30 x 0.70 x 0.50 = <strong>10.5%</strong> <span class="badge badge-new">NEW — 非結束路徑，而是擴大</span></p>
-  <table>
-    <tr><th>節點</th><th>子問題</th><th>估計</th><th>關鍵因素</th></tr>
-    <tr><td style="color:var(--pink)"><strong>F1</strong></td><td>胡塞攻擊商船/關閉曼德海峽</td><td><span style="color:var(--orange)">30%</span></td><td><strong>整個分析最 sensitive 的節點 (±7.0pp)</strong></td></tr>
-    <tr><td>F2</td><td>美國/聯軍打擊葉門（given F1）</td><td><span style="color:var(--green)">70%</span></td><td>2023-2025 先例：胡塞攻擊必遭反擊</td></tr>
-    <tr><td>F3</td><td>衝突擴大到紅海全域（given F2）</td><td><span style="color:var(--orange)">50%</span></td><td>蘇伊士收入受損 → 埃及被拖入</td></tr>
-  </table>
-</div>
-
-<!-- 13 個行為者 -->
-<h2>13 個勢力地圖</h2>
-
-<div class="actor-grid">
-  <div class="actor-card" style="border-left:3px solid var(--accent)">
-    <h4>美國</h4><div class="role">主攻方 | 決定戰爭規模</div>
-    <p>4,500+ 部署、3 航母群。Epic Fury 首日 1,000+ 目標。60%+ 民意反對。Kharg 攻佔討論中。</p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--accent)">
-    <h4>以色列</h4><div class="role">聯合主攻 | 雙線作戰</div>
-    <p>聯合空襲 + 黎巴嫩地面擴張。100 萬黎巴嫩人流離。斬首真主黨。</p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--red)">
-    <h4>伊朗 IRGC</h4><div class="role">防禦+報復 | 馬賽克防禦</div>
-    <p>31 省自治指揮。穆杰塔巴重傷。Vahidi 強硬派掌權。4 名高層被殺。</p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--red)">
-    <h4>俄羅斯</h4><div class="role">武器+情報 | 戰爭最大贏家</div>
-    <p>確認提供衛星情報。48 架 Su-35 + S-400 交付中。油價飆升每月多賺 $50 億。</p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--orange)">
-    <h4>中國</h4><div class="role">經濟生命線+斡旋 | 不軍事介入</div>
-    <p>購買伊朗 160 萬桶/天。80% 油經霍爾木茲。18 通外長電話斡旋。THAAD 離韓=台海空隙。</p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--pink)">
-    <h4>胡塞武裝</h4><div class="role">最激進代理人 | 曼德海峽槓桿</div>
-    <p>3/28 攻擊以色列。威脅關閉曼德海峽（15% 全球海運）。<strong>整個分析最 sensitive 的變數。</strong></p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--text-dim)">
-    <h4>真主黨（殘部）</h4><div class="role">被削弱代理人 | 牽制以色列</div>
-    <p>Nasrallah + Safieddine 已死。仍有 25,000 飛彈。黎巴嫩政府禁止軍事活動。</p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--text-dim)">
-    <h4>伊拉克 PMF</h4><div class="role">分散攻擊 | 擴大戰場</div>
-    <p>3/14 首次突破美軍防空。多個獨立團體。IRGC 協調但自主行動。</p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--orange)">
-    <h4>沙烏地阿拉伯</h4><div class="role">被攻擊+斡旋 | 要求加入談判</div>
-    <p>3/1 被伊朗飛彈攻擊。Aramco 產能降至 70%。要求賠償 + 加入停火談判。</p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--orange)">
-    <h4>阿聯</h4><div class="role">攔截最多攻擊 | 經濟受損重</div>
-    <p>攔截 414 枚彈道飛彈 + 1,914 架無人機。杜拜旅遊崩潰。要求賠償。</p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--green)">
-    <h4>巴基斯坦</h4><div class="role">首席斡旋 | 48-72hr 窗口</div>
-    <p>3/29 伊斯蘭堡四國峰會。提議主辦美伊直接談判。中國支持。</p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--green)">
-    <h4>土耳其</h4><div class="role">NATO+斡旋 | 庫德紅線</div>
-    <p>伊朗飛彈落入土耳其領土。不允許美國使用土耳其空域。提議停火架構。</p>
-  </div>
-  <div class="actor-card" style="border-left:3px solid var(--green)">
-    <h4>阿曼</h4><div class="role">傳統密使 | 唯一戰前管道</div>
-    <p>日內瓦 Powell 會談在阿曼大使官邸舉行。開戰後管道中斷但仍嘗試。</p>
-  </div>
-</div>
-
-<!-- 四版演化 -->
-<h2>四版概率演化</h2>
-<div class="card">
-  <table>
-    <tr><th>路徑</th><th>v1 初估</th><th>v2 情報修正</th><th>v3 +3/31</th><th>v4 多行為者</th><th>變化</th></tr>
-    <tr><td>A：談判停火</td><td>8.2%</td><td>5.3%</td><td>5.8%</td><td><strong>4.7%</strong></td><td style="color:var(--red)">-3.5pp</td></tr>
-    <tr><td>B：美方降溫</td><td>10.8%</td><td>7.7%</td><td>7.0%</td><td><strong>4.7%</strong></td><td style="color:var(--red)">-6.1pp</td></tr>
-    <tr><td>C：政權崩潰</td><td>16.0%</td><td>7.6%</td><td>8.0%</td><td><strong>6.8%</strong></td><td style="color:var(--red)">-9.2pp</td></tr>
-    <tr><td>E：經濟強迫</td><td>—</td><td>—</td><td>—</td><td><strong>7.1%</strong></td><td style="color:var(--pink)">NEW</td></tr>
-    <tr><td>F：胡塞升級</td><td>—</td><td>—</td><td>—</td><td><strong>9.9%</strong></td><td style="color:var(--pink)">NEW</td></tr>
-    <tr style="font-weight:700"><td>年底前結束</td><td>35.0%</td><td>20.6%</td><td>20.8%</td><td><strong>23.3%</strong></td><td style="color:var(--orange)">-11.7pp</td></tr>
-    <tr style="font-weight:700;color:var(--red)"><td>長期化</td><td>65.0%</td><td>79.4%</td><td>79.2%</td><td><strong>66.9%</strong></td><td>部分轉為「擴大」</td></tr>
-  </table>
-  <div style="font-size:0.75em;color:var(--text-dim);margin-top:8px;">v4 年底前結束微升（20.8%→23.3%）因為新增經濟壓力路徑 E。長期化下降因為部分概率轉入胡塞升級路徑 F。</div>
-</div>
-
-<!-- 敏感度 -->
-<h2>關鍵變數影響排名</h2>
-<div class="card">
-  <p style="font-size:0.85em;color:var(--text-dim);margin-bottom:12px;">每個變數偏差 ±10% 對最終結論的影響程度</p>
-  <div class="bar-container">
-    <div class="bar-label"><span><strong style="color:var(--pink)">#1 F1</strong>：胡塞攻擊商船（30%）<span class="badge badge-new">整個局勢的樞紐</span></span><span>±7.0pp</span></div>
-    <div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--pink)">±7.0pp</div></div>
-  </div>
-  <div class="bar-container">
-    <div class="bar-label"><span>#2 C2：軍事抵抗瓦解（30%）</span><span>±4.9pp</span></div>
-    <div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--cyan)">±4.9pp</div></div>
-  </div>
-  <div class="bar-container">
-    <div class="bar-label"><span>#3 C3：新政權+停火（30%） <span class="badge badge-critical" style="font-size:0.7em">ref class 不穩定</span></span><span>±4.9pp</span></div>
-    <div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--cyan)">±4.9pp</div></div>
-  </div>
-  <div class="bar-container">
-    <div class="bar-label"><span>#4 A1：坐上談判桌（20%）</span><span>±4.8pp</span></div>
-    <div class="bar-track"><div class="bar-fill" style="width:48%;background:var(--accent)">±4.8pp</div></div>
-  </div>
-  <div class="bar-container">
-    <div class="bar-label"><span>#5 E3：干預成功迫停火（35%）</span><span>±4.4pp</span></div>
-    <div class="bar-track"><div class="bar-fill" style="width:44%;background:var(--green)">±4.4pp</div></div>
-  </div>
-</div>
-
-<!-- 證據交叉比對 -->
-<h2>證據 vs 假說交叉比對</h2>
-<div class="card ach-matrix" style="overflow-x:auto">
-  <table>
-    <tr><th>證據</th><th>H1 停火<br><small>極不可能</small></th><th>H2 擴大<br><small>五五波</small></th><th>H3 長期化<br><small style="color:var(--green)">最可能</small></th><th>H4 未知</th></tr>
-    <tr><td>E1 俄羅斯即時情報支援</td><td class="ach-i">I</td><td class="ach-c">C</td><td class="ach-cc">CC</td><td class="ach-c">-</td></tr>
-    <tr><td>E2 Su-35 + S-400 交付中</td><td class="ach-i">I</td><td class="ach-c">C</td><td class="ach-cc">CC</td><td class="ach-c">-</td></tr>
-    <tr><td>E3 胡塞攻擊以色列+威脅曼德</td><td class="ach-ii">II</td><td class="ach-cc">CC</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
-    <tr><td>E4 PMF 突破美軍防空</td><td class="ach-c">-</td><td class="ach-c">C</td><td class="ach-cc">CC</td><td class="ach-c">-</td></tr>
-    <tr><td>E5 海峽 79% 癱瘓</td><td class="ach-c">C</td><td class="ach-c">C</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
-    <tr><td>E6 GDP 損失 $5900 億-$3.5 兆</td><td class="ach-cc">CC</td><td class="ach-i">I</td><td class="ach-i">I</td><td class="ach-c">-</td></tr>
-    <tr><td>E7 阿聯攔截 2,300+ 攻擊</td><td class="ach-c">-</td><td class="ach-i">I</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
-    <tr><td>E8 海灣國家要求加入+賠償</td><td class="ach-i">I</td><td class="ach-c">-</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
-    <tr><td>E9 中國 160 萬桶/天+斡旋</td><td class="ach-c">C</td><td class="ach-i">I</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
-    <tr><td>E10 THAAD 調離韓國</td><td class="ach-c">-</td><td class="ach-c">C</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
-    <tr><td>E11 肥料危機+播種季</td><td class="ach-cc">CC</td><td class="ach-c">C</td><td class="ach-i">I</td><td class="ach-c">-</td></tr>
-    <tr><td>E12 Hamas 呼籲克制</td><td class="ach-c">C</td><td class="ach-i">I</td><td class="ach-c">-</td><td class="ach-c">-</td></tr>
-    <tr><td>E13 抵抗之弧分裂</td><td class="ach-c">C</td><td class="ach-i">I</td><td class="ach-c">C</td><td class="ach-c">-</td></tr>
-    <tr><td>E14 巴基斯坦四國峰會</td><td class="ach-c">C</td><td class="ach-c">-</td><td class="ach-c">-</td><td class="ach-c">-</td></tr>
-    <tr><td>E15 條件不可彌合</td><td class="ach-ii">II</td><td class="ach-c">-</td><td class="ach-cc">CC</td><td class="ach-c">-</td></tr>
-    <tr><td>E16 馬賽克防禦 31 省自治</td><td class="ach-i">I</td><td class="ach-c">C</td><td class="ach-cc">CC</td><td class="ach-c">-</td></tr>
-  </table>
-  <div style="margin-top:12px;font-size:0.8em;">
-    <span class="ach-cc">CC</span> 強力支持 &nbsp; <span class="ach-c">C</span> 支持 &nbsp; <span class="ach-i">I</span> 矛盾 &nbsp; <span class="ach-ii">II</span> 強力否定
-  </div>
-  <div style="margin-top:8px;font-size:0.8em;color:var(--text-dim);">
-    <strong>結論：</strong>H1 停火被 6 條證據否定 → H4 無證據支持 → H2 擴大有支持但不夠強 → <span style="color:var(--green)"><strong>H3 長期化最無矛盾</strong>（0 條否定證據, 6 條強支持）</span>
-  </div>
-</div>
-
-<!-- 回饋迴路 -->
-<h2>活躍回饋迴路</h2>
 
 <div class="card card-danger">
-  <h3 style="margin-top:0;color:var(--red)">俄羅斯正回饋迴路 <span class="badge badge-new">NEW — 最危險</span></h3>
-  <div class="loop-diagram">
-    <span>俄提供武器+情報</span><span class="loop-arrow">-></span>
-    <span>伊朗撐更久</span><span class="loop-arrow">-></span>
-    <span>油價持續 $116+</span><span class="loop-arrow">-></span>
-    <span>俄每月多賺 $50 億</span><span class="loop-arrow">-></span>
-    <span>有更多錢支援伊朗</span><span class="loop-arrow" style="color:var(--red)">↻ 正回饋</span>
+  <p style="font-size:1.1em;"><strong>4 月 6 日是整個衝突的轉折點。</strong></p>
+  <p>霍爾木茲最後通牒（非第四次延期）、Rubio-Araghchi 直接接觸安排中、S-400 已在伊斯法罕部署完成。三條線同時在 4/6 交匯。這不是「會不會打」，而是「碎裂成幾塊」的問題。</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: WHAT CHANGED (v4 → v5.1) -->
+<!-- ============================================================ -->
+<h2 id="delta">版本差異：v4 (3/31) → v5.1 (4/2)</h2>
+
+<div class="card" style="overflow-x:auto;">
+  <table>
+    <tr><th style="min-width:140px;">維度</th><th>v4 (3/31)</th><th>v5.1 (4/2)</th><th style="min-width:100px;">變化</th></tr>
+    <tr>
+      <td><strong>霍爾木茲封鎖</strong></td>
+      <td>79%</td>
+      <td>90%</td>
+      <td class="delta-worse">&#x1F534; 惡化</td>
+    </tr>
+    <tr>
+      <td><strong>油價</strong></td>
+      <td>$116</td>
+      <td>$101-104</td>
+      <td class="delta-better">&#x1F7E2; G7 釋出 4 億桶</td>
+    </tr>
+    <tr>
+      <td><strong>S-400</strong></td>
+      <td>運送中</td>
+      <td>已部署伊斯法罕</td>
+      <td class="delta-worse">&#x1F534; 防空質變</td>
+    </tr>
+    <tr>
+      <td><strong>穆杰塔巴·哈梅內伊</strong></td>
+      <td>受傷</td>
+      <td>仍未公開露面</td>
+      <td class="delta-worse">&#x1F534; 繼承危機加深</td>
+    </tr>
+    <tr>
+      <td><strong>IRGC 叛逃</strong></td>
+      <td>觀察中</td>
+      <td>零叛逃（恐懼驅動）</td>
+      <td class="delta-worse">&#x1F534; 體制凝聚</td>
+    </tr>
+    <tr>
+      <td><strong>胡塞武裝</strong></td>
+      <td>威脅中</td>
+      <td>又擊沉 2 艘船</td>
+      <td class="delta-worse">&#x1F534; 實際升級</td>
+    </tr>
+    <tr>
+      <td><strong>談判</strong></td>
+      <td>巴基斯坦峰會</td>
+      <td>Rubio-Araghchi 直接接觸安排中</td>
+      <td class="delta-better">&#x1F7E2; 突破</td>
+    </tr>
+    <tr>
+      <td><strong>中國</strong></td>
+      <td>斡旋</td>
+      <td>五點方案被拒 + 船舶被攔</td>
+      <td class="delta-worse">&#x1F534; 影響力有限</td>
+    </tr>
+    <tr>
+      <td><strong>最後通牒</strong></td>
+      <td>4/6 暫停</td>
+      <td>4/6 霍爾木茲最後通牒</td>
+      <td class="delta-critical">&#x1F534;&#x1F534; 轉折日</td>
+    </tr>
+    <tr>
+      <td><strong>半導體</strong></td>
+      <td>間接影響</td>
+      <td>卡達氦氣 30% 離線</td>
+      <td class="delta-worse">&#x1F534; 直接衝擊 <span class="badge badge-new">NEW</span></td>
+    </tr>
+    <tr>
+      <td><strong>台灣</strong></td>
+      <td>能源風險</td>
+      <td>天然氣儲備僅 11 天</td>
+      <td class="delta-critical">&#x1F534;&#x1F534; 危急 <span class="badge badge-critical">CRITICAL</span></td>
+    </tr>
+    <tr>
+      <td><strong>IRGC 威脅</strong></td>
+      <td>軍事</td>
+      <td>威脅 18 家美國科技公司</td>
+      <td class="delta-worse">&#x1F534; 網路新維度 <span class="badge badge-new">NEW</span></td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: PREDICTION SCORECARD -->
+<!-- ============================================================ -->
+<h2 id="scorecard">預測驗證記分卡</h2>
+
+<h3>已驗證預測（3/3 正確）</h3>
+
+<div class="card score-correct" style="margin:10px 0;">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <div>
+      <strong style="color:var(--green);">CPRED-001</strong>&nbsp; IRGC 4月1日不發動動能攻擊
+    </div>
+    <div>
+      <span style="color:var(--text-dim);">預測概率 65%</span>
+      &nbsp;<span class="badge badge-green" style="font-size:0.85em;">&#10003; 正確</span>
+    </div>
   </div>
-  <p style="font-size:0.85em;color:var(--red);">俄羅斯是唯一沒有停止動機的行為者。唯一的 brake：烏克蘭消耗限制俄供應能力。</p>
+  <p style="font-size:0.88em;color:var(--text-dim);margin-top:6px;">4/1 過去無動能攻擊，IRGC 轉向網路威脅。預測準確。</p>
+</div>
+
+<div class="card score-correct" style="margin:10px 0;">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <div>
+      <strong style="color:var(--green);">CPRED-002</strong>&nbsp; Trump「最終階段」話術框架
+    </div>
+    <div>
+      <span style="color:var(--text-dim);">預測概率 45%</span>
+      &nbsp;<span class="badge badge-green" style="font-size:0.85em;">&#10003; 正確，提前 1 天</span>
+    </div>
+  </div>
+  <p style="font-size:0.88em;color:var(--text-dim);margin-top:6px;">Trump 3/31 使用「final phase」措辭，較預測提前一天出現。</p>
+</div>
+
+<div class="card score-correct" style="margin:10px 0;">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <div>
+      <strong style="color:var(--green);">CPRED-006</strong>&nbsp; 不授權地面行動 + 最後通牒
+    </div>
+    <div>
+      <span style="color:var(--text-dim);">預測概率 62%</span>
+      &nbsp;<span class="badge badge-green" style="font-size:0.85em;">&#10003; 正確</span>
+    </div>
+  </div>
+  <p style="font-size:0.88em;color:var(--text-dim);margin-top:6px;">五角大廈確認無地面授權，轉為霍爾木茲最後通牒。</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: SEVEN SCENARIOS -->
+<!-- ============================================================ -->
+<h2 id="scenarios">七路徑概率分佈</h2>
+
+<div class="bar-container">
+  <div class="bar-label"><span><strong>D：長期消耗 / 碎裂</strong> <span class="badge badge-critical">主路徑</span></span><span style="font-weight:700;">52.0%</span></div>
+  <div class="bar-track"><div class="bar-fill" style="width:52%;background:var(--red);color:#fff;">52.0%</div></div>
+</div>
+<div class="bar-container">
+  <div class="bar-label"><span>E：經濟強迫停火</span><span>12.0%</span></div>
+  <div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--green);">12.0%</div></div>
+</div>
+<div class="bar-container">
+  <div class="bar-label"><span>F：胡塞升級 → 更大衝突</span><span>12.0%</span></div>
+  <div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--pink);">12.0%</div></div>
+</div>
+<div class="bar-container">
+  <div class="bar-label"><span>B：美方單方面降溫</span><span>10.0%</span></div>
+  <div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--purple);">10.0%</div></div>
+</div>
+<div class="bar-container">
+  <div class="bar-label"><span>A：談判停火（巴基斯坦/中國斡旋）</span><span>6.0%</span></div>
+  <div class="bar-track"><div class="bar-fill" style="width:6%;background:var(--accent);">6.0%</div></div>
+</div>
+<div class="bar-container">
+  <div class="bar-label"><span>C：伊朗政權崩潰</span><span>4.0%</span></div>
+  <div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--cyan);">4.0%</div></div>
+</div>
+<div class="bar-container">
+  <div class="bar-label"><span>G：網路不對稱戰 <span class="badge badge-new">NEW</span></span><span>4.0%</span></div>
+  <div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--orange);">4.0%</div></div>
+</div>
+
+<div class="card" style="margin-top:20px;text-align:center;">
+  <div style="font-size:1.3em;font-weight:700;">年底前結束概率</div>
+  <div style="font-size:2.8em;font-weight:800;color:var(--orange);margin:8px 0;">32%</div>
+  <div style="color:var(--text-dim);">v4: 23.3% → v5.1: 32%（經濟壓力路徑與 Rubio-Araghchi 接觸推升）</div>
+</div>
+
+<!-- Scenario Tabs -->
+<h3>路徑詳細推理</h3>
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(event,'tab-d')">D 碎裂 52%</div>
+  <div class="tab" onclick="switchTab(event,'tab-e')">E 經濟 12%</div>
+  <div class="tab" onclick="switchTab(event,'tab-f')">F 胡塞 12%</div>
+  <div class="tab" onclick="switchTab(event,'tab-b')">B 降溫 10%</div>
+  <div class="tab" onclick="switchTab(event,'tab-a')">A 談判 6%</div>
+  <div class="tab" onclick="switchTab(event,'tab-c')">C 崩潰 4%</div>
+  <div class="tab" onclick="switchTab(event,'tab-g')">G 網路 4%</div>
+</div>
+
+<div id="tab-d" class="tab-content active card card-danger" style="border-radius:0 10px 10px 10px;">
+  <p style="font-size:1.05em;font-weight:600;color:var(--red);">主路徑：戰爭碎裂為 5 場獨立衝突，無統一停火可能</p>
+  <p style="margin-top:10px;">通訊被切斷 + 胡塞獨立行動 + IRGC 31省自治 + PMF 平行指揮鏈 + 薪資管道斷裂 = 沒有任何人能同時命令所有戰鬥員停火。</p>
+  <p style="color:var(--text-dim);font-size:0.88em;margin-top:8px;">6 項強力證據支持，0 項矛盾。這是證據面最無瑕疵的路徑。</p>
+</div>
+
+<div id="tab-e" class="tab-content card card-green" style="border-radius:0 10px 10px 10px;">
+  <p style="font-size:1.05em;font-weight:600;color:var(--green);">GDP 損失 $3.5 兆 + G7 釋出 4 億桶 + 肥料播種季危機</p>
+  <p style="margin-top:10px;">經濟計時器是真實的硬約束。G7 已啟動史上最大戰略石油釋出（4 億桶），把油價從 $116 壓到 $101-104。如果 6 月前無法重開海峽，全球衰退概率升至 49%，G20 將被迫介入。</p>
+  <p style="color:var(--text-dim);font-size:0.88em;margin-top:8px;">但經濟壓力轉化為政治行動的時間差不可預測。干預 ≠ 成功。</p>
+</div>
+
+<div id="tab-f" class="tab-content card card-new" style="border-radius:0 10px 10px 10px;">
+  <p style="font-size:1.05em;font-weight:600;color:var(--pink);">胡塞又擊沉 2 艘船，曼德海峽 15% 全球海運受脅</p>
+  <p style="margin-top:10px;">3/28 獨立攻擊以色列（Stimson Institute 確認），不再聽從德黑蘭指揮。曼德海峽如果也關閉，全球兩大咽喉同時癱瘓，史無前例。蘇伊士運河收入暴跌 → 埃及被拖入。</p>
+</div>
+
+<div id="tab-b" class="tab-content card card-purple" style="border-radius:0 10px 10px 10px;">
+  <p style="font-size:1.05em;font-weight:600;color:var(--purple);">Trump 北韓模式：3 次延期 → 宣布勝利 → 逐步撤離</p>
+  <p style="margin-top:10px;">48 小時 → 5 天 → 10 天，三次最後通牒延期。零五角大廈地面授權。專家共識：信譽已毀。如果 4/6 再次有限打擊 + 第 4 次延期，這條路徑概率會快速上升。</p>
+</div>
+
+<div id="tab-a" class="tab-content card card-highlight" style="border-radius:0 10px 10px 10px;">
+  <p style="font-size:1.05em;font-weight:600;color:var(--accent);">Rubio-Araghchi 直接接觸安排中 = 唯一正面訊號</p>
+  <p style="margin-top:10px;">巴基斯坦仍是唯一真誠斡旋方。但即使 Trump + Pezeshkian 簽紙，IRGC 省級指揮官和胡塞不會停火。停火在結構上不可能執行。</p>
+  <p style="color:var(--text-dim);font-size:0.88em;margin-top:8px;">6 項證據矛盾，是所有路徑中矛盾最多的。</p>
+</div>
+
+<div id="tab-c" class="tab-content card card-cyan" style="border-radius:0 10px 10px 10px;">
+  <p style="font-size:1.05em;font-weight:600;color:var(--cyan);">IRGC 零叛逃 + S-400 部署 = 崩潰概率降至 4%</p>
+  <p style="margin-top:10px;">v4 時 IRGC 叛逃只是觀察中，v5.1 確認零叛逃（恐懼驅動）。加上 S-400 已部署伊斯法罕，空防質變。政權短期內不會崩潰。</p>
+</div>
+
+<div id="tab-g" class="tab-content card card-warn" style="border-radius:0 10px 10px 10px;">
+  <p style="font-size:1.05em;font-weight:600;color:var(--orange);">IRGC 威脅 18 家美國科技公司 = 資源耗盡的訊號 <span class="badge badge-new">NEW</span></p>
+  <p style="margin-top:10px;">動能能力衰退（4 名指揮官被殺、S-400 是防禦優先）→ 轉向不對稱戰。如果 2 週內對 FAANG 發動網路攻擊，此路徑概率跳升。威脅但不行動 = 純虛張聲勢。</p>
+</div>
+
+<!-- Five-Version Evolution -->
+<h3>五版概率演化</h3>
+<div class="card" style="overflow-x:auto;">
+  <table>
+    <tr><th>路徑</th><th>v1</th><th>v2</th><th>v3</th><th>v4</th><th style="color:var(--accent)">v5.1</th><th>變化</th></tr>
+    <tr><td>A：談判停火</td><td>8.2%</td><td>5.3%</td><td>5.8%</td><td>4.7%</td><td><strong>6.0%</strong></td><td class="delta-better">+1.3pp</td></tr>
+    <tr><td>B：美方降溫</td><td>10.8%</td><td>7.7%</td><td>7.0%</td><td>4.7%</td><td><strong>10.0%</strong></td><td class="delta-better">+5.3pp</td></tr>
+    <tr><td>C：政權崩潰</td><td>16.0%</td><td>7.6%</td><td>8.0%</td><td>6.8%</td><td><strong>4.0%</strong></td><td class="delta-worse">-2.8pp</td></tr>
+    <tr><td>D：長期消耗/碎裂</td><td>65.0%</td><td>79.4%</td><td>79.2%</td><td>66.9%</td><td><strong>52.0%</strong></td><td style="color:var(--text-dim)">重分配至 E/F/G</td></tr>
+    <tr><td>E：經濟強迫</td><td>—</td><td>—</td><td>—</td><td>7.1%</td><td><strong>12.0%</strong></td><td class="delta-better">+4.9pp</td></tr>
+    <tr><td>F：胡塞升級</td><td>—</td><td>—</td><td>—</td><td>9.9%</td><td><strong>12.0%</strong></td><td class="delta-worse">+2.1pp</td></tr>
+    <tr><td>G：網路不對稱戰</td><td>—</td><td>—</td><td>—</td><td>—</td><td><strong>4.0%</strong></td><td><span class="badge badge-new">NEW</span></td></tr>
+    <tr style="font-weight:700;"><td>年底前結束</td><td>35.0%</td><td>20.6%</td><td>20.8%</td><td>23.3%</td><td style="color:var(--green);"><strong>32.0%</strong></td><td class="delta-better">+8.7pp</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: APRIL 6 PIVOT - DECISION TREE -->
+<!-- ============================================================ -->
+<h2 id="pivot">4 月 6 日轉折點：決策樹</h2>
+
+<div class="card card-danger">
+  <p style="font-size:1.05em;text-align:center;font-weight:700;color:var(--red);margin-bottom:8px;">
+    4/6 20:00 EST — 霍爾木茲最後通牒到期
+  </p>
+  <p style="text-align:center;color:var(--text-dim);font-size:0.92em;">距今僅 <strong style="color:var(--red);">4 天</strong>。三條分支決定衝突走向。</p>
+</div>
+
+<div class="dtree">
+  <!-- Root -->
+  <div class="dtree-root" style="max-width:600px;margin:0 auto 30px;">
+    &#9200; 4/6 20:00 EST 最後通牒到期
+  </div>
+
+  <!-- Branch 1 -->
+  <div class="card card-green" style="margin:14px 0;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <h4 style="margin:0;color:var(--green);">&#9312; 伊朗象徵性讓步（允許部分油輪通行）</h4>
+      <span class="badge badge-green" style="font-size:1em;">50% 概率</span>
+    </div>
+    <div style="margin-top:12px; padding:12px; background:var(--surface2); border-radius:8px;">
+      <div class="loop-diagram" style="margin:0; padding:0; background:transparent;">
+        <span>伊朗放行部分油輪</span>
+        <span class="loop-arrow" style="color:var(--green);">&#8594;</span>
+        <span>Trump 宣布「重大勝利」</span>
+        <span class="loop-arrow" style="color:var(--green);">&#8594;</span>
+        <span>路徑 A/B 概率上升</span>
+        <span class="loop-arrow" style="color:var(--green);">&#8594;</span>
+        <span>油價回落 $90 以下</span>
+      </div>
+    </div>
+    <p style="font-size:0.88em;color:var(--text-dim);margin-top:8px;">最可能的結果。伊朗用最小讓步換取喘息時間，Trump 獲得國內宣傳素材。但胡塞和 IRGC 省級行動不會停止。</p>
+  </div>
+
+  <!-- Branch 2 -->
+  <div class="card card-warn" style="margin:14px 0;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <h4 style="margin:0;color:var(--orange);">&#9313; 伊朗零讓步 + Trump 有限打擊（1-3 設施）</h4>
+      <span class="badge badge-fragile" style="font-size:1em;">30% 概率</span>
+    </div>
+    <div style="margin-top:12px; padding:12px; background:var(--surface2); border-radius:8px;">
+      <div class="loop-diagram" style="margin:0; padding:0; background:transparent;">
+        <span>伊朗不讓步</span>
+        <span class="loop-arrow">&#8594;</span>
+        <span>Trump 打 1-3 個設施</span>
+        <span class="loop-arrow">&#8594;</span>
+        <span>第 4 次延期</span>
+        <span class="loop-arrow">&#8594;</span>
+        <span>路徑 D 持續</span>
+      </div>
+    </div>
+    <p style="font-size:0.88em;color:var(--text-dim);margin-top:8px;">重複 v4 模式。信譽進一步受損，但避免全面升級。S-400 部署使打擊效果打折扣。</p>
+  </div>
+
+  <!-- Branch 3 -->
+  <div class="card card-danger" style="margin:14px 0;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <h4 style="margin:0;color:var(--red);">&#9314; 伊朗零讓步 + Trump 全面電網打擊</h4>
+      <span class="badge badge-critical" style="font-size:1em;">20% 概率</span>
+    </div>
+    <div style="margin-top:12px; padding:12px; background:var(--surface2); border-radius:8px;">
+      <div class="loop-diagram" style="margin:0; padding:0; background:transparent;">
+        <span>全面電網打擊</span>
+        <span class="loop-arrow" style="color:var(--red);">&#8594;</span>
+        <span>人道危機</span>
+        <span class="loop-arrow" style="color:var(--red);">&#8594;</span>
+        <span>俄羅斯升級回應</span>
+        <span class="loop-arrow" style="color:var(--red);">&#8594;</span>
+        <span>路徑 D/F + 衰退</span>
+      </div>
+    </div>
+    <p style="font-size:0.88em;color:var(--red);margin-top:8px;">最危險的分支。油價 &gt;$120，全球衰退概率跳升至 60%+。但 S-400 部署使此選項的軍事風險大幅增加，五角大廈可能內部反對。</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 6: FRAGMENTATION THESIS -->
+<!-- ============================================================ -->
+<h2 id="fragmentation">碎裂論：停火為何在結構上不可能</h2>
+
+<div class="card card-danger">
+  <p style="font-size:1.2em;font-weight:700;color:var(--red);margin-bottom:16px;">
+    核心論點：即使 Trump + Pezeshkian 簽署停火協議，戰爭仍會繼續。
+  </p>
+  <p style="font-size:1.05em;">因為沒有任何人能同時命令所有戰鬥員停火。</p>
+</div>
+
+<h3>證據鏈</h3>
+
+<div class="card" style="margin:10px 0;">
+  <div style="display:flex;gap:14px;align-items:flex-start;">
+    <div style="background:var(--red);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">1</div>
+    <div>
+      <strong>以色列空襲切斷德黑蘭→貝魯特/巴格達/薩那加密通訊</strong>
+      <p style="color:var(--text-dim);font-size:0.92em;margin-top:4px;">抵抗之弧的神經系統已被物理切斷。德黑蘭無法即時下達停火命令。</p>
+    </div>
+  </div>
+</div>
+<div class="card" style="margin:10px 0;">
+  <div style="display:flex;gap:14px;align-items:flex-start;">
+    <div style="background:var(--red);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">2</div>
+    <div>
+      <strong>胡塞 3/28 獨立攻擊以色列</strong>（Stimson Institute 確認）
+      <p style="color:var(--text-dim);font-size:0.92em;margin-top:4px;">不再等待德黑蘭授權。2025 年可控的先例已不適用。</p>
+    </div>
+  </div>
+</div>
+<div class="card" style="margin:10px 0;">
+  <div style="display:flex;gap:14px;align-items:flex-start;">
+    <div style="background:var(--red);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">3</div>
+    <div>
+      <strong>IRGC 31 省已有預先授權的獨立開火權</strong>
+      <p style="color:var(--text-dim);font-size:0.92em;margin-top:4px;">馬賽克防禦的設計就是去中心化。撤回權力 = 瓦解防禦。</p>
+    </div>
+  </div>
+</div>
+<div class="card" style="margin:10px 0;">
+  <div style="display:flex;gap:14px;align-items:flex-start;">
+    <div style="background:var(--red);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">4</div>
+    <div>
+      <strong>PMF 有繞過德黑蘭的平行指揮鏈</strong>
+      <p style="color:var(--text-dim);font-size:0.92em;margin-top:4px;">伊拉克人民動員軍多個派系自主行動，IRGC 協調但無法命令。</p>
+    </div>
+  </div>
+</div>
+<div class="card" style="margin:10px 0;">
+  <div style="display:flex;gap:14px;align-items:flex-start;">
+    <div style="background:var(--red);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">5</div>
+    <div>
+      <strong>薪資管道被切斷 → 控制機制失效</strong>
+      <p style="color:var(--text-dim);font-size:0.92em;margin-top:4px;">代理人失去經濟依附，轉為自籌資金、自主行動。</p>
+    </div>
+  </div>
+</div>
+
+<h3>碎裂後的 5 場獨立衝突</h3>
+
+<div class="card" style="overflow-x:auto;">
+  <table>
+    <tr><th style="width:50px;">#</th><th>衝突</th><th>預計時程</th><th>結束條件</th></tr>
+    <tr>
+      <td style="font-weight:800;color:var(--accent);">1</td>
+      <td><strong>美國空中戰役</strong></td>
+      <td style="color:var(--green);">5-6 月停止</td>
+      <td>Trump 宣布勝利撤離</td>
+    </tr>
+    <tr>
+      <td style="font-weight:800;color:var(--orange);">2</td>
+      <td><strong>霍爾木茲對峙</strong></td>
+      <td style="color:var(--orange);">6-8 月部分重開</td>
+      <td>經濟壓力迫使部分通行</td>
+    </tr>
+    <tr>
+      <td style="font-weight:800;color:var(--red);">3</td>
+      <td><strong>IRGC 省級游擊戰</strong></td>
+      <td style="color:var(--red);">持續至 12 月+</td>
+      <td>無明確結束點</td>
+    </tr>
+    <tr>
+      <td style="font-weight:800;color:var(--pink);">4</td>
+      <td><strong>胡塞紅海行動</strong></td>
+      <td style="color:var(--pink);">持續至 2027+</td>
+      <td>無明確結束點</td>
+    </tr>
+    <tr>
+      <td style="font-weight:800;color:var(--purple);">5</td>
+      <td><strong>網路戰</strong></td>
+      <td style="color:var(--purple);">無限期</td>
+      <td>強度遞減但不會歸零</td>
+    </tr>
+  </table>
+</div>
+
+<!-- Visual timeline bars -->
+<div style="margin:20px 0;">
+  <p style="font-size:0.88em;color:var(--text-dim);margin-bottom:12px;">衝突時間線預估（2026）</p>
+  <div style="position:relative;">
+    <!-- Month labels -->
+    <div style="display:flex;justify-content:space-between;font-size:0.78em;color:var(--text-dim);margin-bottom:8px;padding:0 2px;">
+      <span>4月</span><span>5月</span><span>6月</span><span>7月</span><span>8月</span><span>9月</span><span>10月</span><span>11月</span><span>12月</span><span>2027</span>
+    </div>
+    <div style="margin:8px 0;">
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0;">
+        <span style="min-width:140px;font-size:0.85em;font-weight:600;">美國空襲</span>
+        <div style="flex:1;height:24px;background:var(--surface2);border-radius:4px;overflow:hidden;">
+          <div style="width:22%;height:100%;background:var(--accent);border-radius:4px;"></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0;">
+        <span style="min-width:140px;font-size:0.85em;font-weight:600;">霍爾木茲對峙</span>
+        <div style="flex:1;height:24px;background:var(--surface2);border-radius:4px;overflow:hidden;">
+          <div style="width:55%;height:100%;background:var(--orange);border-radius:4px;"></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0;">
+        <span style="min-width:140px;font-size:0.85em;font-weight:600;">IRGC 游擊戰</span>
+        <div style="flex:1;height:24px;background:var(--surface2);border-radius:4px;overflow:hidden;">
+          <div style="width:100%;height:100%;background:var(--red);border-radius:4px;"></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0;">
+        <span style="min-width:140px;font-size:0.85em;font-weight:600;">胡塞紅海</span>
+        <div style="flex:1;height:24px;background:var(--surface2);border-radius:4px;overflow:hidden;">
+          <div style="width:100%;height:100%;background:var(--pink);border-radius:4px;"></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0;">
+        <span style="min-width:140px;font-size:0.85em;font-weight:600;">網路戰</span>
+        <div style="flex:1;height:24px;background:var(--surface2);border-radius:4px;overflow:hidden;">
+          <div style="width:100%;height:100%;background:var(--purple);border-radius:4px;opacity:0.7;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 7: EVIDENCE WEIGHT DISPLAY -->
+<!-- ============================================================ -->
+<h2 id="evidence">證據權重分析</h2>
+<p style="color:var(--text-dim);margin-bottom:20px;">每張證據卡顯示該項事實支持或否定哪些路徑，以及證據強度。</p>
+
+<div class="evidence-cards">
+
+  <!-- E1 -->
+  <div class="ev-card" style="border-left:4px solid var(--red);">
+    <div class="ev-id">E1</div>
+    <div class="ev-fact">俄羅斯提供即時衛星情報給伊朗</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green-strong">D 碎裂（強）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span class="ev-tag ev-tag-red">A 停火</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot empty"></span></div>
+  </div>
+
+  <!-- E2 -->
+  <div class="ev-card" style="border-left:4px solid var(--red);">
+    <div class="ev-id">E2</div>
+    <div class="ev-fact">Su-35 + S-400 已交付/部署伊斯法罕</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green-strong">D 碎裂（強）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span class="ev-tag ev-tag-red">C 崩潰</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span></div>
+  </div>
+
+  <!-- E3 -->
+  <div class="ev-card" style="border-left:4px solid var(--pink);">
+    <div class="ev-id">E3</div>
+    <div class="ev-fact">胡塞 3/28 獨立攻擊以色列（Stimson Institute 確認）</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green-strong">F 胡塞升級（強）</span>
+      <span class="ev-tag ev-tag-green">D 碎裂</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span class="ev-tag ev-tag-red-strong">A 停火（強）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span></div>
+  </div>
+
+  <!-- E4 -->
+  <div class="ev-card" style="border-left:4px solid var(--red);">
+    <div class="ev-id">E4</div>
+    <div class="ev-fact">PMF 突破美軍防空系統</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green-strong">D 碎裂（強）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span style="font-size:0.82em;color:var(--text-dim);">（無直接否定）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot empty"></span></div>
+  </div>
+
+  <!-- E5 -->
+  <div class="ev-card" style="border-left:4px solid var(--orange);">
+    <div class="ev-id">E5</div>
+    <div class="ev-fact">霍爾木茲海峽 90% 封鎖</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green-strong">E 經濟強迫（強）</span>
+      <span class="ev-tag ev-tag-green">B 美方降溫</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span style="font-size:0.82em;color:var(--text-dim);">（間接推動所有路徑）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span></div>
+  </div>
+
+  <!-- E6 -->
+  <div class="ev-card" style="border-left:4px solid var(--green);">
+    <div class="ev-id">E6</div>
+    <div class="ev-fact">潛在 GDP 損失 $3.5 兆</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green-strong">E 經濟強迫（強）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span class="ev-tag ev-tag-red">D 碎裂（長期無法承受）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span></div>
+  </div>
+
+  <!-- E7 -->
+  <div class="ev-card" style="border-left:4px solid var(--cyan);">
+    <div class="ev-id">E7</div>
+    <div class="ev-fact">阿聯攔截 2,300+ 攻擊</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green">D 碎裂（防禦有效→長期化）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span class="ev-tag ev-tag-red">F 升級（被控制住）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot empty"></span><span class="ev-weight-dot empty"></span></div>
+  </div>
+
+  <!-- E8 -->
+  <div class="ev-card" style="border-left:4px solid var(--orange);">
+    <div class="ev-id">E8</div>
+    <div class="ev-fact">海灣國家要求加入談判 + 賠償</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green">D 碎裂（條件複雜化）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span class="ev-tag ev-tag-red">A 停火（條件不可調和）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot empty"></span><span class="ev-weight-dot empty"></span></div>
+  </div>
+
+  <!-- E9 -->
+  <div class="ev-card" style="border-left:4px solid var(--accent);">
+    <div class="ev-id">E9</div>
+    <div class="ev-fact">中國購買 160 萬桶/天 + 斡旋（五點方案被拒）</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green">A 停火（有槓桿）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span class="ev-tag ev-tag-red">F 升級（有制約力）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot empty"></span><span class="ev-weight-dot empty"></span></div>
+  </div>
+
+  <!-- E10 -->
+  <div class="ev-card" style="border-left:4px solid var(--accent);">
+    <div class="ev-id">E10</div>
+    <div class="ev-fact">THAAD 從韓國調往中東</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green-strong">D 碎裂（美國投入深）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span style="font-size:0.82em;color:var(--text-dim);">（無直接否定）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot empty"></span></div>
+  </div>
+
+  <!-- E11 -->
+  <div class="ev-card" style="border-left:4px solid var(--green);">
+    <div class="ev-id">E11</div>
+    <div class="ev-fact">肥料危機 + 4-5 月播種季</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green-strong">E 經濟強迫（強）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span style="font-size:0.82em;color:var(--text-dim);">（加速時間壓力）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot empty"></span></div>
+  </div>
+
+  <!-- E12 -->
+  <div class="ev-card" style="border-left:4px solid var(--red);">
+    <div class="ev-id">E12</div>
+    <div class="ev-fact">抵抗之弧正在碎裂（通訊切斷 + 獨立行動）</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green-strong">D 碎裂（強）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span class="ev-tag ev-tag-red-strong">A 停火（強）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span></div>
+  </div>
+
+  <!-- E13 -->
+  <div class="ev-card" style="border-left:4px solid var(--purple);">
+    <div class="ev-id">E13</div>
+    <div class="ev-fact">Trump 3 次最後通牒延期（48h → 5d → 10d）</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green-strong">B 降溫（強）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span class="ev-tag ev-tag-red">軍事認真度</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot empty"></span></div>
+  </div>
+
+  <!-- E14 -->
+  <div class="ev-card" style="border-left:4px solid var(--orange);">
+    <div class="ev-id">E14</div>
+    <div class="ev-fact">IRGC 威脅 18 家美國科技公司（未行動）</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green">G 網路戰</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span style="font-size:0.82em;color:var(--text-dim);">（顯示資源耗盡）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot empty"></span><span class="ev-weight-dot empty"></span></div>
+  </div>
+
+  <!-- E15 -->
+  <div class="ev-card" style="border-left:4px solid var(--red);">
+    <div class="ev-id">E15</div>
+    <div class="ev-fact">停火在結構上不可能（通訊切斷 + 去中心化指揮）</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green-strong">D 碎裂（強）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span class="ev-tag ev-tag-red-strong">A 停火（強）</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span></div>
+  </div>
+
+  <!-- E16 -->
+  <div class="ev-card" style="border-left:4px solid var(--cyan);">
+    <div class="ev-id">E16</div>
+    <div class="ev-fact">IRGC 逃兵增加（恐懼驅動，非信念瓦解）</div>
+    <div class="ev-supports">
+      <span class="ev-label">&#9650; 支持：</span>
+      <span class="ev-tag ev-tag-green">C 崩潰（部分）</span>
+    </div>
+    <div class="ev-contradicts">
+      <span class="ev-label">&#9660; 否定：</span>
+      <span style="font-size:0.82em;color:var(--text-dim);">恐懼驅動 ≠ 系統性崩潰</span>
+    </div>
+    <div class="ev-weight"><span style="font-size:0.82em;color:var(--text-dim);margin-right:6px;">強度：</span><span class="ev-weight-dot"></span><span class="ev-weight-dot"></span><span class="ev-weight-dot empty"></span><span class="ev-weight-dot empty"></span></div>
+  </div>
+
+</div>
+
+<!-- Evidence Verdict -->
+<div class="card card-danger" style="margin-top:20px;">
+  <h3 style="margin-top:0;color:var(--red);">證據總結</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:12px;">
+    <div>
+      <p style="font-weight:700;color:var(--green);font-size:1.1em;">D（碎裂）勝出</p>
+      <p style="font-size:0.92em;">6 項強力支持，0 項矛盾<br>所有路徑中證據面最無瑕疵</p>
+    </div>
+    <div>
+      <p style="font-weight:700;color:var(--red);font-size:1.1em;">A（停火）淘汰</p>
+      <p style="font-size:0.92em;">6 項矛盾（含 3 項強力否定）<br>所有路徑中矛盾最多</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 8: 13 ACTOR MAP -->
+<!-- ============================================================ -->
+<h2 id="actors">13 勢力地圖</h2>
+
+<div class="actor-grid">
+  <div class="actor-card" style="border-left:4px solid var(--accent);">
+    <h4>&#127482;&#127480; 美國</h4>
+    <div class="role">主攻方 | 決定戰爭規模</div>
+    <p>4,500+ 部署、3 航母群。4/6 霍爾木茲最後通牒。零地面授權。</p>
+    <p style="color:var(--purple);font-size:0.88em;margin-top:6px;"><strong>行為模式：</strong>北韓模式（82%）&gt; 委內瑞拉模式（18%）。三次延期 = 劇場成分極高。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--accent);">
+    <h4>&#127470;&#127473; 以色列</h4>
+    <div class="role">聯合主攻 | 切斷抵抗之弧神經</div>
+    <p>空襲切斷德黑蘭→貝魯特/巴格達/薩那加密通訊。黎巴嫩地面擴張。100 萬人流離。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--red);">
+    <h4>&#127470;&#127479; 伊朗 IRGC</h4>
+    <div class="role">防禦+報復 | 馬賽克防禦 + 去中心化</div>
+    <p>31 省自治指揮。Vahidi 掌實權。Pezeshkian 被架空。穆杰塔巴仍未露面。零叛逃。</p>
+    <p style="color:var(--orange);font-size:0.88em;margin-top:6px;"><strong>Vahidi：</strong>控制戰爭決策。Pezeshkian 僅為談判門面。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--red);">
+    <h4>&#127479;&#127482; 俄羅斯</h4>
+    <div class="role">武器+情報 | 戰爭最大贏家</div>
+    <p>即時衛星情報。S-400 已部署。Su-35 交付中。油價高 → 每月多賺 $50 億。</p>
+    <p style="color:var(--red);font-size:0.88em;margin-top:6px;"><strong>唯一沒有停止動機的行為者。</strong>正回饋迴路持續運轉。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--orange);">
+    <h4>&#127464;&#127475; 中國</h4>
+    <div class="role">經濟生命線 + 表面斡旋</div>
+    <p>160 萬桶/天。五點方案被拒。船舶被攔。THAAD 離韓 = 台海空隙。</p>
+    <p style="color:var(--purple);font-size:0.88em;margin-top:6px;"><strong>雙重博弈：</strong>斡旋是劇場（78%），真正目標是廉價石油 + THAAD 空隙。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--pink);">
+    <h4>&#127486;&#127466; 胡塞武裝</h4>
+    <div class="role">最激進代理人 | 曼德海峽槓桿</div>
+    <p>又擊沉 2 艘船。3/28 獨立攻擊以色列。整個分析最敏感的變數。</p>
+    <p style="color:var(--pink);font-size:0.88em;margin-top:6px;"><strong>2025 先例可控，但選擇獨立行動。</strong>通訊切斷後德黑蘭無法制約。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--text-dim);">
+    <h4>&#127473;&#127463; 真主黨（殘部）</h4>
+    <div class="role">被削弱代理人 | 牽制以色列</div>
+    <p>Nasrallah + Safieddine 已死。仍有 25,000 飛彈。黎巴嫩政府禁止軍事活動。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--text-dim);">
+    <h4>&#127470;&#127478; 伊拉克 PMF</h4>
+    <div class="role">分散攻擊 | 平行指揮鏈</div>
+    <p>突破美軍防空。多個獨立團體。平行指揮鏈繞過德黑蘭。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--orange);">
+    <h4>&#127480;&#127462; 沙烏地阿拉伯</h4>
+    <div class="role">被攻擊 + 要求賠償</div>
+    <p>3/1 被伊朗飛彈攻擊。Aramco 產能 70%。要求加入停火談判 + 賠償。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--orange);">
+    <h4>&#127462;&#127466; 阿聯</h4>
+    <div class="role">攔截最多攻擊 | 經濟受損重</div>
+    <p>攔截 2,300+ 攻擊。杜拜旅遊崩潰。要求賠償。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--green);">
+    <h4>&#127477;&#127472; 巴基斯坦</h4>
+    <div class="role">唯一真誠斡旋方</div>
+    <p>伊斯蘭堡峰會。安排 Rubio-Araghchi 直接接觸。中國支持。</p>
+    <p style="color:var(--green);font-size:0.88em;margin-top:6px;"><strong>唯一真正的中間人。</strong>所有其他斡旋方都有隱藏議程。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--green);">
+    <h4>&#127481;&#127479; 土耳其</h4>
+    <div class="role">NATO + 斡旋 | 庫德紅線</div>
+    <p>伊朗飛彈落入土耳其領土。不允許美國使用土耳其空域。提議停火架構。</p>
+  </div>
+
+  <div class="actor-card" style="border-left:4px solid var(--green);">
+    <h4>&#127476;&#127474; 阿曼</h4>
+    <div class="role">傳統密使 | 管道中斷但仍嘗試</div>
+    <p>日內瓦會談在阿曼大使官邸舉行。開戰後管道中斷但持續嘗試恢復。</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 9: KEY REASONING CHAINS -->
+<!-- ============================================================ -->
+<h2 id="reasoning">關鍵推理鏈</h2>
+
+<!-- Reasoning 1 -->
+<div class="reasoning-card">
+  <h4 style="color:var(--purple);margin-bottom:12px;">推理一：Trump 的劇場模式</h4>
+  <div class="chain">
+    <strong>事實基礎：</strong>3 次最後通牒延期（48h → 5d → 10d）+ 零五角大廈地面授權 + 專家共識信譽已毀 + 北韓 2017 先例
+    <br><br>
+    <span class="chain-arrow">&#8594;</span> <strong>推論：</strong>4/6 是劇場。有限打擊 + 第 4 次延期可能性最高。
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+    <div style="background:rgba(63,185,80,0.08);padding:12px;border-radius:8px;">
+      <p class="if-true"><strong>如果推論正確：</strong></p>
+      <p style="font-size:0.92em;">4/6 後油價不會飆升；Trump 使用「productive talks」措辭；第 4 次延期 7-14 天</p>
+    </div>
+    <div style="background:rgba(248,81,73,0.08);padding:12px;border-radius:8px;">
+      <p class="if-false"><strong>如果推論錯誤：</strong></p>
+      <p style="font-size:0.92em;">全面電網打擊；油價 &gt;$120；人道危機；全球衰退概率 60%+</p>
+    </div>
+  </div>
+</div>
+
+<!-- Reasoning 2 -->
+<div class="reasoning-card">
+  <h4 style="color:var(--purple);margin-bottom:12px;">推理二：停火的結構性不可能</h4>
+  <div class="chain">
+    <strong>事實基礎：</strong>通訊切斷 + 胡塞獨立行動 + IRGC 31 省自治 + PMF 平行指揮鏈 + 薪資管道斷裂
+    <br><br>
+    <span class="chain-arrow">&#8594;</span> <strong>推論：</strong>沒有任何人能同時命令所有戰鬥員停火。任何停火協議將在 96 小時內被違反。
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+    <div style="background:rgba(63,185,80,0.08);padding:12px;border-radius:8px;">
+      <p class="if-true"><strong>如果推論正確：</strong></p>
+      <p style="font-size:0.92em;">停火後 96 小時內被違反；至少一條戰線繼續活躍</p>
+    </div>
+    <div style="background:rgba(248,81,73,0.08);padding:12px;border-radius:8px;">
+      <p class="if-false"><strong>如果推論錯誤：</strong></p>
+      <p style="font-size:0.92em;">所有戰線沉寂超過 7 天；代理人服從停火命令</p>
+    </div>
+  </div>
+</div>
+
+<!-- Reasoning 3 -->
+<div class="reasoning-card">
+  <h4 style="color:var(--purple);margin-bottom:12px;">推理三：中國的雙重博弈</h4>
+  <div class="chain">
+    <strong>事實基礎：</strong>船舶攔截是預先安排（78%概率）+ 五點方案設計為被拒 + THAAD 空隙 + 廉價石油
+    <br><br>
+    <span class="chain-arrow">&#8594;</span> <strong>推論：</strong>中國希望戰爭持續 3-6 個月。斡旋是表面功夫。
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+    <div style="background:rgba(63,185,80,0.08);padding:12px;border-radius:8px;">
+      <p class="if-true"><strong>如果推論正確：</strong></p>
+      <p style="font-size:0.92em;">4 月無實質性中國提案；持續購買折扣原油；利用 THAAD 空隙</p>
+    </div>
+    <div style="background:rgba(248,81,73,0.08);padding:12px;border-radius:8px;">
+      <p class="if-false"><strong>如果推論錯誤：</strong></p>
+      <p style="font-size:0.92em;">中國提出有約束力的架構並提供擔保</p>
+    </div>
+  </div>
+</div>
+
+<!-- Reasoning 4 -->
+<div class="reasoning-card">
+  <h4 style="color:var(--purple);margin-bottom:12px;">推理四：台灣能源倒數計時</h4>
+  <div class="chain">
+    <strong>事實基礎：</strong>天然氣儲備 11 天 + 47.8% 電力來自 LNG + 卡達 -17% 產能 + TSMC 用台灣 9% 電力
+    <br><br>
+    <span class="chain-arrow">&#8594;</span> <strong>推論：</strong>如果霍爾木茲持續封鎖，5-6 月台灣面臨能源危機。
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+    <div style="background:rgba(63,185,80,0.08);padding:12px;border-radius:8px;">
+      <p class="if-true"><strong>如果推論正確：</strong></p>
+      <p style="font-size:0.92em;">5/31 前宣布工業限電；台積電產能受影響；AI 晶片全球短缺</p>
+    </div>
+    <div style="background:rgba(248,81,73,0.08);padding:12px;border-radius:8px;">
+      <p class="if-false"><strong>如果推論錯誤：</strong></p>
+      <p style="font-size:0.92em;">替代 LNG 路線確保供應；儲備充足度被低估</p>
+    </div>
+  </div>
+</div>
+
+<!-- Reasoning 5 -->
+<div class="reasoning-card">
+  <h4 style="color:var(--purple);margin-bottom:12px;">推理五：IRGC 資源耗盡轉向</h4>
+  <div class="chain">
+    <strong>事實基礎：</strong>威脅 18 家公司（未行動）+ 轉向網路威脅 + 4 名指揮官被殺 + S-400 優先用於防禦
+    <br><br>
+    <span class="chain-arrow">&#8594;</span> <strong>推論：</strong>動能能力嚴重衰退，正在轉向不對稱作戰。
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+    <div style="background:rgba(63,185,80,0.08);padding:12px;border-radius:8px;">
+      <p class="if-true"><strong>如果推論正確：</strong></p>
+      <p style="font-size:0.92em;">2 週內對美國科技公司發動網路攻擊</p>
+    </div>
+    <div style="background:rgba(248,81,73,0.08);padding:12px;border-radius:8px;">
+      <p class="if-false"><strong>如果推論錯誤：</strong></p>
+      <p style="font-size:0.92em;">無網路攻擊，威脅為純虛張聲勢</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 10: ECONOMIC IMPACT -->
+<!-- ============================================================ -->
+<h2 id="economy">全球經濟衝擊儀表板</h2>
+
+<div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+  <div class="stat-box"><div class="num" style="color:var(--orange);font-size:1.8em;">$101-104</div><div class="label">布蘭特原油<br><span style="color:var(--green);font-size:0.9em;">&#9660; 從 $116（G7 釋出）</span></div></div>
+  <div class="stat-box"><div class="num" style="color:var(--red);font-size:1.8em;">&#8364;70</div><div class="label">歐洲天然氣 /MWh<br><span style="color:var(--red);font-size:0.9em;">翻倍</span></div></div>
+  <div class="stat-box"><div class="num" style="color:var(--yellow);font-size:1.8em;">$4,758</div><div class="label">黃金 /盎司</div></div>
+  <div class="stat-box"><div class="num" style="color:var(--red);font-size:1.8em;">90%</div><div class="label">霍爾木茲封鎖率</div></div>
+  <div class="stat-box"><div class="num" style="color:var(--red);font-size:1.8em;">5-10%</div><div class="label">船體保險費/週<br><span style="color:var(--red);font-size:0.9em;">正常值的 20-40 倍</span></div></div>
+  <div class="stat-box"><div class="num" style="color:var(--red);font-size:1.8em;">11 天</div><div class="label">台灣天然氣儲備<br><span class="badge badge-critical">CRITICAL</span></div></div>
+  <div class="stat-box"><div class="num" style="color:var(--orange);font-size:1.8em;">30%</div><div class="label">卡達氦氣離線<br><span class="badge badge-new">NEW</span></div></div>
+  <div class="stat-box"><div class="num" style="color:var(--orange);font-size:1.8em;">40-49%</div><div class="label">全球衰退概率</div></div>
+  <div class="stat-box"><div class="num" style="color:var(--red);font-size:1.8em;">$200B+</div><div class="label">記憶體市值蒸發</div></div>
+  <div class="stat-box"><div class="num" style="color:var(--green);font-size:1.8em;">4 億桶</div><div class="label">G7 戰略釋出<br><span style="color:var(--green);font-size:0.9em;">史上最大</span></div></div>
+</div>
+
+<!-- Feedback loops -->
+<h3>活躍回饋迴路</h3>
+<div class="card card-danger">
+  <h4 style="color:var(--red);margin-bottom:8px;">俄羅斯正回饋迴路（最危險）</h4>
+  <div class="loop-diagram">
+    <span>俄提供武器+情報</span><span class="loop-arrow">&#8594;</span>
+    <span>伊朗撐更久</span><span class="loop-arrow">&#8594;</span>
+    <span>油價 $101+</span><span class="loop-arrow">&#8594;</span>
+    <span>俄每月多賺 $50 億</span><span class="loop-arrow">&#8594;</span>
+    <span>更多資源支援伊朗</span><span class="loop-arrow" style="color:var(--red);">&#8635; 正回饋</span>
+  </div>
 </div>
 
 <div class="card card-warn">
-  <h3 style="margin-top:0;color:var(--orange)">胡塞-經濟-停火 三角迴路 <span class="badge badge-new">NEW</span></h3>
+  <h4 style="color:var(--orange);margin-bottom:8px;">經濟-胡塞-干預 三角悖論</h4>
   <div class="loop-diagram">
-    <span>胡塞關閉曼德</span><span class="loop-arrow">-></span>
-    <span>經濟崩潰加速</span><span class="loop-arrow">-></span>
-    <span>G7 干預壓力</span><span class="loop-arrow">-></span>
-    <span>但干預=打胡塞=升級</span><span class="loop-arrow" style="color:var(--orange)">!! 方向不確定</span>
+    <span>胡塞關閉曼德</span><span class="loop-arrow">&#8594;</span>
+    <span>經濟崩潰加速</span><span class="loop-arrow">&#8594;</span>
+    <span>G7 干預壓力</span><span class="loop-arrow">&#8594;</span>
+    <span>但干預=打胡塞=升級</span><span class="loop-arrow" style="color:var(--orange);">!! 方向不確定</span>
   </div>
 </div>
 
+<!-- ============================================================ -->
+<!-- SECTION 11: TAIWAN SEMICONDUCTOR IMPACT -->
+<!-- ============================================================ -->
+<h2 id="taiwan">台灣半導體危機專題</h2>
+
+<div class="card card-danger">
+  <div style="text-align:center;margin-bottom:16px;">
+    <div style="font-size:3em;font-weight:800;color:var(--red);">11 天</div>
+    <div style="font-size:1.1em;color:var(--text-dim);">台灣天然氣儲備 — 東亞最低</div>
+  </div>
+</div>
+
+<div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+  <div class="stat-box" style="border-color:var(--red);">
+    <div class="num" style="color:var(--red);font-size:1.6em;">47.8%</div>
+    <div class="label">台灣電力來自 LNG</div>
+  </div>
+  <div class="stat-box" style="border-color:var(--red);">
+    <div class="num" style="color:var(--red);font-size:1.6em;">9%</div>
+    <div class="label">TSMC 占台灣總用電</div>
+  </div>
+  <div class="stat-box" style="border-color:var(--orange);">
+    <div class="num" style="color:var(--orange);font-size:1.6em;">+236%</div>
+    <div class="label">TSMC 2030 電力需求增幅</div>
+  </div>
+  <div class="stat-box" style="border-color:var(--pink);">
+    <div class="num" style="color:var(--pink);font-size:1.6em;">30%</div>
+    <div class="label">卡達氦氣離線 <span class="badge badge-new">NEW</span></div>
+  </div>
+</div>
+
+<h3>連鎖風險傳導</h3>
 <div class="card card-warn">
-  <h3 style="margin-top:0;color:var(--orange)">Trump 狂人策略（v3 已標記）</h3>
   <div class="loop-diagram">
-    <span>威脅摧毀 Kharg</span><span class="loop-arrow">-></span>
-    <span>伊朗加強封鎖</span><span class="loop-arrow">-></span>
-    <span>油價升</span><span class="loop-arrow">-></span>
-    <span>需要快結束</span><span class="loop-arrow">-></span>
-    <span>但 Kharg=長期化</span><span class="loop-arrow" style="color:var(--orange)">!! 矛盾</span>
+    <span style="color:var(--red);font-weight:700;">電力不足</span>
+    <span class="loop-arrow">&#8594;</span>
+    <span style="color:var(--orange);font-weight:700;">氦氣短缺</span>
+    <span class="loop-arrow">&#8594;</span>
+    <span style="color:var(--pink);font-weight:700;">晶圓冷卻受阻</span>
+    <span class="loop-arrow">&#8594;</span>
+    <span style="color:var(--red);font-weight:700;">光刻良率下降</span>
+    <span class="loop-arrow">&#8594;</span>
+    <span style="color:var(--red);font-weight:800;">AI 晶片供應震盪</span>
   </div>
 </div>
 
-<!-- Tripwires -->
-<h2>觸發條件（12 項）</h2>
-<div class="card">
+<div class="card" style="overflow-x:auto;">
   <table>
-    <tr><th>條件</th><th>影響</th><th>狀態</th></tr>
-    <tr style="background:rgba(247,120,186,0.05)"><td><strong>胡塞攻擊商船</strong></td><td>F1 跳升，升級路徑啟動</td><td><span class="badge badge-new">NEW</span></td></tr>
-    <tr style="background:rgba(247,120,186,0.05)"><td><strong>Su-35 首批抵達伊朗</strong></td><td>C2 長期化，制空均勢質變</td><td><span class="badge badge-new">NEW</span></td></tr>
-    <tr style="background:rgba(247,120,186,0.05)"><td><strong>歐洲天然氣儲存 &lt;20%</strong></td><td>E2 經濟干預壓力劇增</td><td><span class="badge badge-new">NEW</span></td></tr>
-    <tr style="background:rgba(247,120,186,0.05)"><td><strong>俄軍人員在伊朗確認</strong></td><td>大國升級，全部重算</td><td><span class="badge badge-new">NEW</span></td></tr>
-    <tr><td>美伊確認直接談判</td><td>A1 跳升至 60%+</td><td>待定</td></tr>
-    <tr><td>IRGC 省級指揮官投降</td><td>C1/C2 跳升</td><td>待定</td></tr>
-    <tr><td>美軍 KIA &gt; 100</td><td>B1/B2 跳升</td><td>目前 13-15</td></tr>
-    <tr><td>Trump 授權 Kharg 攻佔</td><td>長期化劇增</td><td><span class="badge badge-critical">密切關注</span></td></tr>
-    <tr><td>中俄軍事介入</td><td>全部重算</td><td>待定</td></tr>
-    <tr><td>油價跌破 $80</td><td>B1 腰斬</td><td>目前 $116</td></tr>
-    <tr><td>海峽重開</td><td>全面重估</td><td><span class="badge badge-critical">79% 癱瘓</span></td></tr>
-    <tr><td>伊朗核試驗</td><td>全面升級</td><td>待定</td></tr>
+    <tr><th>時間</th><th>風險等級</th><th>情境</th></tr>
+    <tr>
+      <td><strong>4 月</strong></td>
+      <td><span style="color:var(--green);font-weight:700;">&#9679; 充足</span></td>
+      <td>現有庫存 + 替代來源可維持正常運作</td>
+    </tr>
+    <tr>
+      <td><strong>5 月</strong></td>
+      <td><span style="color:var(--orange);font-weight:700;">&#9679; 緊張</span></td>
+      <td>如霍爾木茲未部分重開，開始工業限電準備</td>
+    </tr>
+    <tr>
+      <td><strong>6 月</strong></td>
+      <td><span style="color:var(--red);font-weight:700;">&#9679; 危急</span></td>
+      <td>工業限電啟動；台積電產能受影響；AI 晶片交期延長</td>
+    </tr>
   </table>
 </div>
 
-<!-- 經濟衝擊 -->
-<h2>全球經濟衝擊</h2>
-<div class="card">
-  <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
-    <div class="stat-box"><div class="num" style="font-size:1.3em;color:var(--red)">79%</div><div class="label">海峽通行量下降</div></div>
-    <div class="stat-box"><div class="num" style="font-size:1.3em;color:var(--red)">$3.5兆</div><div class="label">最壞 GDP 損失</div></div>
-    <div class="stat-box"><div class="num" style="font-size:1.3em;color:var(--orange)">+50%</div><div class="label">尿素價格漲幅</div></div>
+<!-- ============================================================ -->
+<!-- SECTION 12: MONITORING DASHBOARD -->
+<!-- ============================================================ -->
+<h2 id="monitoring">監控儀表板</h2>
+
+<div class="monitor-grid">
+  <div class="monitor-card" style="border-left:4px solid var(--red);">
+    <div class="monitor-status monitor-critical">&#9888; 危急</div>
+    <h4 style="margin-top:8px;">4/6 最後通牒</h4>
+    <p style="font-size:0.92em;">距今 <strong style="color:var(--red);">4 天</strong>。三條分支（讓步/有限打擊/全面打擊）。所有路徑概率在此分叉。</p>
+    <p style="font-size:0.82em;color:var(--text-dim);margin-top:6px;">監控：Trump Twitter + 五角大廈記者會 + 伊朗國家電視台</p>
   </div>
-  <table style="margin-top:12px">
-    <tr><th>指標</th><th>數值</th><th>影響</th></tr>
-    <tr><td>布蘭特原油</td><td>$116/桶（+55% 月漲幅，史上最大）</td><td>全球通膨壓力</td></tr>
-    <tr><td>LNG 價格</td><td>$25.40/MMBtu（翻倍）</td><td>歐洲/亞洲能源危機</td></tr>
-    <tr><td>歐洲天然氣儲存</td><td>30%（歷史低點）</td><td>夏季無法補充 → 秋季配給</td></tr>
-    <tr><td>台灣戰略儲備</td><td style="color:var(--red)">120 天（亞洲最短）</td><td>半導體製造能源風險</td></tr>
-    <tr><td>肥料</td><td>1/3 經霍爾木茲，尿素 +50%</td><td>4-5 月播種季糧食危機</td></tr>
-    <tr><td>全球衰退機率</td><td>40%（美國 12 個月內）</td><td>政治壓力迫使停火</td></tr>
-  </table>
+
+  <div class="monitor-card" style="border-left:4px solid var(--green);">
+    <div class="monitor-status monitor-tracking">追蹤中</div>
+    <h4 style="margin-top:8px;">Rubio-Araghchi 接觸</h4>
+    <p style="font-size:0.92em;">美伊外長級直接接觸安排中。如果成功 → 路徑 A 概率跳升至 15%+。</p>
+    <p style="font-size:0.82em;color:var(--text-dim);margin-top:6px;">監控：巴基斯坦外交部聲明 + 阿曼管道消息</p>
+  </div>
+
+  <div class="monitor-card" style="border-left:4px solid var(--orange);">
+    <div class="monitor-status monitor-new">&#9733; 新增</div>
+    <h4 style="margin-top:8px;">IRGC 網路威脅</h4>
+    <p style="font-size:0.92em;">威脅 18 家美國科技公司。如 2 週內實際攻擊 → 路徑 G 跳升。如無行動 → 純虛張聲勢。</p>
+    <p style="font-size:0.82em;color:var(--text-dim);margin-top:6px;">監控：CISA 公告 + FAANG 安全團隊 + 暗網論壇</p>
+  </div>
+
+  <div class="monitor-card" style="border-left:4px solid var(--red);">
+    <div class="monitor-status monitor-critical">&#9888; 危急</div>
+    <h4 style="margin-top:8px;">台灣 LNG 供應</h4>
+    <p style="font-size:0.92em;">11 天儲備。47.8% 電力依賴。5 月起進入危險區。</p>
+    <p style="font-size:0.82em;color:var(--text-dim);margin-top:6px;">監控：台灣經濟部能源局 + 中油進口數據 + 台電備轉容量</p>
+  </div>
+
+  <div class="monitor-card" style="border-left:4px solid var(--pink);">
+    <div class="monitor-status monitor-new">&#9733; 新增</div>
+    <h4 style="margin-top:8px;">卡達氦氣恢復</h4>
+    <p style="font-size:0.92em;">30% 產能離線。半導體晶圓冷卻/光刻製程直接依賴。恢復時程未明。</p>
+    <p style="font-size:0.82em;color:var(--text-dim);margin-top:6px;">監控：QatarEnergy 聲明 + 全球氦氣現貨價 + ASML/LAM 供應鏈</p>
+  </div>
+
+  <div class="monitor-card" style="border-left:4px solid var(--pink);">
+    <div class="monitor-status monitor-tracking">追蹤中</div>
+    <h4 style="margin-top:8px;">胡塞紅海活動</h4>
+    <p style="font-size:0.92em;">又擊沉 2 船。曼德海峽如果關閉 = 兩大咽喉同時癱瘓。路徑 F 最敏感變數。</p>
+    <p style="font-size:0.82em;color:var(--text-dim);margin-top:6px;">監控：UKMTO 警報 + 船舶 AIS 數據 + 保險費率</p>
+  </div>
+
+  <div class="monitor-card" style="border-left:4px solid var(--orange);">
+    <div class="monitor-status monitor-tracking">追蹤中</div>
+    <h4 style="margin-top:8px;">油價軌跡</h4>
+    <p style="font-size:0.92em;">G7 釋出 4 億桶壓至 $101-104。如 4/6 升級 → 回升 $120+。如讓步 → 跌破 $90。</p>
+    <p style="font-size:0.82em;color:var(--text-dim);margin-top:6px;">監控：ICE Brent 期貨 + G7 SPR 釋出進度 + IEA 月報</p>
+  </div>
+
+  <div class="monitor-card" style="border-left:4px solid var(--cyan);">
+    <div class="monitor-status monitor-watching">觀察中</div>
+    <h4 style="margin-top:8px;">IRGC 士氣/逃兵</h4>
+    <p style="font-size:0.92em;">零正式叛逃，但逃兵增加（恐懼驅動）。如出現省級指揮官投降 → 路徑 C 跳升。</p>
+    <p style="font-size:0.82em;color:var(--text-dim);margin-top:6px;">監控：波斯語社群媒體 + 伊朗海外反對派消息 + 衛星影像</p>
+  </div>
 </div>
 
-<!-- 局限 -->
-<h2>誠實的局限性</h2>
-<div class="card" style="font-size:0.85em;">
-  <ul style="padding-left:20px;">
-    <li><strong>13 個行為者的互動矩陣過於複雜</strong>，簡化為 6 條路徑是必要的近似，但遺漏非線性互動</li>
-    <li><strong>Wildcard 仍高（62%）</strong>——「混合路徑」（部分談判+部分重組+逐步降溫）是最可能的真實結局，但無法用單一路徑建模</li>
-    <li><strong>俄羅斯正回饋迴路</strong>意味著有一個行為者積極阻止戰爭結束，歷史罕見</li>
-    <li><strong>代理人自主性</strong>讓伊朗無法單方面執行停火——不只沒有最高領袖簽字，連代理人都不聽指揮</li>
-    <li><strong>經濟計時器</strong>（肥料+天然氣+GDP）是真實硬約束，但轉化為政治行動的時間差不可預測</li>
-    <li>有效期 <strong>7 天</strong></li>
-  </ul>
-</div>
+<!-- ============================================================ -->
+<!-- SECTION 13: ACTIVE PREDICTIONS TRACKER -->
+<!-- ============================================================ -->
+<h2 id="predictions">活躍預測追蹤器</h2>
 
-<!-- 分析說明 -->
-<h2>分析說明</h2>
-<div class="card" style="font-size:0.85em;">
+<div class="card" style="overflow-x:auto;">
   <table>
-    <tr><td style="width:100px;color:var(--text-dim)">架構</td><td>6 條獨立發展路徑，含 2 條新增路徑（經濟壓力+胡塞升級）</td></tr>
-    <tr><td style="color:var(--text-dim)">估計</td><td>每個節點概率基於歷史類比 → 個案調整 → 極端值檢查</td></tr>
-    <tr><td style="color:var(--text-dim)">計算</td><td>10,000 次情境模擬，80% 信賴區間</td></tr>
-    <tr><td style="color:var(--text-dim)">驗證</td><td>16 條證據 × 4 個假說交叉比對 + 5 條回饋迴路檢查</td></tr>
-    <tr><td style="color:var(--text-dim)">情報</td><td>7 個平行偵察團隊（IRGC/斡旋/美軍/代理人/中俄/海灣/經濟）</td></tr>
-    <tr><td style="color:var(--text-dim)">不確定性</td><td>高度不確定 | 信賴區間加寬 50% | 未知路徑下限 10%</td></tr>
-    <tr><td style="color:var(--text-dim)">版本</td><td>第四版（歷經四輪情報修正）</td></tr>
+    <tr>
+      <th style="min-width:100px;">編號</th>
+      <th>預測內容</th>
+      <th style="min-width:70px;">概率</th>
+      <th style="min-width:100px;">截止日</th>
+      <th style="min-width:140px;">驗證方法</th>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent);">CPRED-003</strong></td>
+      <td>4/6 為有限打擊 + 第 4 次延期（非全面打擊）</td>
+      <td>
+        <div style="background:var(--surface2);border-radius:4px;height:18px;width:100px;overflow:hidden;display:inline-block;vertical-align:middle;">
+          <div style="width:65%;height:100%;background:var(--accent);border-radius:4px;"></div>
+        </div>
+        <span style="font-weight:700;"> 65%</span>
+      </td>
+      <td>4/7</td>
+      <td>五角大廈聲明 + 打擊目標數</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent);">CPRED-004</strong></td>
+      <td>伊朗 4/6 前做出象徵性讓步</td>
+      <td>
+        <div style="background:var(--surface2);border-radius:4px;height:18px;width:100px;overflow:hidden;display:inline-block;vertical-align:middle;">
+          <div style="width:50%;height:100%;background:var(--orange);border-radius:4px;"></div>
+        </div>
+        <span style="font-weight:700;"> 50%</span>
+      </td>
+      <td>4/6</td>
+      <td>伊朗國家電視台 + 油輪 AIS</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent);">CPRED-005</strong></td>
+      <td>Rubio-Araghchi 4 月中前直接通話</td>
+      <td>
+        <div style="background:var(--surface2);border-radius:4px;height:18px;width:100px;overflow:hidden;display:inline-block;vertical-align:middle;">
+          <div style="width:35%;height:100%;background:var(--purple);border-radius:4px;"></div>
+        </div>
+        <span style="font-weight:700;"> 35%</span>
+      </td>
+      <td>4/15</td>
+      <td>官方聲明 + 記者洩露</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent);">CPRED-007</strong></td>
+      <td>IRGC 2 週內對美國科技公司發動網路攻擊</td>
+      <td>
+        <div style="background:var(--surface2);border-radius:4px;height:18px;width:100px;overflow:hidden;display:inline-block;vertical-align:middle;">
+          <div style="width:30%;height:100%;background:var(--orange);border-radius:4px;"></div>
+        </div>
+        <span style="font-weight:700;"> 30%</span>
+      </td>
+      <td>4/16</td>
+      <td>CISA 公告 + 受害公司聲明</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent);">CPRED-008</strong></td>
+      <td>油價 4 月底前跌破 $95</td>
+      <td>
+        <div style="background:var(--surface2);border-radius:4px;height:18px;width:100px;overflow:hidden;display:inline-block;vertical-align:middle;">
+          <div style="width:25%;height:100%;background:var(--green);border-radius:4px;"></div>
+        </div>
+        <span style="font-weight:700;"> 25%</span>
+      </td>
+      <td>4/30</td>
+      <td>ICE Brent 收盤價</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent);">CPRED-009</strong></td>
+      <td>台灣 5 月底前宣布工業限電準備</td>
+      <td>
+        <div style="background:var(--surface2);border-radius:4px;height:18px;width:100px;overflow:hidden;display:inline-block;vertical-align:middle;">
+          <div style="width:40%;height:100%;background:var(--red);border-radius:4px;"></div>
+        </div>
+        <span style="font-weight:700;"> 40%</span>
+      </td>
+      <td>5/31</td>
+      <td>經濟部能源局公告</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent);">CPRED-010</strong></td>
+      <td>胡塞 4 月內關閉曼德海峽 &gt;50%</td>
+      <td>
+        <div style="background:var(--surface2);border-radius:4px;height:18px;width:100px;overflow:hidden;display:inline-block;vertical-align:middle;">
+          <div style="width:25%;height:100%;background:var(--pink);border-radius:4px;"></div>
+        </div>
+        <span style="font-weight:700;"> 25%</span>
+      </td>
+      <td>4/30</td>
+      <td>UKMTO + 船舶通行數據</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent);">CPRED-011</strong></td>
+      <td>穆杰塔巴·哈梅內伊 4 月中前公開露面</td>
+      <td>
+        <div style="background:var(--surface2);border-radius:4px;height:18px;width:100px;overflow:hidden;display:inline-block;vertical-align:middle;">
+          <div style="width:20%;height:100%;background:var(--cyan);border-radius:4px;"></div>
+        </div>
+        <span style="font-weight:700;"> 20%</span>
+      </td>
+      <td>4/15</td>
+      <td>伊朗國家電視台 + 照片/影像</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent);">CPRED-012</strong></td>
+      <td>中國 4 月提出第二份調停方案</td>
+      <td>
+        <div style="background:var(--surface2);border-radius:4px;height:18px;width:100px;overflow:hidden;display:inline-block;vertical-align:middle;">
+          <div style="width:20%;height:100%;background:var(--orange);border-radius:4px;"></div>
+        </div>
+        <span style="font-weight:700;"> 20%</span>
+      </td>
+      <td>4/30</td>
+      <td>新華社/外交部聲明</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent);">CPRED-013</strong></td>
+      <td>停火協議（如簽署）96 小時內被違反</td>
+      <td>
+        <div style="background:var(--surface2);border-radius:4px;height:18px;width:100px;overflow:hidden;display:inline-block;vertical-align:middle;">
+          <div style="width:85%;height:100%;background:var(--red);border-radius:4px;"></div>
+        </div>
+        <span style="font-weight:700;"> 85%</span>
+      </td>
+      <td>停火後 96h</td>
+      <td>任一戰線恢復攻擊</td>
+    </tr>
   </table>
 </div>
 
+<!-- ============================================================ -->
+<!-- FOOTER -->
+<!-- ============================================================ -->
 <div class="footer">
-  <p>13 勢力多行為者深度情報分析</p>
-  <p>此為結構化概率估計，不是預測。使用者應結合自身判斷。</p>
-  <p style="margin-top:8px">第四版 | 2026-03-31</p>
+  <p style="font-size:1em;font-weight:600;">13 勢力多行為者深度情報分析 | 開戰第 33 天</p>
+  <p style="margin-top:8px;">本報告為結構化概率估計，不是確定性預測。所有概率均為當前資訊條件下的最佳估計，隨情報更新而調整。使用者應結合自身判斷。</p>
+  <p style="margin-top:12px;font-weight:600;color:var(--accent);">第五版 v5.1 | 2026-04-02</p>
 </div>
 
 <script>
 function switchTab(e, id) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  const parent = e.target.closest('.tabs') || e.target.parentElement;
+  const container = parent.parentElement;
+  parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  container.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   e.target.classList.add('active');
   document.getElementById(id).classList.add('active');
 }
+
+// Smooth scroll for nav links
+document.querySelectorAll('.topnav a').forEach(a => {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
 </script>
 </body>
 </html>
