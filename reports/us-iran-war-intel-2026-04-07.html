@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美伊戰爭情報整合報告 · 2026-04-07</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{
+  --bg-primary:#0a1628;--bg-card:rgba(26,45,74,.6);--bg-surface:#132038;
+  --accent-gold:#d4a843;--accent-gold-light:#f0d078;--accent-blue:#3498db;
+  --accent-cyan:#1abc9c;--accent-purple:#9b59b6;
+  --status-critical:#e74c5a;--status-elevated:#e67e22;--status-routine:#2ecc71;--status-quiet:#6a7d99;
+  --text-primary:#e8edf5;--text-secondary:#a0b0c8;--text-muted:#6a7d99;
+  --border:rgba(212,168,67,.15);--shadow:0 4px 24px rgba(0,0,0,.3);--radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei","PingFang TC",sans-serif;
+  background:var(--bg-primary);color:var(--text-primary);line-height:1.75;
+  background-image:radial-gradient(ellipse at top,#142845 0%,#0a1628 60%);min-height:100vh;
+}
+.wrap{max-width:1400px;margin:0 auto;padding:24px}
+nav{
+  position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(10,22,40,.85);border-bottom:1px solid var(--border);
+  padding:12px 24px;margin-bottom:32px;
+}
+nav ul{list-style:none;display:flex;gap:20px;flex-wrap:wrap;max-width:1400px;margin:0 auto;font-size:14px}
+nav a{color:var(--text-secondary);text-decoration:none;transition:color .2s}
+nav a:hover{color:var(--accent-gold)}
+.hero{padding:48px 0 32px;border-bottom:1px solid var(--border);margin-bottom:32px}
+.hero h1{
+  font-size:42px;font-weight:700;margin-bottom:16px;
+  background:linear-gradient(135deg,var(--accent-gold-light),var(--accent-gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero .meta{display:flex;gap:24px;flex-wrap:wrap;color:var(--text-secondary);font-size:14px}
+.hero .severity{
+  display:inline-block;margin-top:20px;padding:8px 18px;border-radius:24px;
+  background:rgba(231,76,90,.15);border:1px solid var(--status-critical);
+  color:var(--status-critical);font-weight:600;font-size:14px;
+}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+.kpi-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;backdrop-filter:blur(8px);transition:transform .2s;
+}
+.kpi-card:hover{transform:translateY(-2px);border-color:rgba(212,168,67,.35)}
+.kpi-label{color:var(--text-muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.kpi-value{font-size:32px;font-weight:700;color:var(--accent-gold-light);line-height:1.2}
+.kpi-sub{font-size:12px;color:var(--text-secondary);margin-top:6px}
+.exec-summary{
+  background:var(--bg-card);border-left:4px solid var(--accent-gold);
+  border-radius:var(--radius);padding:24px 28px;margin-bottom:40px;backdrop-filter:blur(8px);
+}
+.exec-summary h2{color:var(--accent-gold);font-size:14px;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.exec-summary p{font-size:16px;color:var(--text-primary)}
+section.block{margin-bottom:48px;scroll-margin-top:80px}
+section.block>h2{
+  font-size:24px;color:var(--accent-gold-light);margin-bottom:20px;
+  padding-bottom:10px;border-bottom:1px solid var(--border);
+}
+section.block h3{font-size:18px;color:var(--text-primary);margin:24px 0 12px}
+.card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;backdrop-filter:blur(8px);margin-bottom:20px;
+}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}
+.tbl-wrap{overflow-x:auto}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid rgba(255,255,255,.06)}
+th{background:rgba(212,168,67,.08);color:var(--accent-gold);font-weight:600;font-size:13px}
+tr:hover td{background:rgba(212,168,67,.04)}
+.scenario-list{display:flex;flex-direction:column;gap:12px}
+.scenario-bar{display:grid;grid-template-columns:200px 1fr 60px;gap:12px;align-items:center}
+.scenario-label{font-size:14px;color:var(--text-primary)}
+.scenario-track{height:24px;background:rgba(255,255,255,.05);border-radius:6px;overflow:hidden}
+.scenario-fill{height:100%;border-radius:6px;transition:width .8s}
+.scenario-pct{font-weight:700;color:var(--accent-gold-light);text-align:right}
+.tag{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600}
+.tag-up{background:rgba(46,204,113,.15);color:#2ecc71}
+.tag-down{background:rgba(231,76,90,.15);color:#e74c5a}
+.tag-warn{background:rgba(230,126,34,.15);color:#e67e22}
+.tag-neut{background:rgba(106,125,153,.2);color:#a0b0c8}
+.actor-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.actor-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.actor-card h4{color:var(--accent-gold-light);margin-bottom:8px;font-size:16px}
+.actor-card .badge{font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(52,152,219,.15);color:#3498db;margin-left:6px}
+.heatmap td{text-align:center;font-weight:600}
+.heat-h{background:rgba(231,76,90,.4);color:#fff}
+.heat-m{background:rgba(230,126,34,.35);color:#fff}
+.heat-l{background:rgba(46,204,113,.3);color:#fff}
+.timeline{position:relative;padding-left:32px;border-left:2px solid var(--border)}
+.timeline-item{position:relative;padding-bottom:20px}
+.timeline-item::before{
+  content:'';position:absolute;left:-39px;top:6px;width:12px;height:12px;border-radius:50%;
+  background:var(--accent-gold);box-shadow:0 0 0 4px rgba(212,168,67,.2);
+}
+.timeline-item .date{color:var(--accent-gold);font-size:12px;font-weight:600}
+.timeline-item .text{color:var(--text-secondary);font-size:14px;margin-top:2px}
+.chart-wrap{position:relative;height:340px;margin:16px 0}
+.three-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.callout{background:rgba(212,168,67,.08);border:1px solid var(--accent-gold);border-radius:var(--radius);padding:18px;margin:16px 0}
+.callout strong{color:var(--accent-gold-light)}
+footer{text-align:center;padding:32px 0;color:var(--text-muted);font-size:12px;border-top:1px solid var(--border);margin-top:48px}
+@media (max-width:768px){
+  .hero h1{font-size:28px}
+  .scenario-bar{grid-template-columns:120px 1fr 50px}
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+}
+@media print{
+  nav,footer{display:none}
+  body{background:#fff;color:#000}
+}
+.fade-in{opacity:0;transform:translateY(20px);transition:all .6s}
+.fade-in.visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<nav>
+  <ul>
+    <li><a href="#snap">即時快照</a></li>
+    <li><a href="#scenarios">情境矩陣</a></li>
+    <li><a href="#leader">伊朗新領袖</a></li>
+    <li><a href="#hedge">台塑套期</a></li>
+    <li><a href="#cascade">衝擊矩陣</a></li>
+    <li><a href="#actions">投資操作</a></li>
+    <li><a href="#monitor">監控清單</a></li>
+    <li><a href="#thesis">非共識主張</a></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <h1>美伊戰爭情報整合報告</h1>
+  <div class="meta">
+    <span>📅 2026-04-07（衝突第 38 天）</span>
+    <span>🛰 Polymarket 21 市場 · Telegram 14 頻道 · FRED · 航運</span>
+  </div>
+  <div class="severity">⚠ 軍事階段已執行 · 進入經濟戰新均衡</div>
+</header>
+
+<section class="kpi-row">
+  <div class="kpi-card"><div class="kpi-label">主導情境</div><div class="kpi-value">40%</div><div class="kpi-sub">伊朗收費控制 Hormuz</div></div>
+  <div class="kpi-card"><div class="kpi-label">過路費機制</div><div class="kpi-value">$2M</div><div class="kpi-sub">每船 · 人民幣計價 · 與阿曼共管</div></div>
+  <div class="kpi-card"><div class="kpi-label">SCFI 週變化</div><div class="kpi-value">+1.54%</div><div class="kpi-sub">CCFI 同步 +4.01%</div></div>
+  <div class="kpi-card"><div class="kpi-label">伊朗領袖</div><div class="kpi-value">55.4%</div><div class="kpi-sub">穆杰塔巴年底仍在位（市場隱含）</div></div>
+  <div class="kpi-card"><div class="kpi-label">台塑系原油避險</div><div class="kpi-value">0%</div><div class="kpi-sub">6505 / 1326 / 1303 全部裸倉</div></div>
+  <div class="kpi-card"><div class="kpi-label">以色列年中前打葉門</div><div class="kpi-value">79.5%</div><div class="kpi-sub">胡塞反擊鏈即將觸發</div></div>
+</section>
+
+<section class="exec-summary">
+  <h2>30 秒結論</h2>
+  <p>軍事階段已完成（B-2 已打 IRGC 地下總部、以色列已炸伊朗最大石化廠），進入「<strong>伊朗收費控制 Hormuz</strong>」新均衡——油價區間 $100-115、人民幣計價挑戰美元秩序、川普稱「我們已贏」。市場若仍以 Brent $140 情境定價將錯方向。最佳長部位：<strong>2605 新興航運</strong>；最佳避開：<strong>2618/2610/2646 三大航空</strong>；被低估翻多：<strong>6505 台塑石化</strong>（敵方產能消失 + 油價甜蜜點）。</p>
+</section>
+
+<section id="snap" class="block">
+  <h2>1 · 即時情勢快照</h2>
+
+  <h3>市場隱含機率（Polymarket，量加權）</h3>
+  <div class="card">
+    <div class="chart-wrap"><canvas id="polyChart"></canvas></div>
+  </div>
+
+  <h3>戰場與外交時間線（過去 24h）</h3>
+  <div class="card">
+    <div class="timeline">
+      <div class="timeline-item"><div class="date">4/2 · Karaj</div><div class="text">在建橋樑遭 GBU-31 集束打擊</div></div>
+      <div class="timeline-item"><div class="date">4/4 · Hormuz</div><div class="text">IRGC 選擇性放行：埃及糧食船免費通過（政治姿態）</div></div>
+      <div class="timeline-item"><div class="date">4/6 · 德黑蘭</div><div class="text">B-2 從 Whiteman AFB 36 小時往返，bunker-buster 炸 IRGC 地下總部</div></div>
+      <div class="timeline-item"><div class="date">4/6 · Shiraz</div><div class="text">美以聯合炸電子工業 + 發電廠 + 煉油廠；伊朗最大石化廠（佔產能 50%）被毀</div></div>
+      <div class="timeline-item"><div class="date">4/6 · Qom</div><div class="text">5 死暗殺攻擊；Khamenei 辦公室所在地遭打擊</div></div>
+      <div class="timeline-item"><div class="date">4/6 · 華府</div><div class="text">川普親口：「We won. They were defeated militarily. I'd rather we charge tolls than let them have them.」</div></div>
+      <div class="timeline-item"><div class="date">4/6 · 伊斯蘭瑪巴德</div><div class="text">巴基斯坦推 Islamabad Accord：立即停火 + 重開 Hormuz + 15-20 天全面協議</div></div>
+    </div>
+  </div>
+
+  <h3>關鍵宏觀與航運驗證點</h3>
+  <div class="three-cols">
+    <div class="card"><strong style="color:var(--accent-gold)">SCFI 1854.96</strong><br><span class="tag tag-up">+1.54% WoW</span><p style="margin-top:8px;font-size:13px;color:var(--text-secondary)">漲幅溫和，符合「收費通過」非斷流恐慌</p></div>
+    <div class="card"><strong style="color:var(--accent-gold)">CCFI 1184.7</strong><br><span class="tag tag-up">+4.01% WoW</span><p style="margin-top:8px;font-size:13px;color:var(--text-secondary)">雙漲確認 Hormuz 緊張定價</p></div>
+    <div class="card"><strong style="color:var(--accent-gold)">US Freight Index</strong><br><span class="tag tag-down">−0.58% MoM</span><p style="margin-top:8px;font-size:13px;color:var(--text-secondary)">美國境內運輸走弱，需求下行訊號</p></div>
+  </div>
+</section>
+
+<section id="scenarios" class="block">
+  <h2>2 · 情境矩陣（推翻原版）</h2>
+  <div class="card">
+    <div class="scenario-list">
+      <div class="scenario-bar"><div class="scenario-label">S4 過路費新均衡 <span class="badge" style="font-size:11px;color:#1abc9c">當前主導</span></div><div class="scenario-track"><div class="scenario-fill" style="width:80%;background:linear-gradient(90deg,#1abc9c,#16a085)"></div></div><div class="scenario-pct">40%</div></div>
+      <div class="scenario-bar"><div class="scenario-label">S3 Islamabad 突破</div><div class="scenario-track"><div class="scenario-fill" style="width:70%;background:#3498db"></div></div><div class="scenario-pct">35%</div></div>
+      <div class="scenario-bar"><div class="scenario-label">S1 拖到夏季激化</div><div class="scenario-track"><div class="scenario-fill" style="width:30%;background:#9b59b6"></div></div><div class="scenario-pct">15%</div></div>
+      <div class="scenario-bar"><div class="scenario-label">尾部（葉門/沙國/政變）</div><div class="scenario-track"><div class="scenario-fill" style="width:20%;background:#e74c5a"></div></div><div class="scenario-pct">10%</div></div>
+    </div>
+  </div>
+
+  <div class="three-cols">
+    <div class="card"><h4 style="color:#1abc9c">S4 · 40%</h4><p style="font-size:13px;color:var(--text-secondary);margin-top:8px">伊朗收 $2M/船人民幣計價、與阿曼共管。油價 $100-115 區間，美方默許，軍事打擊低烈度持續，新常態可維持 6-12 個月</p></div>
+    <div class="card"><h4 style="color:#3498db">S3 · 35%</h4><p style="font-size:13px;color:var(--text-secondary);margin-top:8px">巴基斯坦斡旋成功，15-20 天內全面協議。油價快速回 $90-100；2603/2605 回調 15-25%</p></div>
+    <div class="card"><h4 style="color:#9b59b6">S1 · 15%</h4><p style="font-size:13px;color:var(--text-secondary);margin-top:8px">伊朗 10 點要求 vs 美方臨時停火。拖到 6 月觸發政權合法性危機；油價區間震盪緩慢失血</p></div>
+  </div>
+</section>
+
+<section id="leader" class="block">
+  <h2>3 · 伊朗新領袖：穆杰塔巴決策 DNA</h2>
+  <div class="card">
+    <p style="color:var(--text-secondary);margin-bottom:14px"><strong style="color:var(--accent-gold-light)">背景</strong>：1969 年生 · 2026-03-09 接班 · 個人財富約 $1 億 · <strong>無 Grand Ayatollah 宗教資歷</strong>（憲法要求「卓越法學家」）。CBS 引美情報：先父 Ali Khamenei 私下評其「不夠聰明、不具資格」。接班程序由 IRGC 主導推動。</p>
+  </div>
+
+  <h3>4 個關鍵研判</h3>
+  <div class="actor-grid">
+    <div class="actor-card"><h4>傀儡假設 <span class="badge">信度 78%</span></h4><p style="color:var(--text-secondary);font-size:13px">最高領袖頭銜為門面，IRGC 才是實質決策者。組織模型推論。</p></div>
+    <div class="actor-card"><h4>核武化路徑 <span class="badge" style="background:rgba(230,126,34,.15);color:#e67e22">已下修 ~50%</span></h4><p style="color:var(--text-secondary);font-size:13px">原 0.72；4/6 伊朗主動提 10 點和平案（含 Hormuz 安全保證），與加速核武化矛盾。</p></div>
+    <div class="actor-card"><h4>內部脆弱性 <span class="badge">信度 65%</span></h4><p style="color:var(--text-secondary);font-size:13px">最大威脅來自 IRGC 內部派系（聖城旅 vs 巴斯基），而非外部軍事壓力。</p></div>
+    <div class="actor-card"><h4>中國穩定器 <span class="badge">信度 70%</span></h4><p style="color:var(--text-secondary);font-size:13px">中國是穆杰塔巴政權最重要的外部穩定器（25 年戰略協議+石油購買）。</p></div>
+  </div>
+
+  <h3>4 條已登記預測</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>預測</th><th>機率</th><th>到期</th></tr>
+    <tr><td>IRGC 與穆杰塔巴公開政策張力</td><td>68%</td><td>2026-12-31</td></tr>
+    <tr><td>伊朗突破 IAEA 60% 濃縮上限，進入 90% 武器級測試</td><td>55%</td><td>2026-09-30</td></tr>
+    <tr><td>穆杰塔巴遭重大政治危機（架空/健康/政變）</td><td>42%</td><td>2027-09-09</td></tr>
+    <tr><td>中伊石油貿易維持 ≥100 萬桶/日</td><td>73%</td><td>2026-12-31</td></tr>
+  </table></div>
+</section>
+
+<section id="hedge" class="block">
+  <h2>4 · 台塑集團原油套期重磅</h2>
+  <div class="callout">
+    <strong>核心發現</strong>：6505 台塑石化、1326 台化、1303 南亞——三家公司原油避險覆蓋率 = <strong>0%</strong>。年報直接驗證。市場若捆綁為「同向受益標的」，存在系統性誤定價。
+  </div>
+
+  <div class="tbl-wrap"><table>
+    <tr><th>公司</th><th>原油避險</th><th>工具</th><th>油價方向性</th></tr>
+    <tr><td><strong>6505 台塑石化</strong></td><td>0%</td><td>僅外幣遠期外匯</td><td><span class="tag tag-up">正相關</span> 庫存紅利+煉油利差</td></tr>
+    <tr><td>1326 台化</td><td>0%</td><td>自然避險</td><td><span class="tag tag-down">負相關</span> 石腦油成本敏感</td></tr>
+    <tr><td>1303 南亞</td><td>0%</td><td>自然避險</td><td><span class="tag tag-warn">分裂</span> 化工 23% 負相關 / 電子材料 44% 免疫</td></tr>
+  </table></div>
+
+  <h3>4 條已登記預測</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>預測</th><th>機率</th><th>到期</th></tr>
+    <tr><td>2026Q2 若 Brent 均價 &lt; $75，6505 出現存貨跌價損失，EPS 下修 10-20%</td><td>60%</td><td>2026-08-15</td></tr>
+    <tr><td>2026Q2 1326 因石腦油成本下降單季 EPS 轉正</td><td>55%</td><td>2026-08-15</td></tr>
+    <tr><td>2026Q2 1303 電子材料維持正貢獻，整體 EPS 維持正值</td><td>65%</td><td>2026-08-15</td></tr>
+    <tr><td>Q2 法說會期間市場重新定價 6505 風險溢價</td><td>45%</td><td>2026-08-31</td></tr>
+  </table></div>
+</section>
+
+<section id="cascade" class="block">
+  <h2>5 · 衝擊矩陣 · 對台股全面推演</h2>
+
+  <h3>個股衝擊分數</h3>
+  <div class="card"><div class="chart-wrap"><canvas id="impactChart"></canvas></div></div>
+
+  <h3>4 條傳導路徑</h3>
+  <div class="three-cols">
+    <div class="card"><h4 style="color:var(--accent-gold)">① 石化鏈</h4><p style="font-size:13px;color:var(--text-secondary)">Brent → 6505 → 1301/1303/1326 → CCL/環氧樹脂 → PCB → 封裝基板 → 2330 CoWoS 成本上升<br><span class="tag tag-warn">0-45 天</span></p></div>
+    <div class="card"><h4 style="color:var(--accent-gold)">② 能源基建鏈</h4><p style="font-size:13px;color:var(--text-secondary)">Brent → Hormuz → 油輪費率（2605/2617 受益） → 中油成本 → 台電燃油成本 → 工業電費調漲 15-20%<br><span class="tag tag-warn">7-60 天</span></p></div>
+    <div class="card"><h4 style="color:var(--accent-gold)">③ 需求破壞鏈</h4><p style="font-size:13px;color:var(--text-secondary)">Brent → 進口通膨 → 消費萎縮 → PC/手機萎縮 → NVIDIA/AMD 訂單保守 → 2330 先進製程利用率下修<br><span class="tag tag-warn">30-90 天</span></p></div>
+    <div class="card"><h4 style="color:var(--accent-gold)">④ 航空鏈</h4><p style="font-size:13px;color:var(--text-secondary)">Brent → 燃油飆升 → 2618/2610/2646 成本崩解 → 運能縮減 → 旅遊萎縮 → 2645 二階衝擊<br><span class="tag tag-warn">7-45 天</span></p></div>
+  </div>
+
+  <h3>產業熱力圖</h3>
+  <div class="tbl-wrap"><table class="heatmap">
+    <tr><th></th><th>能源</th><th>航運</th><th>半導體</th><th>航空</th><th>金融</th></tr>
+    <tr><td style="text-align:left">S4 過路費新均衡</td><td class="heat-l">低</td><td class="heat-h">高+</td><td class="heat-l">低</td><td class="heat-m">中</td><td class="heat-l">低</td></tr>
+    <tr><td style="text-align:left">S3 突破</td><td class="heat-l">低</td><td class="heat-m">中</td><td class="heat-l">低</td><td class="heat-l">低</td><td class="heat-l">低</td></tr>
+    <tr><td style="text-align:left">S1 持久</td><td class="heat-m">中</td><td class="heat-h">高</td><td class="heat-m">中</td><td class="heat-h">高</td><td class="heat-m">中</td></tr>
+    <tr><td style="text-align:left">尾部風險</td><td class="heat-h">極高</td><td class="heat-h">極高</td><td class="heat-h">高</td><td class="heat-h">高</td><td class="heat-h">高</td></tr>
+  </table></div>
+
+  <h3>增量影響估算（$140 vs $85 基準）</h3>
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-label">兩大航空年燃油增支</div><div class="kpi-value">NT$500-700 億</div></div>
+    <div class="kpi-card"><div class="kpi-label">6505 原料淨損</div><div class="kpi-value">NT$200-300 億</div></div>
+    <div class="kpi-card"><div class="kpi-label">台積電年電費增</div><div class="kpi-value">NT$100-150 億</div></div>
+    <div class="kpi-card"><div class="kpi-label">台灣能源年帳單增</div><div class="kpi-value">$80-100 億</div><div class="kpi-sub">USD</div></div>
+  </div>
+</section>
+
+<section id="actions" class="block">
+  <h2>6 · 投資操作清單</h2>
+  <div class="callout">
+    主導情境是 <strong>S4 過路費新均衡（40%）</strong>——油價 $100-115 區間而非 $140 衝高。下面操作以 S4 為主、S3/尾部為對沖。
+  </div>
+
+  <h3>立即執行</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>標的</th><th>動作</th><th>理由</th></tr>
+    <tr><td><strong>2605 新興航運</strong></td><td><span class="tag tag-up">建立多頭</span></td><td>revenue YoY +87.5%（z=3.57），VLCC TCE $80-120k/天，繞航邏輯</td></tr>
+    <tr><td>2618 / 2610 / 2646 航空</td><td><span class="tag tag-down">減持/避開</span></td><td>75% 未避險 + 需求雙殺，揭露前不進場</td></tr>
+    <tr><td><strong>6505 台塑石化</strong></td><td><span class="tag tag-up">轉偏多</span></td><td>0% 原油避險 + 油價 $100-115 是甜蜜點；以色列已炸毀伊朗 50% 石化產能（敵方產能消失）</td></tr>
+  </table></div>
+
+  <h3>HIGH</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>標的</th><th>動作</th><th>理由</th></tr>
+    <tr><td>1326 台化 / 1303 南亞</td><td><span class="tag tag-up">結構性超額機會</span></td><td>油價走弱情境下相對 6505 超額表現；市場誤定價（捆綁同向）</td></tr>
+    <tr><td>2330 台積電</td><td><span class="tag tag-warn">Put spread 對沖 10-15%</span></td><td>30-45 天後電費 + 需求破壞顯現；AI 韌性使下行有支撐</td></tr>
+    <tr><td>2603 長榮海運</td><td><span class="tag tag-neut">不再翻空</span></td><td>S4 主導下 $100-115 區間仍可受益；外資連 9 天買超信號維持</td></tr>
+  </table></div>
+
+  <h3>MEDIUM 與尾部對沖</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>標的</th><th>動作</th><th>理由</th></tr>
+    <tr><td>2608 嘉里大榮</td><td><span class="tag tag-down">觀察做空</span></td><td>z=−2.04 歷史新低，毛利率跌破 12% 觸發</td></tr>
+    <tr><td>能源基建（台電/中油代理）</td><td><span class="tag tag-up">分配權溢價</span></td><td>「能源守門人」溢價未被定價</td></tr>
+    <tr><td>2002 中鋼</td><td><span class="tag tag-down">減持</span></td><td>傳導放大效應 + 中國傾銷壓力</td></tr>
+    <tr><td>黃金 / 比特幣</td><td><span class="tag tag-up">尾部對沖</span></td><td>過路費人民幣計價 → 美元秩序受挑戰</td></tr>
+    <tr><td>沙國 Aramco 衍生品做空</td><td><span class="tag tag-down">尾部對沖</span></td><td>79.5% 以色列打葉門 → 胡塞攻沙國設施鏈條（2019 阿布蓋格先例）</td></tr>
+  </table></div>
+</section>
+
+<section id="monitor" class="block">
+  <h2>7 · 監控儀表板</h2>
+  <div class="three-cols">
+    <div class="card">
+      <h4 style="color:#e74c5a">CRITICAL · 24h</h4>
+      <ul style="list-style:none;font-size:13px;color:var(--text-secondary);margin-top:10px">
+        <li>· 川普對伊朗 10 點和平案的回應</li>
+        <li>· IRGC 是否實際開始收 $2M 過路費</li>
+        <li>· Hegseth 「明天打擊更多」是否兌現</li>
+        <li>· Brent 是否突破 $115（新台階）</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="color:#e67e22">HIGH · 每週</h4>
+      <ul style="list-style:none;font-size:13px;color:var(--text-secondary);margin-top:10px">
+        <li>· 川普 4/30 前結束行動機率（目前 31.5%）</li>
+        <li>· 美伊核協議 6/30 前達成（目前 24%）</li>
+        <li>· IRGC 內部裂痕報導</li>
+        <li>· SCFI / CCFI 週變化</li>
+        <li>· VLCC TD3C TCE Rate（&gt;$40k 確認 2605 強勢）</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="color:#3498db">MEDIUM · 每月</h4>
+      <ul style="list-style:none;font-size:13px;color:var(--text-secondary);margin-top:10px">
+        <li>· IAEA 季度報告：濃縮鈾純度</li>
+        <li>· 中國海關伊朗石油進口</li>
+        <li>· 6505/1326/1303 Q2 法說會避險揭露</li>
+        <li>· 台電電費調漲動態</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="thesis" class="block">
+  <h2>8 · 三個非共識主張</h2>
+  <div class="three-cols">
+    <div class="card" style="border-left:4px solid var(--accent-gold)">
+      <h4 style="color:var(--accent-gold-light)">① 軍事階段已結束 · 經濟戰開始</h4>
+      <p style="color:var(--text-secondary);font-size:14px;margin-top:10px">市場若仍以 $140 油價情境定價會錯估方向。真正衝擊不是供給斷流，而是<strong style="color:var(--accent-gold)">伊朗用過路費 + 人民幣計價挑戰美元秩序</strong>。對美元/黃金/BTC 的二階影響未被定價。</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--accent-gold)">
+      <h4 style="color:var(--accent-gold-light)">② 6505 真正利多是「敵方產能消失」</h4>
+      <p style="color:var(--text-secondary);font-size:14px;margin-top:10px">以色列炸毀伊朗最大石化廠（佔該國 50%）+ Shiraz 煉油廠被炸。<strong style="color:var(--accent-gold)">「油價 $100-115 + 競爭對手產能消失」是 6505 數年來最佳情境</strong>。市場仍在用「中國產能過剩谷底」邏輯定價。</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--accent-gold)">
+      <h4 style="color:var(--accent-gold-light)">③ 2603 長榮海運不必翻空</h4>
+      <p style="color:var(--text-secondary);font-size:14px;margin-top:10px">「$120 燃油翻轉點」前提是油價持續飆升，但 S4 主導情境是 $100-115 + Hormuz 收費通行（非斷流）。<strong style="color:var(--accent-gold)">外資連 9 天買超是對新均衡的定價，不是「最後一波」</strong>。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  報告產出 2026-04-07 · 情報新鮮度含 4/6 23:12 即時訊息<br>
+  深度推演：4 部門協同 · 12 條預測已登記待回測
+</footer>
+
+</div>
+
+<script>
+const gridColor='rgba(255,255,255,.06)',tickColor='#a0b0c8';
+Chart.defaults.color=tickColor;Chart.defaults.font.family='-apple-system,"Microsoft JhengHei",sans-serif';
+
+new Chart(document.getElementById('polyChart'),{
+  type:'bar',
+  data:{
+    labels:['以色列年中前打葉門','美國 2027 前入侵伊朗','穆杰塔巴年底仍為元首','Hormuz 5月底回正常','川普 4/30 前結束行動','伊朗 2027 前垮台','美伊核協議 6/30 前','UAE 4/30 前打伊朗','Hormuz 4月底回正常','伊朗 6/30 前垮台','美國 4/30 前正式宣戰'],
+    datasets:[{
+      label:'隱含機率 %',
+      data:[79.5,58.5,55.4,37.5,31.5,26.5,24,22.5,14.5,12.5,1.1],
+      backgroundColor:['#e74c5a','#e67e22','#d4a843','#3498db','#3498db','#9b59b6','#1abc9c','#e67e22','#3498db','#9b59b6','#6a7d99']
+    }]
+  },
+  options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:gridColor},max:100},y:{grid:{display:false}}}}
+});
+
+new Chart(document.getElementById('impactChart'),{
+  type:'bar',
+  data:{
+    labels:['2605 新興航運','2610 中華航空','2618 長榮航空','2646 星宇航空','6505 台塑石化','1301 台塑','2608 嘉里大榮','2002 中鋼','1303 南亞','2617 台灣航業','2330 台積電','2603 長榮海運'],
+    datasets:[{
+      label:'衝擊分數（綠=正向 / 紅=負向）',
+      data:[0.91,0.88,0.85,0.82,0.72,0.68,0.65,0.62,0.6,0.55,0.45,0.35],
+      backgroundColor:['#2ecc71','#e74c5a','#e74c5a','#e74c5a','#e67e22','#e74c5a','#e74c5a','#e74c5a','#e74c5a','#2ecc71','#e74c5a','#e67e22']
+    }]
+  },
+  options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:gridColor},max:1},y:{grid:{display:false}}}}
+});
+
+const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('visible')),{threshold:.1});
+document.querySelectorAll('section.block').forEach(s=>{s.classList.add('fade-in');io.observe(s);});
+</script>
+</body>
+</html>
