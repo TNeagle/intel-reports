@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPO + AI Infra 投資價值報告 v4 FINAL</title>
+<style>
+:root{
+  --bg-primary:#0a1628;--bg-card:rgba(26,45,74,0.6);--bg-surface:#132038;
+  --accent-gold:#d4a843;--accent-gold-light:#f0d078;--accent-blue:#3498db;
+  --accent-cyan:#1abc9c;--accent-purple:#9b59b6;
+  --status-critical:#e74c5a;--status-elevated:#e67e22;--status-routine:#2ecc71;--status-quiet:#6a7d99;
+  --text-primary:#e8edf5;--text-secondary:#a0b0c8;--text-muted:#6a7d99;
+  --border:rgba(212,168,67,0.15);--shadow:0 4px 24px rgba(0,0,0,0.3);--radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei","PingFang TC",sans-serif;
+  background:var(--bg-primary);color:var(--text-primary);line-height:1.75;
+  background-image:radial-gradient(ellipse at top,rgba(212,168,67,0.05),transparent 60%);
+  min-height:100vh;
+}
+.container{max-width:1400px;margin:0 auto;padding:0 24px}
+nav{
+  position:sticky;top:0;z-index:100;background:rgba(10,22,40,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);padding:14px 24px;
+}
+nav .nav-inner{max-width:1400px;margin:0 auto;display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+nav .brand{color:var(--accent-gold);font-weight:700;letter-spacing:1px}
+nav a{color:var(--text-secondary);text-decoration:none;font-size:14px;transition:color .2s}
+nav a:hover{color:var(--accent-gold)}
+.hero{padding:64px 24px 40px;text-align:center;border-bottom:1px solid var(--border)}
+.hero .badge{display:inline-block;padding:6px 16px;background:rgba(46,204,113,0.12);
+  border:1px solid var(--status-routine);border-radius:999px;color:var(--status-routine);
+  font-size:12px;font-weight:600;margin-bottom:20px;letter-spacing:1px}
+.hero h1{font-size:42px;font-weight:800;letter-spacing:1px;
+  background:linear-gradient(120deg,var(--accent-gold),var(--accent-gold-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:14px}
+.hero .meta{color:var(--text-secondary);font-size:15px}
+.hero .meta span{margin:0 12px}
+section{padding:48px 0;border-bottom:1px solid var(--border)}
+section h2{font-size:26px;color:var(--accent-gold);margin-bottom:8px;letter-spacing:0.5px}
+section h2::before{content:"";display:inline-block;width:4px;height:24px;background:var(--accent-gold);
+  margin-right:14px;vertical-align:-4px;border-radius:2px}
+section .sub{color:var(--text-muted);font-size:14px;margin-bottom:28px;margin-left:18px}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:8px}
+.kpi-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:22px;backdrop-filter:blur(8px);transition:transform .2s,border-color .2s}
+.kpi-card:hover{transform:translateY(-2px);border-color:rgba(212,168,67,0.4)}
+.kpi-label{font-size:12px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase}
+.kpi-value{font-size:32px;font-weight:800;color:var(--accent-gold-light);margin:8px 0 4px}
+.kpi-sub{font-size:13px;color:var(--text-secondary)}
+.kpi-card.positive .kpi-value{color:var(--status-routine)}
+.kpi-card.warning .kpi-value{color:var(--status-elevated)}
+.exec-summary{background:var(--bg-card);border-left:4px solid var(--accent-gold);
+  border-radius:8px;padding:24px 28px;margin-top:24px;font-size:15.5px;color:var(--text-primary)}
+.scenario-list{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+.scenario-bar{display:grid;grid-template-columns:200px 1fr 60px;align-items:center;gap:16px}
+.scenario-label{color:var(--text-primary);font-weight:600}
+.scenario-track{height:28px;background:var(--bg-surface);border-radius:6px;overflow:hidden;position:relative}
+.scenario-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:12px;
+  color:#fff;font-size:12px;font-weight:600;transition:width .8s ease}
+.scenario-pct{text-align:right;font-weight:700;color:var(--accent-gold-light);font-size:18px}
+.holdings-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:8px}
+.holding-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:22px;position:relative;overflow:hidden}
+.holding-card.core{border-color:rgba(212,168,67,0.5)}
+.holding-card .stars{color:var(--accent-gold);font-size:14px;margin-bottom:8px}
+.holding-card .ticker{font-size:13px;color:var(--text-muted);letter-spacing:1px}
+.holding-card .name{font-size:20px;font-weight:700;margin:4px 0 12px}
+.holding-card .pos{font-size:36px;font-weight:800;color:var(--accent-gold-light)}
+.holding-card .pos span{font-size:14px;color:var(--text-muted);margin-left:4px}
+.holding-card .bet{font-size:13px;color:var(--text-secondary);margin-top:10px;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin-top:8px;background:var(--bg-card);
+  border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
+th{background:rgba(212,168,67,0.1);color:var(--accent-gold);padding:14px;text-align:left;
+  font-size:13px;letter-spacing:0.5px;border-bottom:1px solid var(--border)}
+td{padding:13px 14px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
+tr:nth-child(even) td{background:rgba(255,255,255,0.015)}
+tr:hover td{background:rgba(212,168,67,0.05)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:0.5px}
+.tag.buy{background:rgba(46,204,113,0.15);color:var(--status-routine);border:1px solid var(--status-routine)}
+.tag.sell{background:rgba(231,76,90,0.15);color:var(--status-critical);border:1px solid var(--status-critical)}
+.tag.warn{background:rgba(230,126,34,0.15);color:var(--status-elevated);border:1px solid var(--status-elevated)}
+.tag.neutral{background:rgba(106,125,153,0.15);color:var(--text-secondary);border:1px solid var(--text-muted)}
+.insight-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px}
+.insight-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+.insight-card h3{color:var(--accent-gold-light);font-size:18px;margin-bottom:10px}
+.insight-card p{color:var(--text-secondary);font-size:14px}
+.timeline{position:relative;padding-left:32px;margin-top:8px}
+.timeline::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:var(--border)}
+.timeline-item{position:relative;margin-bottom:20px}
+.timeline-item::before{content:"";position:absolute;left:-30px;top:6px;width:14px;height:14px;
+  border-radius:50%;background:var(--accent-gold);box-shadow:0 0 0 4px var(--bg-primary)}
+.timeline-item.critical::before{background:var(--status-critical)}
+.timeline-date{color:var(--accent-gold);font-weight:700;font-size:13px;letter-spacing:1px}
+.timeline-title{font-size:15px;color:var(--text-primary);margin-top:4px;font-weight:600}
+.timeline-desc{font-size:13px;color:var(--text-secondary);margin-top:4px}
+.pred-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+.pred-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px}
+.pred-card .pred-text{font-size:14px;font-weight:600;margin-bottom:10px;min-height:42px}
+.pred-card .pred-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted)}
+.pred-bar{height:6px;background:var(--bg-surface);border-radius:3px;margin-top:10px;overflow:hidden}
+.pred-fill{height:100%;background:linear-gradient(90deg,var(--accent-blue),var(--accent-cyan))}
+.pred-card.high{border-color:rgba(212,168,67,0.4)}
+.pred-card.high .pred-fill{background:linear-gradient(90deg,var(--accent-gold),var(--accent-gold-light))}
+.risk-box{background:linear-gradient(135deg,rgba(231,76,90,0.1),rgba(231,76,90,0.02));
+  border:1px solid rgba(231,76,90,0.4);border-radius:var(--radius);padding:28px;margin-top:8px}
+.risk-box h3{color:var(--status-critical);font-size:20px;margin-bottom:12px}
+.risk-box p{color:var(--text-secondary);margin-bottom:10px;font-size:14.5px}
+.chart-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;margin-top:8px;height:340px}
+footer{padding:32px 24px;text-align:center;color:var(--text-muted);font-size:13px}
+@media (max-width:900px){
+  .kpi-row,.holdings-grid{grid-template-columns:repeat(2,1fr)}
+  .insight-grid,.pred-grid{grid-template-columns:1fr}
+  .scenario-bar{grid-template-columns:120px 1fr 50px}
+  .hero h1{font-size:28px}
+  table{display:block;overflow-x:auto}
+}
+@media print{nav,footer{display:none}body{background:#fff;color:#000}}
+.fade-in{opacity:0;transform:translateY(20px);transition:all .6s ease}
+.fade-in.visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<nav><div class="nav-inner">
+  <span class="brand">CPO + AI INFRA v4</span>
+  <a href="#summary">摘要</a>
+  <a href="#scenarios">情境</a>
+  <a href="#insights">洞察</a>
+  <a href="#holdings">持倉</a>
+  <a href="#calendar">日曆</a>
+  <a href="#predictions">預測</a>
+  <a href="#risk">尾部風險</a>
+</div></nav>
+
+<header class="hero">
+  <div class="badge">FINAL · GRADE A · 信心高</div>
+  <h1>CPO + AI Infra 供應鏈投資價值報告</h1>
+  <div class="meta">
+    <span>2026-04-08</span>·<span>v4 FINAL</span>·<span>24 家台股全鏈覆蓋</span>·<span>5 檔最終持倉</span>
+  </div>
+</header>
+
+<div class="container">
+
+<section id="summary">
+  <h2>關鍵指標</h2>
+  <div class="sub">v4 vs v3：更樂觀、更集中、信心評等升等</div>
+  <div class="kpi-row">
+    <div class="kpi-card positive"><div class="kpi-label">預期報酬</div><div class="kpi-value">+11.2%</div><div class="kpi-sub">v3: +9.5%</div></div>
+    <div class="kpi-card"><div class="kpi-label">信心評等</div><div class="kpi-value">A</div><div class="kpi-sub">v3: A−</div></div>
+    <div class="kpi-card warning"><div class="kpi-label">情境偏空度</div><div class="kpi-value">56%</div><div class="kpi-sub">v3: 73%</div></div>
+    <div class="kpi-card"><div class="kpi-label">最終持倉</div><div class="kpi-value">5</div><div class="kpi-sub">檔（總預算 100）</div></div>
+    <div class="kpi-card"><div class="kpi-label">部位上限</div><div class="kpi-value">25%</div><div class="kpi-sub">總組合曝險</div></div>
+  </div>
+
+  <div class="exec-summary">
+    <strong style="color:var(--accent-gold-light)">執行摘要：</strong>
+    本輪 24 家台股 CPO+AI Infra 供應鏈完整覆蓋，最終建倉 <b>5 檔（總分 100）</b>：
+    6442 光聖 50（核心，寧波曝險僅 3–5%）、3324 雙鴻 25（DLC 冷板＋Vera Rubin 卡位）、
+    2345 智邦 10（EPS 47.13 新發現）、3037 欣興 10（ABF 載板無關路線）、3265 台星科 5（CPO 封測 high beta）。
+    砍 6451 訊芯（2025 EPS 僅 0.26），強烈避開 3081 聯亞（C06 = 武漢光迅 33.25% 中國曝險）。
+  </div>
+</section>
+
+<section id="scenarios">
+  <h2>情境機率</h2>
+  <div class="sub">v3 → v4 重新校準後，偏空從 73% 降至 56%</div>
+  <div class="scenario-list">
+    <div class="scenario-bar">
+      <div class="scenario-label">Base：DLC 持續放量＋CPO 漸進商轉</div>
+      <div class="scenario-track"><div class="scenario-fill" style="width:48%;background:var(--accent-blue)">基準</div></div>
+      <div class="scenario-pct">48%</div>
+    </div>
+    <div class="scenario-bar">
+      <div class="scenario-label">Bull：CPO 全面爆發＋浸沒式突破</div>
+      <div class="scenario-track"><div class="scenario-fill" style="width:30%;background:var(--status-routine)">樂觀</div></div>
+      <div class="scenario-pct">30%</div>
+    </div>
+    <div class="scenario-bar">
+      <div class="scenario-label">Bear：AI Capex 放緩＋估值壓縮</div>
+      <div class="scenario-track"><div class="scenario-fill" style="width:14%;background:var(--status-elevated)">空頭</div></div>
+      <div class="scenario-pct">14%</div>
+    </div>
+    <div class="scenario-bar">
+      <div class="scenario-label">Tail：AI 邊際回報遞減</div>
+      <div class="scenario-track"><div class="scenario-fill" style="width:8%;background:var(--status-critical)">尾部</div></div>
+      <div class="scenario-pct">8%</div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="versionChart"></canvas></div>
+</section>
+
+<section id="insights">
+  <h2>四大關鍵洞察</h2>
+  <div class="sub">改變持倉結構的新發現</div>
+  <div class="insight-grid">
+    <div class="insight-card">
+      <h3>① Follow the Margin — 供應鏈利潤地圖錯誤定價</h3>
+      <p>L1 磊晶層（聯亞 48%、全新 40%）為真護城河；L2 光元件（光聖 57%、雙鴻 27%）<b>雙鴻被折價</b>；L3 封裝層 訊芯 GM 僅 16% 卻溢價 4 倍。<br><b>結論：往高毛利層級買，往低毛利層級砍。</b></p>
+    </div>
+    <div class="insight-card">
+      <h3>② 訊芯 6451 的殺手鐧</h3>
+      <p>2025 完整財報揭露：EPS 0.26（年減 35%）、2 月月營收 YoY −45%、實際 GM 16%。基本面合理價 55 元 vs 現價 295＝乖離 −81%。<br><b>結論：v3 給的小倉 15 是錯的，v4 砍至 0。</b></p>
+    </div>
+    <div class="insight-card">
+      <h3>③ 智邦 2345 — v3 完全錯判</h3>
+      <p>2025 全年 EPS <b>47.13（YoY +119%）</b>，2 月月營收 YoY +82.7%，800G 交換器大量出貨，主客戶 AWS / Meta / Microsoft。<br><b>結論：v3 最大遺漏，v4 從 0 升至 10。</b></p>
+    </div>
+    <div class="insight-card">
+      <h3>④ 聯亞 — 中國曝險解碼</h3>
+      <p>C06 = 武漢光迅 Accelink 33.25%，是結構性中國國家隊曝險。外資目標 1081 完全沒計入中美脫鉤斷鏈風險，安全估值 371 vs 現價 ~1500＝乖離 −75%。<br><b>結論：強烈避開維持。</b></p>
+    </div>
+  </div>
+</section>
+
+<section id="holdings">
+  <h2>v4 最終持倉</h2>
+  <div class="sub">總預算 100，CPO+AI Infra 部位不超過總組合 25%</div>
+  <div class="holdings-grid">
+    <div class="holding-card core">
+      <div class="stars">★★ 核心</div>
+      <div class="ticker">6442</div><div class="name">光聖</div>
+      <div class="pos">50<span>/100</span></div>
+      <div class="bet">Google TPU + CPO 光源；寧波風險僅 3–5%</div>
+    </div>
+    <div class="holding-card core">
+      <div class="stars">★ 主力</div>
+      <div class="ticker">3324</div><div class="name">雙鴻</div>
+      <div class="pos">25<span>/100</span></div>
+      <div class="bet">DLC 冷板 + Vera Rubin Group A 卡位</div>
+    </div>
+    <div class="holding-card">
+      <div class="stars">☆ 衛星</div>
+      <div class="ticker">2345</div><div class="name">智邦</div>
+      <div class="pos">10<span>/100</span></div>
+      <div class="bet">800G 交換器 + AWS capex；EPS 47.13 新發現</div>
+    </div>
+    <div class="holding-card">
+      <div class="stars">☆ 衛星</div>
+      <div class="ticker">3037</div><div class="name">欣興</div>
+      <div class="pos">10<span>/100</span></div>
+      <div class="bet">CPO 載板（無關路線敞口）</div>
+    </div>
+    <div class="holding-card">
+      <div class="stars">☆ Beta</div>
+      <div class="ticker">3265</div><div class="name">台星科</div>
+      <div class="pos">5<span>/100</span></div>
+      <div class="bet">CPO 封測 high beta；先行停損信號</div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:48px">砍掉 / 強烈避開</h2>
+  <table>
+    <tr><th>標的</th><th>動作</th><th>原因</th></tr>
+    <tr><td>6451 訊芯</td><td><span class="tag sell">砍至 0</span></td><td>2025 EPS 0.26、GM 16%、月營收 YoY −45%；蔣尚義人脈溢價非真護城河</td></tr>
+    <tr><td>3081 聯亞</td><td><span class="tag sell">強烈避開</span></td><td>C06 = 武漢光迅 33.25% 結構性中國曝險</td></tr>
+    <tr><td>3450 聯鈞</td><td><span class="tag sell">避開</span></td><td>EPS 10 元數學上不可能</td></tr>
+    <tr><td>3234 光環</td><td><span class="tag sell">避開</span></td><td>連虧、中國競爭加劇</td></tr>
+    <tr><td>3504 揚明光</td><td><span class="tag neutral">剔除</span></td><td>與 CPO 無關</td></tr>
+  </table>
+</section>
+
+<section id="quant">
+  <h2>三項深調量化</h2>
+  <div class="insight-grid">
+    <div class="insight-card">
+      <h3>雙鴻 — DLC 冷板龍頭</h3>
+      <p>核心成長靠 DLC 冷板，浸沒式因 PFAS 法規推遲至 2028+。2026E EPS 上修至 57.5 元（vs 2025 的 28.26），目標 1283。1 月單月營收 30.41 億 +121% YoY。<br>→ 持倉從 20 升至 <b>25</b>。</p>
+    </div>
+    <div class="insight-card">
+      <h3>6442 寧波廠 — 風險可控</h3>
+      <p>寧波廠貢獻僅 3–5%（約 3–5 億 / 集團 105.29 億）。主要風險為 BIS Entity List 間接觸發，非營收直接斷鏈。YOFC 對 AI 超算威脅 2026–27 &lt;10%。<br>→ 維持核心 <b>50</b>，不需砍。</p>
+    </div>
+    <div class="insight-card">
+      <h3>合聖 / NVIDIA 整合光引擎</h3>
+      <p>合聖未上市財務不透明；3.2T ELS 模組仍在後期聯合驗證階段。若 NVIDIA 2026 GTC 公開整合光源路線，ELS 商業模式受威脅。<br>→ 已建監控事件，觀察 2026-05-15 GTC。</p>
+    </div>
+  </div>
+</section>
+
+<section id="calendar">
+  <h2>監控日曆</h2>
+  <div class="sub">關鍵檢查點與停損觸發</div>
+  <div class="timeline">
+    <div class="timeline-item critical">
+      <div class="timeline-date">2026-04-15</div>
+      <div class="timeline-title">TSMC Q1 法說 — COUPE 良率</div>
+      <div class="timeline-desc">軟化 → 砍 3265；確認 → 加碼</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2026-04-20+</div>
+      <div class="timeline-title">Q1 財報季</div>
+      <div class="timeline-desc">6442 GM &gt;55%、雙鴻 GM &gt;27%、智邦 EPS &gt;10</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2026-05-10</div>
+      <div class="timeline-title">雙鴻 4 月月營收</div>
+      <div class="timeline-desc">YoY &lt;+30% → 部位減半</div>
+    </div>
+    <div class="timeline-item critical">
+      <div class="timeline-date">2026-05-15</div>
+      <div class="timeline-title">NVIDIA GTC — 整合光引擎進度</div>
+      <div class="timeline-desc">公開 → 6442 砍至 25（最重要單一檢查點）</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2026-06-30</div>
+      <div class="timeline-title">Meta / Google Q2 capex guidance</div>
+      <div class="timeline-desc">下修 &gt;10% → 5 檔同時減半</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2026-09</div>
+      <div class="timeline-title">合聖科技 IPO 認購</div>
+      <div class="timeline-desc">PE &lt;10x → 6442 砍至 30</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2026-11</div>
+      <div class="timeline-title">TSMC COUPE 良率 &gt;80% 公告</div>
+      <div class="timeline-desc">公告 → 台星科加碼至 15</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2026-12</div>
+      <div class="timeline-title">NVIDIA Vera Rubin Group A 名單</div>
+      <div class="timeline-desc">雙鴻入選 → 加碼至 30</div>
+    </div>
+  </div>
+</section>
+
+<section id="stoploss">
+  <h2>個股停損規則</h2>
+  <table>
+    <tr><th>標的</th><th>觸發條件</th><th>動作</th><th class="num">最大可接受 DD</th></tr>
+    <tr><td>6442 光聖</td><td>月營收連 2 月 YoY &lt;+15%，或 NVIDIA 整合光引擎正式公開</td><td><span class="tag warn">砍至 25</span></td><td class="num">-25%</td></tr>
+    <tr><td>3324 雙鴻</td><td>4 月月營收 YoY &lt;+30%，或 Vera Rubin Group A 未入選</td><td><span class="tag warn">減半</span></td><td class="num">-25%</td></tr>
+    <tr><td>2345 智邦</td><td>Q2 月營收 YoY &lt;+40%</td><td><span class="tag sell">全清</span></td><td class="num">-20%</td></tr>
+    <tr><td>3037 欣興</td><td>載板 GM 跌破前季 -3pp</td><td><span class="tag sell">全清</span></td><td class="num">-20%</td></tr>
+    <tr><td>3265 台星科</td><td>TSMC COUPE 法說軟化</td><td><span class="tag sell">全清</span></td><td class="num">-25%</td></tr>
+  </table>
+  <p style="color:var(--text-muted);margin-top:14px;font-size:13px">整體 drawdown 達 -15% → 全砍重評</p>
+</section>
+
+<section id="predictions">
+  <h2>12 個追蹤預測</h2>
+  <div class="sub">高機率為金色卡片</div>
+  <div class="pred-grid">
+    <div class="pred-card"><div class="pred-text">聯亞 2026 全年 EPS &gt;8 元</div><div class="pred-meta"><span>35%</span><span>2027-01-31</span></div><div class="pred-bar"><div class="pred-fill" style="width:35%"></div></div></div>
+    <div class="pred-card"><div class="pred-text">聯鈞 2026Q3 月營收 YoY 轉正</div><div class="pred-meta"><span>55%</span><span>2026-10-31</span></div><div class="pred-bar"><div class="pred-fill" style="width:55%"></div></div></div>
+    <div class="pred-card high"><div class="pred-text">波若威 2026 內跌破 500</div><div class="pred-meta"><span>60%</span><span>2026-12-31</span></div><div class="pred-bar"><div class="pred-fill" style="width:60%"></div></div></div>
+    <div class="pred-card"><div class="pred-text">CPO 市場 2026 實際出貨 &lt;$200M</div><div class="pred-meta"><span>45%</span><span>2027-01-31</span></div><div class="pred-bar"><div class="pred-fill" style="width:45%"></div></div></div>
+    <div class="pred-card"><div class="pred-text">中國 InP 出口管制 2026 升級</div><div class="pred-meta"><span>40%</span><span>2026-12-31</span></div><div class="pred-bar"><div class="pred-fill" style="width:40%"></div></div></div>
+    <div class="pred-card"><div class="pred-text">NVIDIA GTC/Hot Chips 公開整合光引擎</div><div class="pred-meta"><span>40%</span><span>2026-08-31</span></div><div class="pred-bar"><div class="pred-fill" style="width:40%"></div></div></div>
+    <div class="pred-card"><div class="pred-text">合聖 IPO 認購 &lt;10x</div><div class="pred-meta"><span>45%</span><span>2026-09-30</span></div><div class="pred-bar"><div class="pred-fill" style="width:45%"></div></div></div>
+    <div class="pred-card"><div class="pred-text">訊芯 6451 2026Q3 EPS &gt;2 元</div><div class="pred-meta"><span>35%</span><span>2026-11-15</span></div><div class="pred-bar"><div class="pred-fill" style="width:35%"></div></div></div>
+    <div class="pred-card"><div class="pred-text">聯亞 2026 中國業務 &lt;50%</div><div class="pred-meta"><span>28%</span><span>2026-12-31</span></div><div class="pred-bar"><div class="pred-fill" style="width:28%"></div></div></div>
+    <div class="pred-card"><div class="pred-text">台星科 美系廠 CPO 封測首單</div><div class="pred-meta"><span>40%</span><span>2026-12-31</span></div><div class="pred-bar"><div class="pred-fill" style="width:40%"></div></div></div>
+    <div class="pred-card high"><div class="pred-text">Meta+Google 2026H2 capex &gt;$160B</div><div class="pred-meta"><span>62%</span><span>2026-09-30</span></div><div class="pred-bar"><div class="pred-fill" style="width:62%"></div></div></div>
+    <div class="pred-card high"><div class="pred-text">雙鴻 Vera Rubin Group A 入選</div><div class="pred-meta"><span>55%</span><span>2026-09-30</span></div><div class="pred-bar"><div class="pred-fill" style="width:55%"></div></div></div>
+  </div>
+</section>
+
+<section id="risk">
+  <h2>最大單一風險</h2>
+  <div class="risk-box">
+    <h3>AI 邊際回報遞減 — 隱含 8% 尾部，影響全部 5 檔</h3>
+    <p>所有分析默認「AI 模型能力提升快於效率提升」，但 OpenAI Orion 延期 + Claude 推理效率路線暗示矽谷正在安靜翻牌。若 2026H2 顯現 AI 邊際回報遞減，CPO+液冷+AI 設備全板塊敘事同步失效。</p>
+    <p><b style="color:var(--accent-gold-light)">為何比 Bear 情境更重要：</b>Bear（P=14%）只砸 CPO 純概念股；尾部風險（隱含 8%）砸全部 5 檔，impact 可能 −40~−55%。</p>
+    <p><b style="color:var(--accent-gold-light)">最早信號：</b>① Meta+Google 2026Q2 capex guidance 下修 &gt;10% ② OpenAI GPT-5 延至 2027 ③ NVIDIA Q2 guidance 暗示 2026H2 出貨減速。</p>
+    <p><b style="color:var(--accent-gold-light)">對沖：</b>5% 台星科作為高 beta 先行指標 — 若先崩，其他 4 檔預警。</p>
+  </div>
+</section>
+
+<section id="meta">
+  <h2>後設反思</h2>
+  <div class="insight-grid">
+    <div class="insight-card">
+      <h3>最可能錯在訊芯</h3>
+      <p>砍訊芯的核心論述可能低估越南廠 + IDM 外包 + 中國 CSP 多角化成功率。最早發現信號：訊芯 2026Q2 月營收 YoY 轉正 OR 越南廠試產達標。錯誤代價：機會成本 5–10% 相對報酬。</p>
+    </div>
+    <div class="insight-card">
+      <h3>第二可能錯在智邦</h3>
+      <p>智邦升為持倉的底層假設是 800G 持續放量。若 800G → 1.6T 替代速度比預期快 6–12 個月，智邦會被跳過。需密切追蹤客戶端產品路線。</p>
+    </div>
+  </div>
+</section>
+
+<section id="closing" style="border-bottom:none">
+  <h2>給使用者的話</h2>
+  <div class="exec-summary">
+    本報告經 4 個版本迭代、27 家公司調查、2 次推演、12 個追蹤預測。<br><br>
+    <b style="color:var(--accent-gold-light)">最重要的 3 件事：</b><br>
+    ① 買 6442 光聖 + 3324 雙鴻（合計 75%）是 AI Infra 最穩的組合。<br>
+    ② 2026-05-15 NVIDIA GTC 是唯一可能翻轉 6442 論述的單一事件。<br>
+    ③ AI 邊際回報遞減是所有持倉的共同尾部風險，需每季檢查 capex guidance。<br><br>
+    <span style="color:var(--text-muted);font-size:13px">投資有風險。本報告基於公開資訊，非投資建議。所有持倉決定應配合個人風險偏好、時間框架與既有組合二次判斷。</span>
+  </div>
+</section>
+
+</div>
+
+<footer>CPO + AI Infra v4 FINAL · 2026-04-08 · Grade A</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const obs=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('visible')),{threshold:0.1});
+document.querySelectorAll('section').forEach(s=>{s.classList.add('fade-in');obs.observe(s)});
+
+const ctx=document.getElementById('versionChart');
+new Chart(ctx,{
+  type:'line',
+  data:{
+    labels:['v1','v2','v3','v4'],
+    datasets:[
+      {label:'預期報酬 (%)',data:[4.3,6.8,9.5,11.2],borderColor:'#d4a843',backgroundColor:'rgba(212,168,67,0.15)',tension:0.3,fill:true,yAxisID:'y'},
+      {label:'覆蓋家數',data:[6,13,24,24],borderColor:'#3498db',backgroundColor:'rgba(52,152,219,0.1)',tension:0.3,yAxisID:'y1'},
+      {label:'持倉檔數',data:[2,4,5,5],borderColor:'#1abc9c',backgroundColor:'rgba(26,188,156,0.1)',tension:0.3,yAxisID:'y1'}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{labels:{color:'#a0b0c8'}},
+      title:{display:true,text:'v1 → v4 演化',color:'#d4a843',font:{size:14}},
+      tooltip:{backgroundColor:'#132038',borderColor:'#d4a843',borderWidth:1}
+    },
+    scales:{
+      x:{ticks:{color:'#a0b0c8'},grid:{color:'rgba(255,255,255,0.04)'}},
+      y:{position:'left',ticks:{color:'#d4a843'},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'E[return] %',color:'#d4a843'}},
+      y1:{position:'right',ticks:{color:'#3498db'},grid:{display:false},title:{display:true,text:'家數',color:'#3498db'}}
+    }
+  }
+});
+</script>
+</body>
+</html>
