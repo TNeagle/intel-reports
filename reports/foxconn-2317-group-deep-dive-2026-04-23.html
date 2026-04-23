@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TARGET: 鴻海 2317 — TAKE YOUR HEART</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0a0806;
+    --bg-2:      #12100d;
+    --panel:     #1a1612;
+    --panel-2:   #221c16;
+    --ink:       #f5f0e6;
+    --ink-soft:  #b8b0a0;
+    --ink-dim:   #6a6458;
+    --red:       #e60012;
+    --red-hot:   #ff1a2e;
+    --red-deep:  #9a0010;
+    --gold:      #f7c948;
+    --green:     #4ade80;
+    --border:    #2a241d;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 18px;
+    line-height: 1.85;
+    font-weight: 400;
+    letter-spacing: 0.015em;
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(230,0,18,0.08) 0%, transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(230,0,18,0.06) 0%, transparent 50%),
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.008) 0 2px, transparent 2px 4px);
+    background-attachment: fixed;
+  }
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 40px 96px;
+  }
+
+  /* ─── HERO BAR ─── */
+  .hero {
+    position: relative;
+    padding: 44px 40px 38px 48px;
+    margin-bottom: 56px;
+    background: var(--red);
+    color: #fff;
+    clip-path: polygon(0 0, 100% 0, 100% 86%, 96% 100%, 0 100%, 3% 85%);
+    box-shadow: 12px 12px 0 var(--red-deep), 0 0 60px rgba(230,0,18,0.3);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(-45deg, rgba(0,0,0,0.08) 0 3px, transparent 3px 14px),
+      radial-gradient(circle at 95% 20%, rgba(255,255,255,0.15) 0%, transparent 35%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    font-family: 'Bebas Neue', 'JetBrains Mono', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.3em;
+    opacity: 0.92;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin: 0 0 12px;
+    letter-spacing: 0.01em;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+  }
+  .hero-sub {
+    font-size: 17px;
+    font-weight: 500;
+    opacity: 0.92;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .hero-sub b { color: #ffe14a; font-weight: 700; }
+
+  /* ─── HEADINGS ─── */
+  h1.chapter {
+    position: relative;
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin: 72px 0 32px;
+    padding: 18px 28px 18px 32px;
+    background: var(--ink);
+    color: var(--bg);
+    display: inline-block;
+    clip-path: polygon(0 0, 100% 0, 96% 100%, 0 100%, 4% 50%);
+    letter-spacing: 0.02em;
+    transform: skew(-4deg);
+    box-shadow: 6px 6px 0 var(--red);
+  }
+  h1.chapter .num {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--red);
+    font-size: 44px;
+    margin-right: 14px;
+    letter-spacing: 0.05em;
+  }
+  h2 {
+    font-size: 26px;
+    font-weight: 900;
+    margin: 48px 0 20px;
+    padding: 10px 16px 10px 20px;
+    color: var(--ink);
+    background: linear-gradient(90deg, var(--red) 0%, var(--red) 6px, var(--panel) 6px, var(--panel) 100%);
+    border-right: 4px solid var(--red);
+    letter-spacing: 0.02em;
+  }
+  h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--red-hot);
+    margin: 32px 0 14px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ─── PARAGRAPHS & INLINE ─── */
+  p { margin: 18px 0; }
+  strong {
+    color: #fff;
+    font-weight: 700;
+    background: linear-gradient(180deg, transparent 55%, var(--red-deep) 55%, var(--red-deep) 92%, transparent 92%);
+    padding: 0 3px;
+  }
+  em { color: var(--ink-soft); font-style: italic; }
+  hr {
+    border: none;
+    height: 4px;
+    margin: 56px 0;
+    background:
+      linear-gradient(90deg, var(--red) 0 30%, transparent 30% 32%, var(--ink) 32% 36%, transparent 36% 38%, var(--red) 38% 100%);
+    clip-path: polygon(0 30%, 100% 30%, 100% 70%, 0 70%);
+  }
+  ul, ol { padding-left: 28px; margin: 16px 0; }
+  li { margin: 10px 0; }
+  li::marker { color: var(--red); font-weight: 900; }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9em;
+    background: var(--panel-2);
+    color: var(--red-hot);
+    padding: 2px 7px;
+    border: 1px solid var(--border);
+  }
+
+  /* ─── TL;DR PUNCH BOX ─── */
+  .tldr {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 32px 0 48px;
+  }
+  .tldr-card {
+    position: relative;
+    background: var(--panel);
+    padding: 22px 22px 20px;
+    border-left: 5px solid var(--red);
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 94% 100%, 0 100%);
+  }
+  .tldr-card .lbl {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.3em;
+    color: var(--red-hot);
+    margin-bottom: 8px;
+  }
+  .tldr-card .val {
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .tldr-card .val.pos { color: var(--green); }
+  .tldr-card .val.neg { color: var(--red-hot); }
+  .tldr-card .note {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* ─── PUNCH STATEMENT ─── */
+  .punch {
+    margin: 32px 0;
+    padding: 28px 32px;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.55;
+    letter-spacing: 0.015em;
+    clip-path: polygon(0 6%, 100% 0, 98% 94%, 2% 100%);
+    box-shadow: 8px 8px 0 rgba(230,0,18,0.25);
+    position: relative;
+  }
+  .punch::before {
+    content: "▶";
+    display: inline-block;
+    font-size: 18px;
+    margin-right: 12px;
+    color: #ffe14a;
+  }
+
+  /* ─── THESIS BLOCKS (arguments) ─── */
+  .thesis {
+    margin: 36px 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 6px solid var(--red);
+    padding: 0;
+    position: relative;
+  }
+  .thesis-head {
+    background: var(--bg-2);
+    padding: 18px 24px;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--ink);
+    border-bottom: 2px solid var(--red);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .thesis-head .ord {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--red);
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+  .thesis-head .txt { flex: 1; line-height: 1.35; }
+  .thesis-body { padding: 22px 28px 26px; }
+  .thesis-body ul { margin: 10px 0; }
+  .thesis-body li {
+    margin: 12px 0;
+    padding-left: 4px;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+  .bullet-key { color: var(--gold); font-weight: 700; }
+
+  /* ─── CONFIDENCE TAGS ─── */
+  .tag {
+    display: inline-block;
+    font-family: 'Bebas Neue', 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 2px 10px;
+    margin: 0 3px;
+    letter-spacing: 0.2em;
+    vertical-align: 3px;
+    text-transform: uppercase;
+    clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%);
+  }
+  .tag-high { background: var(--green); color: var(--bg); }
+  .tag-mid  { background: var(--gold); color: var(--bg); }
+  .tag-low  { background: var(--red-hot); color: #fff; }
+  .tag-inf  { background: var(--ink-dim); color: var(--ink); }
+
+  /* ─── TABLES ─── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0;
+    font-size: 17px;
+    background: var(--panel);
+    border: 2px solid var(--red);
+  }
+  thead { background: var(--red); }
+  th {
+    font-weight: 900;
+    padding: 14px 16px;
+    text-align: left;
+    color: #fff;
+    border-right: 1px solid rgba(255,255,255,0.15);
+    font-size: 16px;
+    letter-spacing: 0.04em;
+  }
+  th:last-child { border-right: none; }
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--ink);
+  }
+  td:last-child { border-right: none; }
+  tbody tr:nth-child(even) { background: var(--panel-2); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(230,0,18,0.12); transition: background 0.15s; }
+  td strong { background: none; color: var(--red-hot); }
+  .row-bull td:first-child { border-left: 4px solid var(--green); }
+  .row-base td:first-child { border-left: 4px solid var(--gold); }
+  .row-bear td:first-child { border-left: 4px solid var(--red-hot); }
+
+  /* ─── MERMAID ─── */
+  .mermaid-wrap {
+    margin: 32px 0;
+    padding: 28px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--red);
+    overflow-x: auto;
+    text-align: center;
+    position: relative;
+  }
+  .mermaid-wrap::before {
+    content: "// DIAGRAM";
+    position: absolute;
+    top: 8px; right: 16px;
+    font-family: 'Bebas Neue', monospace;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--red);
+  }
+  .mermaid { display: inline-block; min-width: 100%; }
+
+  /* ─── FINALE ─── */
+  .finale {
+    margin: 56px 0 32px;
+    padding: 34px 40px;
+    background: var(--bg-2);
+    border: 3px solid var(--red);
+    position: relative;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.75;
+    color: var(--ink);
+    clip-path: polygon(0 0, 100% 0, 100% 88%, 96% 100%, 0 100%, 4% 12%);
+  }
+  .finale::before {
+    content: "FINAL VERDICT";
+    position: absolute;
+    top: -14px; left: 32px;
+    background: var(--red);
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.35em;
+    padding: 4px 16px;
+    clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
+  }
+  .finale strong {
+    background: none;
+    color: var(--red-hot);
+    padding: 0;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: 'Bebas Neue', monospace;
+    font-size: 13px;
+    letter-spacing: 0.4em;
+    color: var(--ink-dim);
+    text-align: center;
+  }
+
+  @media (max-width: 760px) {
+    body { font-size: 16px; }
+    .page { padding: 24px 16px 64px; }
+    .hero { padding: 28px 20px; }
+    .hero h1 { font-size: 32px; }
+    h1.chapter { font-size: 26px; }
+    h2 { font-size: 21px; }
+    .tldr { grid-template-columns: 1fr; }
+    table { font-size: 15px; }
+    th, td { padding: 10px 10px; }
+    .punch { font-size: 18px; padding: 20px; }
+    .finale { font-size: 18px; padding: 26px 22px; }
+  }
+  @media print {
+    body { background: white; color: black; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <div class="hero">
+    <div class="hero-tag">▶ CELESTE INVESTIGATION · FILE #024</div>
+    <h1>鴻海 2317<br><span style="font-size:30px;opacity:0.92;">AI 伺服器 × EV × 半導體 × 集團折讓</span></h1>
+    <div class="hero-sub">
+      STATUS · <b>PE 14.57</b> &nbsp;|&nbsp; PRICE · <b>221</b> &nbsp;|&nbsp; MCAP · <b>3.06T TWD</b> &nbsp;|&nbsp; VERDICT · <b>HOLD + DIP BUY</b>
+    </div>
+  </div>
+
+  <!-- ═══════════ TL;DR CARDS ═══════════ -->
+  <div class="tldr">
+    <div class="tldr-card">
+      <div class="lbl">目標價 (機率加權)</div>
+      <div class="val pos">257</div>
+      <div class="note">+16% 風險調整後上行 <span class="tag tag-high">HIGH</span></div>
+    </div>
+    <div class="tldr-card">
+      <div class="lbl">核心錯價</div>
+      <div class="val">2.48T</div>
+      <div class="note">FII 看穿權益 (扣折讓) / 鴻海整體市值 3.06T</div>
+    </div>
+    <div class="tldr-card">
+      <div class="lbl">硬停損</div>
+      <div class="val neg">165</div>
+      <div class="note">-25% from 221 · 執行不辯論</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ THE STORY ═══════════ -->
+  <h1 class="chapter"><span class="num">01</span>這盤棋</h1>
+
+  <div class="punch">
+    原題已死。四大 ODM 本益比全塌進 <b style="color:#ffe14a">12-15</b> 區間，「集團折讓」半年前就被市場自己修完。
+  </div>
+
+  <p>真正卡住的變數在<strong>跨境</strong>：鴻海持 FII 工業富聯 <strong>84.10%</strong>，FII 在 A 股吃 PE <strong>34.56</strong> 倍的稀缺溢價——這個溢價<strong>無法跨境傳導回台股</strong>。</p>
+
+  <p>帳面上，FII 持股對應的看穿權益高達 <strong>4.62 兆 TWD</strong>，比鴻海整體市值 3.06 兆還多出 1.51 倍。扣完 A 股溢價折讓 35% + 跨境稅 10% + 控股折讓 15-20%，收斂到 <strong>2.48 兆</strong>——暗示市場給「iPhone + EV + 半導體 + 土地 + 淨現金」這整塊只值 0.58 兆。合理值 1.0-1.5 兆。</p>
+
+  <div class="punch">
+    剩餘超額報酬 <b style="color:#ffe14a">8-15%</b>，窄但為正 <span class="tag tag-high">HIGH</span>
+  </div>
+
+  <p>市場盯 AI 機櫃、GB300、摺疊機 iPhone——那些都是表面訊號。<strong>真正讓 221 動的，是 FII 看穿權益何時被定價</strong>。三個時間窗，只要任一兌現，超額報酬就被擠出來：</p>
+
+  <ul>
+    <li><span class="bullet-key">6 月 GTC / Computex</span> — GB300 實際出貨節奏</li>
+    <li><span class="bullet-key">Q2 法說會</span> — 首次 2026 季度 AI 拆解？</li>
+    <li><span class="bullet-key">FII 分紅 / 減持</span> — 看穿權益實體兌現</li>
+  </ul>
+
+  <div class="punch">
+    221 大部分已反映 AI 兆元。不追高，<b style="color:#ffe14a">180-195 回檔吃 30-40%</b>，守 165。
+  </div>
+
+  <hr>
+
+  <!-- ═══════════ BOARD ═══════════ -->
+  <h1 class="chapter"><span class="num">02</span>這盤棋的結構</h1>
+
+  <h2>論點樹</h2>
+  <div class="mermaid-wrap">
+<pre class="mermaid">
+graph LR
+    A["鴻海 2317<br/>3.06T · PE 14.57<br/>株價 221"] --> B[看穿權益缺口]
+    A --> C[業務結構重整]
+    A --> D[電動車二曲線]
+    A --> E[操作區間]
+
+    B --> B1["FII 84.10%"]
+    B1 --> B2["FII 市值 5.49T TWD"]
+    B2 --> B3["看穿 4.62T<br/>扣折讓 2.48T"]
+
+    C --> C1["雲端 41%"]
+    C --> C2["電腦消費 35%"]
+    C --> C3["Apple 45-55%<br/>iPhone 35-42%"]
+
+    D --> D1["鴻華 2258<br/>佔母體 0.04%"]
+    D --> D2["Stellantis-Leapmotor<br/>與鴻海無關"]
+
+    E --> E1["空手: 180-195 / 200-215"]
+    E --> E2["持有: 抱 200-290 / 減 300-340"]
+    E --> E3["停損 165"]
+</pre>
+  </div>
+
+  <h2>誰跟誰在博弈</h2>
+  <div class="mermaid-wrap">
+<pre class="mermaid">
+graph TD
+    H["NVIDIA<br/>GB200 / GB300 / Rubin"] --> I["鴻海 AI 機櫃<br/>全球 40% · 週產能 1000→2000"]
+    H --> J["廣達 PE 14.96"]
+    H --> K["緯創 PE 14.74"]
+    H --> L["緯穎 PE 12.43"]
+
+    I --> M["FII 601138<br/>PE 34.56 · AI 機櫃 60%"]
+    M -. A 股溢價不傳導 .-> N["鴻海母體 2317<br/>PE 14.57"]
+
+    O["Broadcom<br/>Tomahawk 6"] --> P["FIT 6088<br/>CPO socket 未揭露"]
+
+    Q[Apple] --> I
+    Q --> R["iPhone 35-42%"]
+    R --> N
+</pre>
+  </div>
+
+  <hr>
+
+  <!-- ═══════════ THESES ═══════════ -->
+  <h1 class="chapter"><span class="num">03</span>三大論點</h1>
+
+  <div class="thesis">
+    <div class="thesis-head">
+      <span class="ord">I.</span>
+      <span class="txt">原題已死。新問題：<strong style="background:none;color:#ff1a2e;">看穿權益為何不被看見？</strong> <span class="tag tag-high">HIGH</span></span>
+    </div>
+    <div class="thesis-body">
+      <ul>
+        <li><span class="bullet-key">四大 ODM 全收斂</span>：鴻海 14.57 / 廣達 14.96 / 緯創 14.74 / 緯穎 12.43。廣達從 40 倍腰斬，不是集團折讓被糾正，是<strong>整族群溢價消散</strong>。</li>
+        <li><span class="bullet-key">跨市場才是錯價</span>：FII 單一持股看穿權益 4.62T > 鴻海整體市值 3.06T，是 <strong>1.51 倍</strong>。</li>
+        <li><span class="bullet-key">三層折讓校正</span>：A 股溢價 -35% + 跨境稅 -10% + 控股折讓 -15~20% = 收斂 <strong>2.48T</strong>。</li>
+        <li><span class="bullet-key">ODM 分兩層</span>：鴻海／廣達／緯創／緯穎擠 12-15，英業達／和碩／立訊 17-20，FII 獨享 34.56。鴻海被壓不是 iPhone 拖累，是<strong>故事純淨度</strong>的結構結果。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="thesis">
+    <div class="thesis-head">
+      <span class="ord">II.</span>
+      <span class="txt">AI <strong style="background:none;color:#ff1a2e;">已硬兌現</strong>。EV 還是選擇權，不是基本盤。 <span class="tag tag-high">HIGH</span></span>
+    </div>
+    <div class="thesis-body">
+      <ul>
+        <li><span class="bullet-key">AI 超越 iPhone</span>：2025 Q2 起 AI 伺服器單季營收 > iPhone。雲端 41% > 電腦消費 35%。</li>
+        <li><span class="bullet-key">硬數字全綠</span>：全球機櫃 40%、週產能 1000→2000、Q1 2026 營收 <strong>2.13T（YoY +29.68%）</strong>。FII 雲端 +88.7%、AI 伺服器 +3 倍、800G 交換器 +13 倍。</li>
+        <li><span class="bullet-key">EV 近似歸零</span>：鴻華 2258 月營收 4.73 億 → 0.11 億，全年 35-40 億，<strong>佔母體 0.04%</strong>。</li>
+        <li><span class="bullet-key">題目誤串</span>：Stellantis-Leapmotor 是 Stellantis 直接合資，<strong>鴻海沒有介入</strong>。</li>
+        <li><span class="bullet-key">半導體中性</span>：Sharp 面板級封裝 2026 量產為真。FIT 6088 CPO socket <strong>無硬數字</strong>，列樂觀加分項 <span class="tag tag-mid">MID</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="thesis">
+    <div class="thesis-head">
+      <span class="ord">III.</span>
+      <span class="txt">大摩 <strong style="background:none;color:#ff1a2e;">317 / 444</strong> 是強錨，但上行要催化。 <span class="tag tag-mid">MID</span></span>
+    </div>
+    <div class="thesis-body">
+      <ul>
+        <li><span class="bullet-key">外部錨定</span>：大摩「優於大盤」，基準 <strong>317</strong>（+43%）/ 樂觀 <strong>444</strong>（+101%）。EPS 2026E 17.4-19.06。</li>
+        <li><span class="bullet-key">上行是條件命題</span>，不是時間函數。要看到三件其一：
+          <ul>
+            <li>(a) 單月營收連兩月 &gt; 1T TWD</li>
+            <li>(b) GTC/Computex 後 GB300 出貨超預期</li>
+            <li>(c) 首次正式給 2026 季度 AI 拆解</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ═══════════ SCENARIOS ═══════════ -->
+  <h1 class="chapter"><span class="num">04</span>三情境劇本</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>情境</th><th>機率</th><th>EPS 2026E</th><th>PE</th><th>目標價</th><th>相對 221</th><th>觸發條件</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row-bull">
+        <td><strong>BULL 樂觀</strong></td>
+        <td>0.25</td><td>20.5</td><td>17x</td><td><strong>348</strong></td><td>+57%</td>
+        <td>Q2 連兩月 &gt;1T + FII &gt;73 RMB + 季度 AI 拆解超共識</td>
+      </tr>
+      <tr class="row-base">
+        <td><strong>BASE 基準</strong></td>
+        <td>0.55</td><td>17.8</td><td>14x</td><td><strong>249</strong></td><td>+13%</td>
+        <td>AI 按軌道交付 + FII 50-70 RMB + iPhone 持平</td>
+      </tr>
+      <tr class="row-bear">
+        <td><strong>BEAR 悲觀</strong></td>
+        <td>0.20</td><td>15.0</td><td>11x</td><td><strong>165</strong></td><td>-25%</td>
+        <td>連 3 月 &lt;700 億 + Apple 砍 &gt;20% + 鴻華爆雷</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="punch">
+    機率加權 <b style="color:#ffe14a">257</b> TWD · +16% 風險調整後上行 <span class="tag tag-high">HIGH</span>
+  </div>
+
+  <p>樂觀／悲觀都要「三件全中」，基準條件寬鬆——這就是為什麼 0.55 落在基準。樂觀 0.25 比共識高一點，因 FII 溢價部分傳導 + AI 超預期<strong>有結構支撐，不是純敘事</strong>。</p>
+
+  <hr>
+
+  <!-- ═══════════ PLAYBOOK ═══════════ -->
+  <h1 class="chapter"><span class="num">05</span>操作手冊</h1>
+
+  <h2>空手：三欄進場</h2>
+  <table>
+    <thead>
+      <tr><th>區間</th><th>PE</th><th>動作</th><th>條件</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>180-195</strong> 積極逢低</td><td>10.3-11.2</td><td>一次分批 <strong>30-40%</strong></td><td>回檔 -12~-18%，非基本面破壞</td></tr>
+      <tr><td><strong>200-215</strong> 中性進場</td><td>11.5-12.4</td><td><strong>50-60%</strong></td><td>回檔 -3~-10%，合理但無超額</td></tr>
+      <tr><td><strong>215+</strong> 等催化</td><td>12.4+</td><td><strong>不追高</strong>，滿足任一催化 20-30%</td><td>GB300 超預期／月營收 &gt;900 億／季度拆解</td></tr>
+    </tbody>
+  </table>
+
+  <h2>持有：四欄操作</h2>
+  <table>
+    <thead>
+      <tr><th>區間</th><th>PE</th><th>動作</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>200-290</strong> 核心續抱</td><td>11.5-16.7</td><td><strong>不動作</strong>，對應大摩基準 60-90%</td></tr>
+      <tr><td><strong>175-195</strong> 加碼</td><td>10.0-11.2</td><td>加 20-30%，前提：月營收未跌破 700 億、鴻華無利空</td></tr>
+      <tr><td><strong>300-340</strong> 首次減碼</td><td>17.2-19.5</td><td>賣 20-30%</td></tr>
+      <tr><td><strong>400+</strong> 部位減半</td><td>22.9+</td><td>樂觀目標 444 兌現 90%，歷史高估區</td></tr>
+      <tr class="row-bear"><td><strong>165 硬停損</strong></td><td>—</td><td><strong style="color:#ff1a2e">執行不辯論</strong> <span class="tag tag-high">HIGH</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>三條量化觀察線</h2>
+  <table>
+    <thead>
+      <tr><th>訊號</th><th>樂觀閾值</th><th>悲觀閾值</th><th>意涵</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>FII 601138 股價</strong></td>
+        <td>&gt; 73 RMB (+20%)</td>
+        <td>&lt; 50 RMB</td>
+        <td>看穿權益 2.48T → 3.3T+ ／ 1.8T</td>
+      </tr>
+      <tr>
+        <td><strong>恆生 A/H 溢價指數</strong></td>
+        <td>&lt; 115 (收斂)</td>
+        <td>&gt; 130 (擴大)</td>
+        <td>折價 35% → 25% (利鴻海) ／ 45% (利 FII)</td>
+      </tr>
+      <tr>
+        <td><strong>鴻海單月營收</strong></td>
+        <td>連兩月 &gt;1T</td>
+        <td>連三月 &lt;700 億</td>
+        <td>兆元 AI 超預期 ／ AI 或 iPhone 失速</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <!-- ═══════════ APPENDIX ═══════════ -->
+  <h1 class="chapter"><span class="num">06</span>附錄</h1>
+
+  <h2>核心證據索引</h2>
+  <ul>
+    <li><strong>估值核心</strong>：四大 ODM PE 收斂 #746、同業 PE 對比 #756、ODM 兩層 #768、FII 看穿計算 #759、A 股溢價校正 #763、跨境稅負 #769、大摩 317/444 #761</li>
+    <li><strong>結構驗證</strong>：Q1 2026 營收 2.13T #747、雲端 41% #748、FII 上海業績 #749、Apple 集中度 55% #757、iPhone 口徑校正 #762</li>
+    <li><strong>電動車</strong>：鴻華 Q1 -53% #750、月營收 12 月軌跡 #767、Stellantis-Leapmotor 無關聯 #758</li>
+    <li><strong>選擇權項</strong>：Ohio → SoftBank #751、Sharp 面板級封裝 2026 量產 #752、FIT 6088 CPO socket 無硬數字 #770</li>
+    <li><strong>情境與操作</strong>：空手三欄 #764、持有四欄 #765、三觀察線 #766、三情境加權 257 #771</li>
+  </ul>
+
+  <h2>四輪調查的教訓</h2>
+  <ol>
+    <li><strong>反常審計救了這份報告。</strong> 第一輪就發現原題前提失效——設題時的前提本身要先驗證。</li>
+    <li><strong>頭條數字很危險。</strong> 「FII 權益 = 鴻海市值 1.51 倍」是震撼彈，但沒扣折讓不能用。<em>跨境看穿要預設 30-50% 折價。</em></li>
+    <li><strong>敘事與業績要脫勾。</strong> 鴻華貢獻 0.04% 但股價敘事一堆，三情境不能靠敘事當基本盤。</li>
+    <li><strong>題目本身也要反常審計。</strong> Stellantis-Leapmotor 誤串是活教訓。</li>
+  </ol>
+
+  <h2>待驗證事項</h2>
+  <table>
+    <thead><tr><th>事項</th><th>目標日期</th><th>驗證方法</th></tr></thead>
+    <tbody>
+      <tr><td>鴻海 2026 EPS 是否超保守預估 17.4</td><td>2026-08-15</td><td>Q2 法說會</td></tr>
+      <tr><td>FII 2026 分紅政策是否加碼</td><td>2026-09-30</td><td>FII 中期報告</td></tr>
+      <tr><td>鴻海是否首次給 2026 AI 季度拆解</td><td>2026-05-15</td><td>Q1 法說會</td></tr>
+      <tr><td>FIT 6088 CPO socket 對 Tomahawk 6 能見度</td><td>2026-10-31</td><td>FIT 中期報告</td></tr>
+      <tr><td>Mitsubishi Electric Mobility 50% 收購定案</td><td>2026-05-31</td><td>公開資訊觀測站</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══════════ FINALE ═══════════ -->
+  <div class="finale">
+    221 不是完全反映，也不是完全沒反映。AI 兆元大部分已進去，剩下 <strong>+16%</strong> 要靠催化。<br>
+    <strong>催化沒來之前：不追高 · 留現金 · 守 165。</strong>
+  </div>
+
+  <div class="footer">
+    ▸ CELESTE · FILE #024 · 2026-04-23T15:52:27 · TAKE YOUR HEART ◂
+  </div>
+
+</div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      fontFamily: "'Noto Sans TC', sans-serif",
+      fontSize: '16px',
+      primaryColor: '#1a1612',
+      primaryBorderColor: '#e60012',
+      primaryTextColor: '#f5f0e6',
+      lineColor: '#e60012',
+      secondaryColor: '#221c16',
+      tertiaryColor: '#0a0806',
+      background: '#0a0806',
+      mainBkg: '#1a1612',
+      nodeBorder: '#e60012',
+      clusterBkg: '#12100d',
+      edgeLabelBackground: '#0a0806',
+      textColor: '#f5f0e6',
+    },
+    flowchart: { htmlLabels: true, curve: 'basis', padding: 16 }
+  });
+</script>
+
+</body>
+</html>
