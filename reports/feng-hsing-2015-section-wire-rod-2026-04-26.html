@@ -82,10 +82,13 @@
   }
 
   /* ─────────  HERO  ───────── */
+  .hero-wrap {
+    position: relative;
+    margin: 8px -8px 64px;
+  }
   .hero {
     position: relative;
     padding: 56px 48px 50px;
-    margin: 8px -8px 64px;
     background: var(--red);
     color: #fff;
     clip-path: polygon(0 6%, 100% 0, 100% 86%, 96% 100%, 4% 96%, 0 100%);
@@ -492,9 +495,12 @@
   }
 
   /* ─────────  FINALE  ───────── */
-  .finale {
+  .finale-wrap {
     position: relative;
     margin: 64px 0 36px;
+  }
+  .finale {
+    position: relative;
     padding: 40px 44px;
     background: var(--ink);
     color: #000;
@@ -507,8 +513,7 @@
     transform: skew(-1deg);
   }
   .finale > * { transform: skew(1deg); display: block; }
-  .finale::before {
-    content: "FINAL VERDICT";
+  .finale-badge {
     position: absolute;
     top: -18px; left: 36px;
     background: var(--red);
@@ -576,8 +581,9 @@
 <div class="page">
 
   <!-- ═══════════ HERO ═══════════ -->
-  <div class="hero">
-    <div class="sticker">FILE · 045</div>
+  <div class="hero-wrap">
+   <div class="sticker">FILE · 045</div>
+   <div class="hero">
     <div class="hero-tag">▶ CELESTE INVESTIGATION · TARGET ACQUIRED</div>
     <h1 class="ransom">
       <span class="ch">豐</span><span class="ch">興</span><span class="ch">·</span><span class="ch">2</span><span class="ch">0</span><span class="ch">1</span><span class="ch invert">5</span>
@@ -586,6 +592,7 @@
     <div class="hero-sub">
       MAIN PLAY · <b>條線那一格</b> &nbsp;|&nbsp; Q2 EPS BASE · <b>0.95-1.05</b> &nbsp;|&nbsp; H2 RISK · <b>21.2% → 16-18%</b>
     </div>
+   </div>
   </div>
 
   <!-- ═══════════ TL;DR ═══════════ -->
@@ -847,9 +854,12 @@ graph LR
   <p style="color:var(--ink-soft);font-size:15px;line-height:1.7">聯合新聞網 9439332 / ETtoday 2331579 / cnyes 6418558（豐興 4/13 公告三源驗證）；聚毅鋼鐵盤價週報（4 月三週軌跡）；finlab fundamental_features + monthly_revenue（豐興季毛利率、月營收）；MoneyDJ wiki（豐興外銷比、棒線材質結構）；公開資訊觀測站（世豐 2065 月營收）；永豐金證券晨訊 PDF（2025 條線量價結構）。</p>
 
   <!-- ═══════════ FINALE ═══════════ -->
-  <div class="finale">
+  <div class="finale-wrap">
+   <div class="finale-badge">FINAL VERDICT</div>
+   <div class="finale">
     <span>4/27 不是賭盤價漲跌幾百，是賭<strong>條線那一格</strong>透露的 H2 訊息。</span>
     <span style="margin-top:10px;font-size:18px;font-weight:700;color:#444">條線跌 -100 以上 = 螺絲扣件對美關稅傳導已確認 = Q2 法說會條線毛利會比市場預期難看。</span>
+   </div>
   </div>
 
   <div class="footer">
