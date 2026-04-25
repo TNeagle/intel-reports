@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TARGET: 豐興 2015 — 4/27 雙產品 × Q2 壓測</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Anton&family=Bebas+Neue&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0d0d0d;
+    --bg-2:      #161616;
+    --panel:     #1c1c1c;
+    --panel-2:   #232323;
+    --ink:       #ffffff;
+    --ink-soft:  #c4c0b8;
+    --ink-dim:   #6a6458;
+    --red:       #e60012;
+    --red-hot:   #ff0a25;
+    --red-deep:  #8a000d;
+    --gold:      #ffd700;
+    --green:     #4ade80;
+    --border:    #2a2a2a;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 18px;
+    line-height: 1.85;
+    font-weight: 400;
+    letter-spacing: 0.015em;
+    background-image:
+      /* halftone dots — fading from top-left */
+      radial-gradient(circle at 0% 0%, rgba(230,0,18,0.10) 0%, transparent 40%),
+      radial-gradient(circle at 100% 100%, rgba(230,0,18,0.08) 0%, transparent 45%),
+      radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1.5px);
+    background-size: auto, auto, 6px 6px;
+    background-attachment: fixed, fixed, fixed;
+    overflow-x: hidden;
+  }
+  .page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 48px 40px 96px;
+    position: relative;
+  }
+
+  /* ─────────  RANSOM-NOTE HEADLINE  ───────── */
+  .ransom {
+    font-family: 'Anton', 'Bebas Neue', sans-serif;
+    font-style: italic;
+    font-weight: 900;
+    letter-spacing: -0.005em;
+  }
+  .ransom .ch {
+    display: inline-block;
+    font-style: italic;
+  }
+  .ransom .ch:nth-child(2n)  { transform: rotate(-3deg) translateY(-2px); }
+  .ransom .ch:nth-child(3n)  { transform: rotate(2deg)  translateY(1px); }
+  .ransom .ch:nth-child(5n)  { transform: rotate(-2deg) translateY(2px); }
+  .invert {
+    position: relative;
+    color: var(--bg);
+    text-shadow: none;
+  }
+  .invert::before {
+    content: "";
+    position: absolute;
+    top: 0.06em;
+    bottom: -0.06em;
+    left: -0.08em;
+    right: -0.08em;
+    background: var(--ink);
+    box-shadow: 3px 3px 0 #000;
+    z-index: -1;
+  }
+
+  /* ─────────  HERO  ───────── */
+  .hero {
+    position: relative;
+    padding: 56px 48px 50px;
+    margin: 8px -8px 64px;
+    background: var(--red);
+    color: #fff;
+    clip-path: polygon(0 6%, 100% 0, 100% 86%, 96% 100%, 4% 96%, 0 100%);
+    box-shadow: 14px 14px 0 var(--red-deep);
+    overflow: hidden;
+  }
+  .hero::before {
+    /* halftone fade from top-right + diagonal stripes */
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(0,0,0,0.35) 1.2px, transparent 1.7px),
+      repeating-linear-gradient(-45deg, rgba(0,0,0,0.06) 0 4px, transparent 4px 18px);
+    background-size: 7px 7px, auto;
+    -webkit-mask-image: linear-gradient(135deg, #000 0%, transparent 60%);
+            mask-image: linear-gradient(135deg, #000 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero::after {
+    /* speed-line burst from upper-right */
+    content: "";
+    position: absolute;
+    top: -50%; right: -30%;
+    width: 80%; height: 200%;
+    background: repeating-conic-gradient(from 0deg at 0% 50%,
+      rgba(0,0,0,0.10) 0deg 1deg,
+      transparent 1deg 4deg);
+    pointer-events: none;
+    opacity: 0.6;
+  }
+  .hero-tag {
+    font-family: 'Bebas Neue', monospace;
+    font-size: 16px;
+    letter-spacing: 0.32em;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    position: relative; z-index: 2;
+  }
+  .hero h1 {
+    font-size: 64px;
+    line-height: 0.95;
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+    text-shadow: 4px 4px 0 #000, 9px 9px 0 var(--red-deep);
+    position: relative; z-index: 2;
+    transform: skew(-3deg);
+  }
+  .hero h1 .sub {
+    display: block;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    font-style: normal;
+    margin-top: 14px;
+    letter-spacing: 0.04em;
+    text-shadow: 2px 2px 0 #000;
+    transform: skew(3deg);
+  }
+  .hero-sub {
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    position: relative; z-index: 2;
+    margin-top: 8px;
+  }
+  .hero-sub b { color: var(--gold); font-weight: 700; }
+
+  /* sticker on hero */
+  .sticker {
+    position: absolute;
+    top: -16px; right: 32px;
+    background: #000;
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.32em;
+    padding: 8px 18px 7px;
+    transform: rotate(8deg);
+    box-shadow: 4px 4px 0 var(--red);
+    clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+    z-index: 3;
+  }
+
+  /* ─────────  CHAPTER HEADINGS (RANSOM)  ───────── */
+  h1.chapter {
+    position: relative;
+    font-family: 'Anton', 'Noto Sans TC', sans-serif;
+    font-size: 52px;
+    font-style: italic;
+    font-weight: 900;
+    line-height: 1;
+    margin: 88px 0 36px;
+    padding: 14px 0 14px 0;
+    color: var(--ink);
+    display: block;
+    letter-spacing: -0.01em;
+    transform: skew(-6deg);
+    text-shadow: 3px 3px 0 #000, 7px 7px 0 var(--red);
+  }
+  h1.chapter .num {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    padding: 4px 14px 2px;
+    margin-right: 18px;
+    letter-spacing: 0.08em;
+    transform: skew(6deg) rotate(-3deg);
+    box-shadow: 4px 4px 0 #000;
+    text-shadow: none;
+    vertical-align: 6px;
+  }
+  h1.chapter .ch.invert {
+    color: #000;
+  }
+
+  h2 {
+    position: relative;
+    font-size: 28px;
+    font-weight: 900;
+    font-style: italic;
+    margin: 56px 0 22px;
+    padding: 12px 22px 12px 26px;
+    color: var(--ink);
+    background: #000;
+    border-left: 8px solid var(--red);
+    transform: skew(-4deg);
+    box-shadow: 5px 5px 0 var(--red);
+    display: inline-block;
+    letter-spacing: 0.01em;
+  }
+  h2 > span { display: inline-block; transform: skew(4deg); }
+  h3 {
+    font-size: 22px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--red-hot);
+    margin: 32px 0 14px;
+    letter-spacing: 0.03em;
+    text-shadow: 2px 2px 0 #000;
+  }
+
+  p { margin: 18px 0; }
+  strong {
+    color: #fff;
+    font-weight: 700;
+    background: linear-gradient(180deg, transparent 60%, var(--red-deep) 60%, var(--red-deep) 92%, transparent 92%);
+    padding: 0 3px;
+  }
+  em { color: var(--ink-soft); font-style: italic; }
+  hr {
+    border: none;
+    height: 5px;
+    margin: 64px 0;
+    background:
+      linear-gradient(90deg, var(--red) 0 28%, transparent 28% 30%, var(--ink) 30% 36%, transparent 36% 38%, var(--red) 38% 100%);
+    clip-path: polygon(0 30%, 100% 30%, 96% 70%, 4% 70%);
+  }
+  ul, ol { padding-left: 28px; margin: 16px 0; }
+  li { margin: 10px 0; }
+  li::marker { color: var(--red); font-weight: 900; }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9em;
+    background: #000;
+    color: var(--gold);
+    padding: 2px 8px;
+    border: 1px solid var(--red);
+    font-weight: 700;
+  }
+
+  /* ─────────  TL;DR CARDS  ───────── */
+  .tldr {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin: 32px 0 56px;
+  }
+  .tldr-card {
+    position: relative;
+    background: var(--ink);
+    color: #000;
+    padding: 22px 22px 20px;
+    transform: skewX(-6deg);
+    box-shadow: 6px 6px 0 var(--red), 10px 10px 0 #000;
+  }
+  .tldr-card > * { transform: skewX(6deg); }
+  .tldr-card .lbl {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.32em;
+    color: var(--red);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .tldr-card .val {
+    font-family: 'Anton', sans-serif;
+    font-size: 38px;
+    font-weight: 900;
+    font-style: italic;
+    line-height: 1.05;
+    color: #000;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .tldr-card .val.pos { color: #00874f; }
+  .tldr-card .val.neg { color: var(--red); }
+  .tldr-card .note {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+  .tldr-card::after {
+    /* corner sticker */
+    content: "//";
+    position: absolute;
+    top: 6px; right: 12px;
+    font-family: 'Bebas Neue', monospace;
+    color: var(--red);
+    font-size: 16px;
+    letter-spacing: 0.2em;
+  }
+
+  /* ─────────  PUNCH (with speed-line halftone)  ───────── */
+  .punch {
+    position: relative;
+    margin: 36px 0;
+    padding: 30px 36px;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.55;
+    letter-spacing: 0.015em;
+    clip-path: polygon(0 8%, 100% 0, 99% 92%, 1% 100%);
+    box-shadow: 8px 8px 0 #000;
+    overflow: hidden;
+  }
+  .punch::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(0,0,0,0.25) 1.1px, transparent 1.6px);
+    background-size: 8px 8px;
+    -webkit-mask-image: radial-gradient(circle at 100% 0%, #000 0%, transparent 60%);
+            mask-image: radial-gradient(circle at 100% 0%, #000 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .punch::after {
+    content: "▶";
+    position: absolute;
+    left: 16px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    font-size: 18px;
+    text-shadow: 2px 2px 0 #000;
+  }
+  .punch > * { position: relative; z-index: 1; padding-left: 18px; display: block; }
+
+  /* ─────────  THESIS BLOCKS  ───────── */
+  .thesis {
+    position: relative;
+    margin: 40px 0;
+    background: #000;
+    border: 1px solid var(--border);
+    border-left: 6px solid var(--red);
+    padding: 0;
+    box-shadow: 6px 6px 0 var(--red);
+  }
+  .thesis-head {
+    background: var(--ink);
+    color: #000;
+    padding: 16px 26px 14px;
+    font-size: 21px;
+    font-weight: 900;
+    font-style: italic;
+    border-bottom: 4px solid var(--red);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .thesis-head .ord {
+    font-family: 'Anton', sans-serif;
+    font-size: 44px;
+    color: #fff;
+    background: var(--red);
+    line-height: 1;
+    padding: 4px 14px 2px;
+    letter-spacing: 0.05em;
+    transform: rotate(-4deg);
+    box-shadow: 3px 3px 0 #000;
+  }
+  .thesis-head .txt { flex: 1; line-height: 1.35; color: #000; }
+  .thesis-head .txt em { color: var(--red); font-style: normal; font-weight: 900; }
+  .thesis-body { padding: 22px 28px 24px; }
+  .thesis-body ul { margin: 8px 0; }
+  .thesis-body li {
+    margin: 12px 0;
+    padding-left: 4px;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+  .bullet-key { color: var(--gold); font-weight: 700; }
+
+  /* ─────────  CONFIDENCE TAGS (skewed parallelogram)  ───────── */
+  .tag {
+    display: inline-block;
+    font-family: 'Bebas Neue', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 12px;
+    margin: 0 4px;
+    letter-spacing: 0.22em;
+    vertical-align: 3px;
+    text-transform: uppercase;
+    transform: skewX(-15deg);
+    box-shadow: 2px 2px 0 #000;
+  }
+  .tag > span { display: inline-block; transform: skewX(15deg); }
+  .tag-high { background: var(--green); color: #000; }
+  .tag-mid  { background: var(--gold); color: #000; }
+  .tag-low  { background: var(--red-hot); color: #fff; }
+  .tag-inf  { background: var(--ink-dim); color: var(--ink); }
+
+  /* ─────────  TABLES  ───────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0;
+    font-size: 17px;
+    background: var(--panel);
+    border: 3px solid var(--red);
+    box-shadow: 6px 6px 0 #000;
+  }
+  thead { background: #000; }
+  th {
+    font-weight: 900;
+    font-style: italic;
+    padding: 14px 16px;
+    text-align: left;
+    color: var(--ink);
+    border-right: 2px solid var(--red);
+    border-bottom: 3px solid var(--red);
+    font-size: 16px;
+    letter-spacing: 0.05em;
+  }
+  th:last-child { border-right: none; }
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--ink);
+  }
+  td:last-child { border-right: none; }
+  tbody tr:nth-child(even) { background: var(--panel-2); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(230,0,18,0.15); transition: background 0.15s; }
+  td strong { background: none; color: var(--red-hot); padding: 0; }
+  .row-bull td:first-child { border-left: 5px solid var(--green); }
+  .row-base td:first-child { border-left: 5px solid var(--gold); }
+  .row-bear td:first-child { border-left: 5px solid var(--red-hot); }
+
+  /* ─────────  MERMAID  ───────── */
+  .mermaid-wrap {
+    position: relative;
+    margin: 32px 0;
+    padding: 32px 28px 28px;
+    background: var(--bg-2);
+    border: 2px solid var(--red);
+    overflow-x: auto;
+    text-align: center;
+    box-shadow: 6px 6px 0 #000;
+  }
+  .mermaid-wrap::before {
+    content: "DIAGRAM // ";
+    position: absolute;
+    top: -12px; left: 24px;
+    background: var(--red);
+    color: #fff;
+    font-family: 'Bebas Neue', monospace;
+    font-size: 13px;
+    letter-spacing: 0.32em;
+    padding: 4px 16px 3px;
+    transform: skewX(-12deg);
+    font-weight: 700;
+  }
+  .mermaid { display: inline-block; min-width: 100%; }
+
+  /* ─────────  STICKER  ───────── */
+  .floating-sticker {
+    display: inline-block;
+    background: #000;
+    color: var(--gold);
+    font-family: 'Bebas Neue', monospace;
+    font-size: 13px;
+    padding: 5px 14px 4px;
+    letter-spacing: 0.28em;
+    transform: rotate(-6deg);
+    margin: 0 6px;
+    box-shadow: 3px 3px 0 var(--red);
+    font-weight: 700;
+  }
+
+  /* ─────────  FINALE  ───────── */
+  .finale {
+    position: relative;
+    margin: 64px 0 36px;
+    padding: 40px 44px;
+    background: var(--ink);
+    color: #000;
+    border: 4px solid #000;
+    font-size: 23px;
+    font-weight: 900;
+    line-height: 1.7;
+    clip-path: polygon(0 0, 100% 0, 100% 88%, 96% 100%, 0 100%, 4% 12%);
+    box-shadow: 10px 10px 0 var(--red), 16px 16px 0 #000;
+    transform: skew(-1deg);
+  }
+  .finale > * { transform: skew(1deg); display: block; }
+  .finale::before {
+    content: "FINAL VERDICT";
+    position: absolute;
+    top: -18px; left: 36px;
+    background: var(--red);
+    color: #fff;
+    font-family: 'Anton', sans-serif;
+    font-style: italic;
+    font-size: 18px;
+    letter-spacing: 0.32em;
+    padding: 6px 20px 4px;
+    transform: rotate(-3deg);
+    box-shadow: 3px 3px 0 #000;
+    z-index: 2;
+  }
+  .finale strong {
+    background: #000;
+    color: var(--gold);
+    padding: 0 6px;
+  }
+
+  /* ─────────  FOOTER  ───────── */
+  .footer {
+    margin-top: 72px;
+    padding: 24px 0;
+    border-top: 4px solid var(--red);
+    font-family: 'Bebas Neue', monospace;
+    font-size: 13px;
+    letter-spacing: 0.4em;
+    color: var(--ink-dim);
+    text-align: center;
+  }
+  .footer .stamp {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    padding: 4px 14px;
+    letter-spacing: 0.32em;
+    font-weight: 700;
+    transform: skewX(-12deg);
+    margin: 0 6px;
+  }
+
+  @media (max-width: 760px) {
+    body { font-size: 16px; }
+    .page { padding: 24px 16px 64px; }
+    .hero { padding: 32px 22px; }
+    .hero h1 { font-size: 40px; }
+    .hero h1 .sub { font-size: 17px; }
+    h1.chapter { font-size: 32px; }
+    h2 { font-size: 21px; }
+    .tldr { grid-template-columns: 1fr; }
+    .tldr-card { transform: none; box-shadow: 4px 4px 0 var(--red); }
+    .tldr-card > * { transform: none; }
+    table { font-size: 14px; }
+    th, td { padding: 10px 8px; }
+    .punch { font-size: 17px; padding: 22px 24px; }
+    .finale { font-size: 18px; padding: 28px 22px; transform: none; }
+    .finale > * { transform: none; }
+  }
+  @media print {
+    body { background: white; color: black; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <div class="hero">
+    <div class="sticker">FILE · 045</div>
+    <div class="hero-tag">▶ CELESTE INVESTIGATION · TARGET ACQUIRED</div>
+    <h1 class="ransom">
+      <span class="ch">豐</span><span class="ch">興</span><span class="ch">·</span><span class="ch">2</span><span class="ch">0</span><span class="ch">1</span><span class="ch invert">5</span>
+      <span class="sub">4/27 雙產品盤價深度推演 × Q2 利差結構壓測</span>
+    </h1>
+    <div class="hero-sub">
+      MAIN PLAY · <b>條線那一格</b> &nbsp;|&nbsp; Q2 EPS BASE · <b>0.95-1.05</b> &nbsp;|&nbsp; H2 RISK · <b>21.2% → 16-18%</b>
+    </div>
+  </div>
+
+  <!-- ═══════════ TL;DR ═══════════ -->
+  <div class="tldr">
+    <div class="tldr-card">
+      <div class="lbl">主軸劇本機率</div>
+      <div class="val">22<span style="font-size:24px">%</span></div>
+      <div class="note">型平 / 條跌 / 鋼筋跌 — 我下注的格子</div>
+    </div>
+    <div class="tldr-card">
+      <div class="lbl">咽喉變數</div>
+      <div class="val neg">條線</div>
+      <div class="note">毛利 21.2% · H2 螺絲扣件關稅 32→50%</div>
+    </div>
+    <div class="tldr-card">
+      <div class="lbl">下行不對稱</div>
+      <div class="val">30 / 20</div>
+      <div class="note">Bear 30% &gt; Bull 20% · 風險 1.5x</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ STORY ═══════════ -->
+  <h1 class="chapter"><span class="num">01</span><span class="ch">這盤棋</span></h1>
+
+  <div class="punch"><span>豐興 4/27 不是賭盤價漲跌，是賭<b style="color:#ffd700">「條線那一格」</b>透露的 H2 訊息。</span></div>
+
+  <p>三條時間線在 4/27 交會：鋼筋連六漲剛止步、型鋼連六週平盤、條線出貨已悄悄轉弱。管理層的動機不是拉漲、不是守價——而是在 4 月營收 YoY <strong>-10.1%</strong>、進口小鋼胚到岸壓得鋼筋價差只剩 <strong>700 元</strong>、新廠 Q1 才剛點火加劇折舊壓力的這個窗口，<strong>避免任一產品線單獨出錯</strong>。</p>
+
+  <p>市場在等的是「鋼筋會不會像台鋼集團那樣明調 -100」。<span class="floating-sticker">真正的故事在條線</span></p>
+
+  <p>稀缺點：</p>
+  <ul>
+    <li><span class="bullet-key">鋼筋下行已顯化</span> — 進口替代成本 17,400 vs 市價 18,100，價差 <strong>&lt; 4%</strong>，彈藥剩多少人盡皆知</li>
+    <li><span class="bullet-key">型鋼支撐很清楚</span> — 東鋼 H 連 7 盤 / 東京製鐵連 2 月 +4-5% / 4 月營收新高 53.6 億</li>
+    <li><span class="bullet-key">條線是真咽喉</span> — 售價結構性高於鋼筋 <strong>17.9%</strong>、毛利 <strong>21.2%</strong> 全公司最高，核心歸因是 <strong>合金鋼 28% + 中碳鋼 38% = 66% 利基規格</strong>，不是過去以為的出口屏障</li>
+  </ul>
+
+  <div class="punch"><span>而這個利基規格的下游 — 螺絲扣件 — 對美關稅從 <b style="color:#ffd700">32% 倍增到 50%</b>，世豐 2065 二月 YoY -11.4%，業界訂單掉 -50%+。</span></div>
+
+  <p>故事不在 4/27 條線盤價漲跌幾百，<strong>而在 H2 那 21.2% 毛利會不會被腰斬到 16-18%</strong>。時間窗很短：4/27 公告 → 5/10 上下 4 月營收 → 6 月底 Q2 法說會。這六週決定 2026 全年 EPS 落 3.2-3.5 / 3.5-3.8 / 4.0-4.2 哪一檔。</p>
+
+  <hr>
+
+  <!-- ═══════════ STRUCTURE ═══════════ -->
+  <h1 class="chapter"><span class="num">02</span><span class="ch">這盤棋的結構</span></h1>
+
+  <h2><span>調查樹 / 五條主分支收口狀態</span></h2>
+  <div class="mermaid-wrap">
+<pre class="mermaid">
+graph TD
+    R[Root #349 豐興 4/27 雙產品<br/>+ Q2 利差結構壓測]
+    R --> N350[#350 條線 4 月軌跡<br/>verified ✓]
+    R --> N351[#351 條線 21.2% 毛利歸因<br/>verified ✓]
+    R --> N352[#352 型鋼推演 + Q2 EPS<br/>verified ✓]
+    R --> N353[#353 同業條線對照<br/>verified ✓]
+    R --> N354[#354 4/27 操作含義<br/>verified ✓]
+    N351 --> N355[#355 H2 螺絲扣件關稅衝擊<br/>exhausted △]
+
+    N350 -.contradiction 解.- C1293[題目「4/13 條線 +300」<br/>三源新聞無證據<br/>實為「廢鋼 +300」誤譯]
+    N351 -.歸因校正.- F1308[出口屏障 X → 利基規格 ✓<br/>合金鋼 28% + 中碳鋼 38%]
+    N352 -.毛利率上修.- F1298[#41 base 10.5% → 11.4%<br/>2025 全年 ≥ 10.78%]
+    N355 -.H2 結構新破口.- F1309[HS 7318 對美關稅 32%→50%<br/>條線 H2 毛利退至 16-18%]
+</pre>
+  </div>
+
+  <h2><span>利益關係人 + 傳導鏈</span></h2>
+  <div class="mermaid-wrap">
+<pre class="mermaid">
+graph LR
+    subgraph Upstream[上游成本]
+        JS[日本廢鋼 H2 ~$375]
+        US[美廢 ~$362]
+        CSC[中鋼板捲<br/>5月 +1,200<br/>情緒共振]
+        BIL[進口小鋼胚<br/>CFR 485-490<br/>到岸 ~17,400]
+    end
+
+    subgraph FH[豐興 2015 · 4/27 樞紐]
+        FH_R[鋼筋 18,900<br/>連6漲止步]
+        FH_S[型鋼 24,500<br/>連6平]
+        FH_W[條線 ~22,300<br/>4月出貨↓]
+        FH_X[廢鋼 10,100<br/>4/13 +300]
+    end
+
+    subgraph Downstream[下游需求]
+        SCREW[螺絲扣件<br/>世豐 2065<br/>Feb YoY -11.4%]
+        REBAR[營建鋼筋<br/>進口替代壓力]
+        STRUCT[鋼骨/AI 機房<br/>東鋼 H 連7盤]
+    end
+
+    subgraph Tariff[H2 黑天鵝]
+        T7318[HS 7318 關稅<br/>32% → 50%]
+    end
+
+    JS --> FH_X
+    US --> FH_X
+    BIL --> FH_R
+    CSC -.情緒.-> FH
+
+    FH_X --> FH_R
+    FH_X --> FH_S
+    FH_X --> FH_W
+
+    FH_R --> REBAR
+    FH_S --> STRUCT
+    FH_W --> SCREW
+
+    T7318 --> SCREW
+    SCREW -.需求反饋.-> FH_W
+</pre>
+  </div>
+
+  <hr>
+
+  <!-- ═══════════ 4/27 PROBABILITY ═══════════ -->
+  <h1 class="chapter"><span class="num">03</span><span class="ch">4/</span><span class="ch invert">2</span><span class="ch">7 推演</span></h1>
+
+  <h2><span>09:05 三產品分布表</span></h2>
+  <table>
+    <thead>
+      <tr><th>產品</th><th>平</th><th>漲</th><th>跌</th><th>主驅動</th><th>信心</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>廢鋼</strong></td><td>50%</td><td><strong>35%</strong> (+100~200)</td><td>15%</td><td>美廢 4/21 已觸 360；日 H2 ~375 仍墊</td><td><span class="tag tag-high"><span>HIGH</span></span></td></tr>
+      <tr><td><strong>鋼筋</strong></td><td><strong>60%</strong></td><td>10%</td><td>30% (-100~-200)</td><td>進口替代成本 17,400 vs 市價 18,100</td><td><span class="tag tag-high"><span>HIGH</span></span></td></tr>
+      <tr><td><strong>型鋼</strong></td><td><strong>75%</strong></td><td>18% (+100~300)</td><td>7%</td><td>連 6 平慣性 + 東鋼連 7 盤外推</td><td><span class="tag tag-high"><span>HIGH</span></span></td></tr>
+      <tr class="row-bear"><td><strong>條線</strong> · 主軸</td><td>55%</td><td>10%</td><td><strong>35%</strong> (-100~-300)</td><td>4 月出貨已減少 + 螺絲扣件對美關稅倍增</td><td><span class="tag tag-mid"><span>MID</span></span></td></tr>
+    </tbody>
+  </table>
+
+  <h2><span>九格聯合機率前三大</span></h2>
+  <table>
+    <thead><tr><th>格</th><th>劇本</th><th>機率</th><th>含義</th></tr></thead>
+    <tbody>
+      <tr class="row-base"><td><strong>A</strong></td><td>全平</td><td>32%</td><td>base case，最高單格</td></tr>
+      <tr class="row-bear"><td><strong>B</strong></td><td>型平 / 條跌 / 鋼筋跌</td><td><strong>22%</strong></td><td><strong style="color:var(--red-hot)">我下注的主軸劇本</strong> — 條線出貨↓ + 進口替代逼近 + 月營收翻負三條暗線同向</td></tr>
+      <tr class="row-bear"><td><strong>I</strong></td><td>全跌</td><td>10%</td><td>極端壓縮情境</td></tr>
+    </tbody>
+  </table>
+
+  <h2><span>Trigger 觸發狀態（4/26 收盤）</span></h2>
+  <ul>
+    <li><span style="color:var(--green);font-weight:900">✅ T1</span> 美廢 ≥ 360 USD → 廢鋼漲機率上修至 35%（<strong>已生效</strong>）</li>
+    <li><span style="color:var(--red-hot);font-weight:900">❌ T2</span> 日 H2 跌破 365 USD → 鋼筋平機率上修至 65%（未觸發，仍 375）</li>
+  </ul>
+
+  <hr>
+
+  <!-- ═══════════ EPS SCENARIOS ═══════════ -->
+  <h1 class="chapter"><span class="num">04</span><span class="ch">Q</span><span class="ch invert">2</span><span class="ch"> 情境 + H2 風險</span></h1>
+
+  <p>2025 實績錨點 <span class="tag tag-high"><span>HIGH</span></span>：全年 EPS <strong>3.88</strong>（YoY -8.92%），季毛利率 Q1 10.78% / Q2 11.40% / Q3 <strong>12.43%</strong>（近年新高）/ Q4 11.65%。先前報告 #41 的 Q2 base 10.5% 偏保守——校正後三情境如下：</p>
+
+  <table>
+    <thead>
+      <tr><th>情境</th><th>機率</th><th>Q2 毛利率</th><th>Q2 EPS</th><th>全年 EPS</th><th>對比 2025</th><th>主驅動</th></tr>
+    </thead>
+    <tbody>
+      <tr class="row-base"><td><strong>BASE</strong></td><td>50%</td><td>11.4%</td><td><strong>0.95-1.05</strong></td><td><strong>3.5-3.8</strong></td><td>持平</td><td>廢鋼 +200 / 鋼筋 -100 / 條線 -200 / 折舊吃 0.3-0.5pp</td></tr>
+      <tr class="row-bull"><td><strong>BULL</strong></td><td>20%</td><td>12.5%</td><td>1.10-1.20</td><td>4.0-4.2</td><td>+3-8%</td><td>板捲漲情緒外延 + 型鋼接東鋼動能</td></tr>
+      <tr class="row-bear"><td><strong>BEAR</strong></td><td>30%</td><td>10.0%</td><td>0.75-0.85</td><td><strong>3.2-3.5</strong></td><td>-10~-17%</td><td>鋼筋 -200/-300 + 條線退至 18% + 折舊 1pp</td></tr>
+    </tbody>
+  </table>
+
+  <div class="punch"><span>下行不對稱風險明顯大於上行 — Bear 機率是 Bull 的 <b style="color:#ffd700">1.5 倍</b>。</span></div>
+
+  <h2><span>三條同向暗線</span></h2>
+
+  <div class="thesis">
+    <div class="thesis-head">
+      <span class="ord">I.</span>
+      <span class="txt"><em>條線</em> 21.2% 毛利的需求面正在反轉 <span class="tag tag-high"><span>HIGH</span></span></span>
+    </div>
+    <div class="thesis-body">
+      <ul>
+        <li><span class="bullet-key">關稅破口</span>：HS 7318 對美 <strong>32% → 50%</strong></li>
+        <li><span class="bullet-key">下游已塌</span>：世豐 2065 二月 YoY <strong>-11.4%</strong>、累計 -7.24%、業者訂單普遍 -50%+</li>
+        <li><span class="bullet-key">公司側已現</span>：4/13 報導已揭「4 月條線出貨減少」</li>
+        <li>H2 條線毛利大概率退至 <strong>16-18%</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="thesis">
+    <div class="thesis-head">
+      <span class="ord">II.</span>
+      <span class="txt"><em>鋼筋</em> 進口替代屏障已破 <span class="tag tag-high"><span>HIGH</span></span></span>
+    </div>
+    <div class="thesis-body">
+      <ul>
+        <li>進口小鋼胚 CFR 485-490 推算到岸 <strong>~17,400</strong> vs 市價 18,100-18,300</li>
+        <li>價差 <strong>&lt; 4%</strong>，歷史正常 ≥1,500（≥8%）</li>
+        <li>4/13 鋼筋只 +200（vs 前幾週 +500/+600）已是放緩訊號，4/20 止漲合理收斂</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="thesis">
+    <div class="thesis-head">
+      <span class="ord">III.</span>
+      <span class="txt"><em>新廠</em> Q1 才剛投產，折舊 Q2 全額認列 <span class="tag tag-mid"><span>MID</span></span></span>
+    </div>
+    <div class="thesis-body">
+      <ul>
+        <li>估吃毛利率 <strong>0.3-0.5 pp</strong>（base） / 1.0 pp（bear）</li>
+        <li>具體金額待 Q2 法說會揭露</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2><span>弱訊號 / 廢鋼兩套口徑分歧</span></h2>
+  <p><span class="tag tag-inf"><span>WEAK SIGNAL</span></span><span class="tag tag-inf"><span>VERIFY 2026-05-09</span></span></p>
+  <p>SMM 美廢 FOB（4/21 $362）vs Fastmarkets cfr Taiwan 進口（4/16-4/23 -$5）<strong>口徑分歧</strong>，可能代表台灣到岸成本實際在鬆、出口端還在墊高。</p>
+  <p>驗證方法：cfr Taiwan 連兩週 -$5 以上 + SMM FOB 連兩週平/漲 = <strong>分歧確認</strong>。若分歧成立，豐興廢鋼採購端可能比公開出口報價先看到鬆動，鋼筋下行壓力可能比目前評估<strong>更早</strong>顯化（5 月而非 6 月）。</p>
+
+  <hr>
+
+  <!-- ═══════════ CALIBRATION ═══════════ -->
+  <h1 class="chapter"><span class="num">05</span><span class="ch">與 #</span><span class="ch invert">41</span><span class="ch"> 差異</span></h1>
+
+  <p>報告 #41（2 月底）型鋼 4/27 推演 70/15/15（平/漲/跌）。本次校正為 <strong>75/18/7</strong>。</p>
+
+  <table>
+    <thead><tr><th>差異</th><th>方向</th><th>原因</th></tr></thead>
+    <tbody>
+      <tr><td><strong>平機率</strong></td><td>+5pp</td><td>連 6 週平盤慣性比 #41 時更穩、4 月營收 YoY -10.1% 削弱拉漲動機</td></tr>
+      <tr><td><strong>漲機率</strong></td><td>+3pp</td><td>東鋼連 7 盤 + 東京製鐵連 2 月 +5,000 日圓 + 東鋼 4 月營收新高（#41 時尚未完整）</td></tr>
+      <tr><td><strong>跌機率</strong></td><td>-8pp</td><td>型鋼下游需求（AI 機房 + 風電 + 工業廠房）H1 確認轉強，下行壓力主要落在條線/鋼筋而非型鋼</td></tr>
+    </tbody>
+  </table>
+
+  <p>#41 沒有條線那一格 — 這次補上 <strong>55/10/35</strong>。跌機率特別高是因為兩個 #41 沒看到的結構新破口：HS 7318 倍增關稅 + 4 月條線出貨減少。</p>
+
+  <div class="punch"><span>Q2 base 毛利率從 #41 的 <b style="color:#ffd700">10.5% 上修至 11.4%</b>，依據 2025 全季 ≥10.78%、Q3 達 12.43% 新高。</span></div>
+
+  <hr>
+
+  <!-- ═══════════ APPENDIX ═══════════ -->
+  <h1 class="chapter"><span class="num">06</span><span class="ch">附錄</span></h1>
+
+  <h2><span>未解 / 待後續驗證項目</span></h2>
+  <table>
+    <thead><tr><th>項目</th><th>類型</th><th>驗證時點</th></tr></thead>
+    <tbody>
+      <tr><td>SMM FOB vs Fastmarkets cfr 廢鋼口徑分歧</td><td><span class="tag tag-inf"><span>WEAK</span></span></td><td>2026-05-09</td></tr>
+      <tr><td>5 月豐興 4 月營收揭露時，條線分項出貨是否確認下行趨勢</td><td><span class="tag tag-inf"><span>INF</span></span></td><td>2026-05-10</td></tr>
+      <tr><td>Q2 法說會條線分項毛利退守區間</td><td><span class="tag tag-inf"><span>INF</span></span></td><td>2026-08-31</td></tr>
+      <tr><td>新廠 Q1 投產對 Q2 折舊實際金額</td><td><span class="tag tag-inf"><span>WEAK</span></span></td><td>2026-08-31</td></tr>
+    </tbody>
+  </table>
+
+  <h2><span>英文技術詞索引</span></h2>
+  <ul>
+    <li><code>verify by</code> 驗證時點 / <code>trigger</code> 觸發條件 / <code>leak forward</code> 訊息提前外洩</li>
+    <li><code>cfr Taiwan</code> 到岸台灣 / <code>FOB</code> 出口報價 / <code>under-ship</code> 出貨低於指引</li>
+    <li><code>niche specs</code> 利基規格 / <code>priced in</code> 已反映進股價</li>
+  </ul>
+
+  <h2><span>數據來源</span></h2>
+  <p style="color:var(--ink-soft);font-size:15px;line-height:1.7">聯合新聞網 9439332 / ETtoday 2331579 / cnyes 6418558（豐興 4/13 公告三源驗證）；聚毅鋼鐵盤價週報（4 月三週軌跡）；finlab fundamental_features + monthly_revenue（豐興季毛利率、月營收）；MoneyDJ wiki（豐興外銷比、棒線材質結構）；公開資訊觀測站（世豐 2065 月營收）；永豐金證券晨訊 PDF（2025 條線量價結構）。</p>
+
+  <!-- ═══════════ FINALE ═══════════ -->
+  <div class="finale">
+    <span>4/27 不是賭盤價漲跌幾百，是賭<strong>條線那一格</strong>透露的 H2 訊息。</span>
+    <span style="margin-top:10px;font-size:18px;font-weight:700;color:#444">條線跌 -100 以上 = 螺絲扣件對美關稅傳導已確認 = Q2 法說會條線毛利會比市場預期難看。</span>
+  </div>
+
+  <div class="footer">
+    <span class="stamp">CELESTE</span> FILE 045 · 2026-04-26T01:06:12 · <span class="stamp">TAKE YOUR HEART</span>
+  </div>
+
+</div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      fontFamily: "'Noto Sans TC', sans-serif",
+      fontSize: '15px',
+      primaryColor: '#1c1c1c',
+      primaryBorderColor: '#e60012',
+      primaryTextColor: '#ffffff',
+      lineColor: '#e60012',
+      secondaryColor: '#232323',
+      tertiaryColor: '#0d0d0d',
+      background: '#0d0d0d',
+      mainBkg: '#1c1c1c',
+      nodeBorder: '#e60012',
+      clusterBkg: '#161616',
+      clusterBorder: '#e60012',
+      edgeLabelBackground: '#0d0d0d',
+      textColor: '#ffffff',
+    },
+    flowchart: { htmlLabels: true, curve: 'basis', padding: 18 }
+  });
+</script>
+
+</body>
+</html>
