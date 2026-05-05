@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第参拾貳話｜中碳 1723 量與率分歧調查</title>
+<style>
+:root{
+  --bg:#000;
+  --ink:#fff;
+  --warn:#ff0a0a;
+  --signal:#ffcc00;
+  --pattern:#33ccff;
+  --orange:#ffaa33;
+  --muted:#888;
+  --grid:#222;
+  --safe:#33ff66;
+  --apocrypha:#ccaa44;
+  --coal:#d4953a;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#000;color:#fff;}
+
+body{
+  font-family:'Source Han Serif TC','Noto Serif TC','Yu Mincho','Microsoft JhengHei','PMingLiU',serif;
+  font-weight:500;
+  line-height:1.75;
+  font-size:18.5px;
+  letter-spacing:0.02em;
+}
+
+.heavy{font-weight:900;letter-spacing:0.06em;}
+.mono{font-family:'Helvetica Neue','Helvetica','Arial',sans-serif;text-transform:uppercase;letter-spacing:0.18em;font-weight:700;}
+
+a{color:#fff;text-decoration:none;}
+a:hover{color:#ff6600;}
+
+/* ─── Title Card ─── */
+.title-card{
+  min-height:100vh;
+  background:#000;
+  padding:60px 50px;
+  display:grid;
+  grid-template-rows:auto 1fr auto auto;
+  position:relative;
+  border-bottom:6px double #fff;
+  overflow:hidden;
+}
+.tc-top{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:30px;
+  align-items:start;
+}
+.tc-ep{
+  font-weight:900;
+  font-size:42px;
+  border-left:8px solid #fff;
+  padding:0 0 0 16px;
+  line-height:1;
+}
+.tc-class-row{
+  text-align:right;
+  font-family:'Helvetica',sans-serif;
+  text-transform:uppercase;
+  letter-spacing:0.4em;
+  font-size:13.5px;
+  line-height:2;
+  color:#aaa;
+}
+.tc-stamp{
+  position:absolute;
+  top:30px;
+  right:50px;
+  border:3px solid var(--warn);
+  color:var(--warn);
+  padding:6px 14px;
+  font-weight:900;
+  font-size:20.5px;
+  letter-spacing:0.25em;
+  transform:rotate(-7deg);
+  background:#000;
+}
+.tc-title{
+  font-weight:900;
+  font-size:clamp(60px,11vw,160px);
+  line-height:0.92;
+  letter-spacing:0.04em;
+  align-self:end;
+  margin:50px 0 30px 0;
+}
+.tc-title .lhs{display:block;}
+.tc-title .rhs{display:block;text-align:right;border-bottom:6px solid #fff;padding-bottom:14px;color:#fff;text-shadow:0 0 30px rgba(212,149,58,0.5);}
+.tc-sub{
+  font-family:'Helvetica',sans-serif;
+  text-transform:uppercase;
+  letter-spacing:0.5em;
+  font-size:16.5px;
+  color:#ccc;
+  border-top:2px solid #fff;
+  padding-top:16px;
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:20px;
+}
+.tc-meta{
+  margin-top:24px;
+  font-family:'Helvetica',sans-serif;
+  text-transform:uppercase;
+  letter-spacing:0.3em;
+  font-size:13.5px;
+  color:#666;
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:20px;
+}
+
+/* ─── Index ─── */
+.index{
+  padding:50px 60px;
+  background:#050505;
+  border-bottom:4px solid #fff;
+}
+.index h2{
+  font-weight:900;
+  font-size:32px;
+  letter-spacing:0.3em;
+  margin-bottom:24px;
+  border-left:8px solid var(--warn);
+  padding-left:14px;
+}
+.index ol{
+  columns:2;
+  list-style:none;
+  column-gap:50px;
+}
+.index li{
+  padding:10px 0;
+  border-bottom:1px dotted #555;
+  font-weight:700;
+  break-inside:avoid;
+}
+.index li a{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+}
+.index .num{
+  font-family:'Helvetica',sans-serif;
+  color:var(--warn);
+  letter-spacing:0.2em;
+  font-size:15.5px;
+  min-width:80px;
+}
+
+/* ─── Dead Sea Scrolls ─── */
+.dead-sea{
+  background:#0d0a04;
+  border:2px solid var(--apocrypha);
+  padding:40px 36px 32px;
+  margin:50px auto;
+  max-width:1100px;
+  position:relative;
+  color:#e8d090;
+  font-style:italic;
+  font-size:19.5px;
+  line-height:2;
+}
+.dead-sea::before{
+  content:"死海文書 第参拾貳章 抄";
+  position:absolute;
+  top:-16px;
+  left:30px;
+  background:#0d0a04;
+  padding:2px 14px;
+  color:var(--apocrypha);
+  font-style:normal;
+  font-weight:900;
+  letter-spacing:0.3em;
+  font-size:15.5px;
+}
+.dead-sea p{margin:10px 0;}
+
+/* ─── Episode block ─── */
+.episode{
+  padding:80px 60px;
+  border-bottom:1px solid #333;
+  max-width:1300px;
+  margin:0 auto;
+}
+.ep-bar{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:30px;
+  align-items:end;
+  margin-bottom:50px;
+  border-bottom:5px solid #fff;
+  padding-bottom:14px;
+}
+.ep-num{
+  font-weight:900;
+  font-size:38px;
+  letter-spacing:0.15em;
+  white-space:nowrap;
+}
+.ep-title{
+  font-weight:900;
+  font-size:clamp(28px,4.5vw,56px);
+  letter-spacing:0.05em;
+  margin:0;
+  text-align:right;
+  line-height:1;
+}
+.ep-eyecatch{
+  font-family:'Helvetica',sans-serif;
+  text-transform:uppercase;
+  letter-spacing:0.4em;
+  font-size:13.5px;
+  color:#aaa;
+  margin-bottom:20px;
+}
+
+/* ─── Alerts ─── */
+.alert{
+  background:var(--warn);
+  color:#fff;
+  padding:14px 24px;
+  font-weight:900;
+  letter-spacing:0.3em;
+  margin:30px 0;
+  display:flex;
+  align-items:center;
+  gap:24px;
+  text-transform:uppercase;
+}
+.alert-tag{
+  border-right:2px solid #fff;
+  padding-right:20px;
+  white-space:nowrap;
+}
+
+.pattern-blue{
+  background:linear-gradient(90deg,#001144,#003388 35%,#001144);
+  border:2px solid var(--pattern);
+  padding:12px 24px;
+  margin:30px 0;
+  display:flex;
+  align-items:center;
+  gap:24px;
+  color:#cceeff;
+}
+.pb-tag{
+  background:var(--pattern);
+  color:#000;
+  padding:5px 12px;
+  font-family:'Helvetica',sans-serif;
+  font-weight:700;
+  letter-spacing:0.25em;
+  font-size:13.5px;
+}
+.pb-text{
+  font-family:'Helvetica',sans-serif;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  font-size:15.5px;
+  font-weight:700;
+}
+
+.pattern-orange{
+  background:linear-gradient(90deg,#221100,#553300 35%,#221100);
+  border:2px solid var(--orange);
+  padding:12px 24px;
+  margin:30px 0;
+  display:flex;
+  align-items:center;
+  gap:24px;
+  color:#ffddaa;
+}
+.po-tag{
+  background:var(--orange);
+  color:#000;
+  padding:5px 12px;
+  font-family:'Helvetica',sans-serif;
+  font-weight:700;
+  letter-spacing:0.25em;
+  font-size:13.5px;
+}
+.po-text{
+  font-family:'Helvetica',sans-serif;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  font-size:15.5px;
+  font-weight:700;
+}
+
+/* ─── Stamp ─── */
+.stamp{
+  display:inline-block;
+  border:3px double var(--warn);
+  color:var(--warn);
+  padding:3px 12px;
+  font-weight:900;
+  letter-spacing:0.3em;
+  font-size:15.5px;
+  margin:0 8px 0 0;
+  vertical-align:middle;
+}
+.stamp.ok{border-color:var(--safe);color:var(--safe);}
+.stamp.warn{border-color:var(--signal);color:var(--signal);}
+
+/* ─── MAGI ─── */
+.magi{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin:30px 0;
+  border:4px solid #ff7700;
+  padding:18px;
+  background:#160800;
+}
+.magi-cell{
+  text-align:center;
+  border:1px solid #ff7700;
+  padding:14px 8px;
+  background:#0a0500;
+}
+.magi-name{
+  font-family:'Helvetica',sans-serif;
+  font-weight:700;
+  letter-spacing:0.25em;
+  color:#ff9933;
+  font-size:13.5px;
+  text-transform:uppercase;
+}
+.magi-target{
+  font-weight:900;
+  font-size:15.5px;
+  margin:6px 0;
+  color:#ddd;
+  letter-spacing:0.05em;
+}
+.magi-verdict{
+  font-weight:900;
+  font-size:24px;
+  letter-spacing:0.15em;
+}
+.magi-verdict.ok{color:var(--safe);}
+.magi-verdict.no{color:var(--warn);}
+.magi-verdict.hold{color:var(--signal);}
+.magi-cap{
+  font-family:'Helvetica',sans-serif;
+  text-transform:uppercase;
+  letter-spacing:0.3em;
+  font-size:11.5px;
+  color:#ff9933;
+  margin-top:8px;
+}
+
+/* ─── Tables ─── */
+.tbl{
+  width:100%;
+  border-collapse:collapse;
+  margin:24px 0;
+  background:#080808;
+}
+.tbl th{
+  background:#fff;
+  color:#000;
+  text-align:left;
+  padding:10px 12px;
+  font-weight:900;
+  border:2px solid #fff;
+  font-size:15.5px;
+  letter-spacing:0.05em;
+}
+.tbl td{
+  padding:10px 12px;
+  border:1px solid #333;
+  vertical-align:top;
+  font-size:16.5px;
+  line-height:1.65;
+}
+.tbl tr:nth-child(even) td{background:#0e0e0e;}
+.tbl .red{color:var(--warn);font-weight:900;}
+.tbl .yellow{color:var(--signal);font-weight:900;}
+.tbl .green{color:var(--safe);font-weight:900;}
+.tbl .coal{color:var(--coal);font-weight:900;}
+
+/* ─── ASCII chain ─── */
+.ascii{
+  background:#000;
+  border:2px solid #fff;
+  padding:24px;
+  font-family:'Cascadia Code','Consolas','Courier New',monospace;
+  white-space:pre;
+  overflow-x:auto;
+  font-size:15px;
+  line-height:1.55;
+  margin:30px 0;
+  color:#eee;
+}
+.ascii .red{color:var(--warn);}
+.ascii .yel{color:var(--signal);}
+.ascii .blu{color:var(--pattern);}
+.ascii .gre{color:var(--safe);}
+.ascii .coa{color:var(--coal);}
+.ascii .gry{color:#888;}
+.ascii .ora{color:var(--orange);}
+
+/* ─── Boxes ─── */
+.box{
+  border:2px solid #fff;
+  padding:30px 28px 24px;
+  margin:36px 0;
+  position:relative;
+  background:rgba(255,255,255,0.03);
+}
+.box-label{
+  position:absolute;
+  top:-16px;
+  left:24px;
+  background:#000;
+  padding:2px 14px;
+  font-weight:900;
+  letter-spacing:0.3em;
+  font-size:15.5px;
+  border:2px solid #fff;
+}
+.box.warn{border-color:var(--warn);}
+.box.warn .box-label{border-color:var(--warn);color:var(--warn);}
+.box.signal{border-color:var(--signal);}
+.box.signal .box-label{border-color:var(--signal);color:var(--signal);}
+.box.coal{border-color:var(--coal);}
+.box.coal .box-label{border-color:var(--coal);color:var(--coal);}
+
+/* ─── Strike ─── */
+.strike{
+  border-left:8px solid var(--warn);
+  padding:6px 18px;
+  margin:24px 0;
+  background:rgba(255,0,0,0.04);
+}
+.strike.coal{
+  border-left-color:var(--coal);
+  background:rgba(212,149,58,0.06);
+}
+
+/* ─── Dream cards ─── */
+.dream-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:14px;
+  margin:30px 0;
+}
+.dream-card{
+  background:#0a0a0a;
+  border:2px solid #fff;
+  padding:24px 20px 20px;
+  position:relative;
+}
+.dream-num{
+  font-weight:900;
+  font-size:64px;
+  line-height:0.9;
+  border-left:6px solid var(--warn);
+  padding-left:12px;
+}
+.dream-tag{
+  font-family:'Helvetica',sans-serif;
+  font-size:13.5px;
+  letter-spacing:0.3em;
+  color:var(--warn);
+  text-transform:uppercase;
+  margin-top:14px;
+  font-weight:700;
+}
+.dream-title{
+  font-weight:900;
+  font-size:21.5px;
+  margin:8px 0 12px;
+  letter-spacing:0.04em;
+}
+.dream-body{font-size:16.5px;line-height:1.75;color:#ddd;}
+.dream-body ul{padding-left:18px;}
+.dream-body li{margin:4px 0;}
+.dream-verdict{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px dashed #555;
+  font-family:'Helvetica',sans-serif;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  font-size:13.5px;
+  font-weight:700;
+}
+.dream-verdict.partial{color:var(--signal);}
+.dream-verdict.weak{color:var(--warn);}
+.dream-verdict.true{color:var(--safe);}
+.dream-verdict.condit{color:var(--coal);}
+
+/* ─── Headings ─── */
+h3{
+  font-weight:900;
+  font-size:24px;
+  letter-spacing:0.05em;
+  margin:48px 0 18px;
+  border-left:6px solid #fff;
+  padding-left:14px;
+  line-height:1.4;
+}
+h4{
+  font-weight:900;
+  font-size:20.5px;
+  margin:30px 0 12px;
+  color:var(--signal);
+  letter-spacing:0.05em;
+}
+p{margin:14px 0;}
+ul,ol{padding-left:24px;}
+li{margin:6px 0;}
+strong{font-weight:900;color:#fff;}
+em{font-style:normal;color:var(--signal);font-weight:700;}
+
+code,.code{
+  font-family:'Cascadia Code','Consolas',monospace;
+  background:#1a1a1a;
+  padding:1px 6px;
+  border:1px solid #444;
+  font-size:15.5px;
+  color:#eee;
+}
+
+/* ─── Bar chart ─── */
+.bars{
+  display:grid;
+  gap:14px;
+  margin:24px 0;
+  border:2px solid #fff;
+  padding:20px;
+  background:#080808;
+}
+.bar-row{
+  display:grid;
+  grid-template-columns:200px 1fr 130px;
+  gap:14px;
+  align-items:center;
+  font-size:16.5px;
+}
+.bar-label{font-weight:900;letter-spacing:0.04em;}
+.bar-track{
+  background:#222;
+  height:24px;
+  position:relative;
+  border:1px solid #444;
+}
+.bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,#fff,#ccc);
+}
+.bar-fill.up{background:linear-gradient(90deg,var(--safe),#88ff88);}
+.bar-fill.down{background:linear-gradient(90deg,var(--warn),#ff8866);}
+.bar-fill.coal{background:linear-gradient(90deg,var(--coal),#f0c070);}
+.bar-val{
+  font-family:'Helvetica',sans-serif;
+  font-weight:700;
+  text-align:right;
+  letter-spacing:0.1em;
+  font-size:15.5px;
+}
+.bar-val.up{color:var(--safe);}
+.bar-val.down{color:var(--warn);}
+.bar-val.coal{color:var(--coal);}
+
+/* ─── Comparative dual-bar (oil vs margin) ─── */
+.dual{
+  border:2px solid var(--coal);
+  padding:24px;
+  margin:30px 0;
+  background:#100806;
+}
+.dual-row{
+  display:grid;
+  grid-template-columns:120px 1fr 1fr;
+  gap:16px;
+  margin-bottom:18px;
+  align-items:center;
+}
+.dual-year{
+  font-weight:900;
+  font-size:21.5px;
+  color:var(--coal);
+  letter-spacing:0.08em;
+}
+.dual-cell{
+  display:grid;
+  grid-template-columns:90px 1fr 90px;
+  gap:8px;
+  align-items:center;
+  font-size:15.5px;
+}
+.dual-cell .lab{font-family:'Helvetica',sans-serif;letter-spacing:0.15em;font-size:13.5px;color:#aaa;}
+.dual-cell .trk{background:#222;height:18px;border:1px solid #444;position:relative;}
+.dual-cell .fill{height:100%;}
+.dual-cell .fill.brent{background:linear-gradient(90deg,#3366cc,#66aaff);}
+.dual-cell .fill.margin{background:linear-gradient(90deg,var(--coal),#ffd47e);}
+.dual-cell .val{font-family:'Helvetica',sans-serif;font-weight:700;font-size:14.5px;text-align:right;}
+
+/* ─── EPS scenarios block ─── */
+.eps-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:14px;
+  margin:30px 0;
+}
+.eps-card{
+  border:2px solid #fff;
+  padding:22px 18px 18px;
+  background:#0a0a0a;
+}
+.eps-tag{
+  font-family:'Helvetica',sans-serif;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  font-size:13.5px;
+  color:#ccc;
+  font-weight:700;
+}
+.eps-tag.bear{color:var(--warn);}
+.eps-tag.base{color:var(--coal);}
+.eps-tag.bull{color:var(--safe);}
+.eps-num{
+  font-weight:900;
+  font-size:48px;
+  margin:6px 0;
+  letter-spacing:0.05em;
+}
+.eps-num.bear{color:var(--warn);}
+.eps-num.base{color:var(--coal);}
+.eps-num.bull{color:var(--safe);}
+.eps-cond{
+  font-size:15.5px;
+  color:#ccc;
+  line-height:1.6;
+}
+
+/* ─── Friction list ─── */
+.friction{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:14px;
+  margin:30px 0;
+}
+.fric-card{
+  border:2px solid var(--warn);
+  background:rgba(255,10,10,0.04);
+  padding:22px 18px;
+}
+.fric-tag{
+  font-family:'Helvetica',sans-serif;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  font-size:13.5px;
+  color:var(--warn);
+  font-weight:700;
+}
+.fric-num{
+  font-weight:900;
+  font-size:42px;
+  line-height:1;
+  margin:6px 0;
+  color:var(--warn);
+}
+.fric-title{
+  font-weight:900;
+  font-size:18.5px;
+  margin:6px 0 12px;
+  letter-spacing:0.04em;
+}
+.fric-body{font-size:16.5px;line-height:1.7;color:#ddd;}
+
+/* ─── SEELE monoliths ─── */
+.seele{
+  background:#000;
+  border-top:6px double #fff;
+  padding:50px 30px;
+}
+.seele-title{
+  text-align:center;
+  font-family:'Helvetica',sans-serif;
+  letter-spacing:0.4em;
+  font-size:15.5px;
+  color:#888;
+  margin-bottom:30px;
+  text-transform:uppercase;
+}
+.monoliths{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+  max-width:1200px;
+  margin:0 auto;
+}
+.monolith{
+  background:#000;
+  border:2px solid #fff;
+  padding:18px 6px 14px;
+  text-align:center;
+  font-family:'Helvetica',sans-serif;
+  font-weight:700;
+  letter-spacing:0.18em;
+  font-size:11.5px;
+  text-transform:uppercase;
+  position:relative;
+  min-height:120px;
+}
+.monolith .num{
+  font-family:'Helvetica',sans-serif;
+  font-weight:700;
+  font-size:42px;
+  display:block;
+  margin-bottom:8px;
+  -webkit-text-stroke:2px var(--warn);
+  color:transparent;
+  font-style:italic;
+}
+.monolith .tag{color:#aaa;font-size:11.5px;line-height:1.4;}
+
+footer{
+  background:#000;
+  color:#666;
+  padding:30px;
+  text-align:center;
+  font-family:'Helvetica',sans-serif;
+  font-size:13.5px;
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  border-top:1px solid #333;
+}
+
+/* ─── Responsive ─── */
+@media(max-width:900px){
+  .title-card{padding:40px 24px;}
+  .tc-top{grid-template-columns:1fr;}
+  .episode{padding:50px 24px;}
+  .index{padding:30px 24px;}
+  .index ol{columns:1;}
+  .ep-bar{grid-template-columns:1fr;text-align:left;}
+  .ep-title{text-align:left;}
+  .magi{grid-template-columns:1fr;}
+  .monoliths{grid-template-columns:repeat(3,1fr);}
+  .bar-row{grid-template-columns:120px 1fr 90px;}
+  .dual-row{grid-template-columns:1fr;}
+  .dual-cell{grid-template-columns:70px 1fr 70px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════
+     TITLE CARD ｜第参拾貳話
+     ════════════════════════════════════════════════ -->
+<section class="title-card">
+  <div class="tc-stamp">極秘</div>
+
+  <div class="tc-top">
+    <div class="tc-ep">第<br>参拾<br>貳話</div>
+    <div></div>
+    <div class="tc-class-row">
+      NERV INTERNAL ／ FILE NO. CSC-1723-2026-05-05<br>
+      取扱注意 ／ HANDLE WITH CARE<br>
+      死海文書 第参拾貳章 抄
+    </div>
+  </div>
+
+  <div class="tc-title">
+    <span class="lhs">中碳 1723</span>
+    <span class="rhs">量與率分歧調查</span>
+  </div>
+
+  <div class="tc-sub">
+    <span>BRENT × MARGIN DECOUPLING</span>
+    <span>「量縮 mix 升」　│　三道傳導摩擦力　│　針狀焦選擇權</span>
+  </div>
+  <div class="tc-meta">
+    <span>生成 ／ 2026-05-05</span>
+    <span>來源 ／ 1341 中碳 1723 轉機調查（Brent +87% 環境）</span>
+    <span>排除 ／ 股價 ＋ 操作建議</span>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     INDEX
+     ════════════════════════════════════════════════ -->
+<nav class="index">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#prologue"><span class="num">序章</span><span>死海文書 抄</span></a></li>
+    <li><a href="#ep1"><span class="num">第壹話</span><span>反直覺：油價 ≠ 毛利率</span></a></li>
+    <li><a href="#ep2"><span class="num">第貳話</span><span>三道傳導摩擦力</span></a></li>
+    <li><a href="#ep3"><span class="num">第参話</span><span>供應鏈位置 ‧ 上下游圖</span></a></li>
+    <li><a href="#ep4"><span class="num">第肆話</span><span>針狀焦 EV 選擇權</span></a></li>
+    <li><a href="#ep5"><span class="num">第伍話</span><span>Pattern Orange ‧ 石墨電極景氣</span></a></li>
+    <li><a href="#ep6"><span class="num">第陸話</span><span>五個夢的現實校驗</span></a></li>
+    <li><a href="#ep7"><span class="num">第柒話</span><span>EPS 情境試算</span></a></li>
+    <li><a href="#final"><span class="num">終話</span><span>情報邊界</span></a></li>
+    <li><a href="#appendix"><span class="num">附錄</span><span>關鍵基本面索引</span></a></li>
+    <li><a href="#seele"><span class="num">SEELE</span><span>SOUND ONLY</span></a></li>
+  </ol>
+</nav>
+
+<!-- ════════════════════════════════════════════════
+     PROLOGUE
+     ════════════════════════════════════════════════ -->
+<section class="episode" id="prologue">
+  <div class="ep-eyecatch">PROLOGUE — DEAD SEA SCROLL</div>
+  <div class="dead-sea">
+    <p>中碳非單一故事，乃量與率之分歧。</p>
+    <p>2026-Q1 毛利從谷底 17.4% 反彈至 25.0%，修復是真的——然量未跟上，月均營收較 2024 高峰仍少 41%。</p>
+    <p>「量縮 mix 升」型反彈，比量價齊升更脆弱。mix 可在下季因訂單結構回吐。</p>
+    <p>油價 → 毛利並非線性。歷史反例兩起：2022 Brent $110+ 毛利僅 21-24%；2023 Brent 僅 $80 毛利反高達 29.57%。</p>
+    <p>三道摩擦力夾擊：中國苯過剩、中鋼 captive 計價、傳導 lag 方向不確定。</p>
+    <p>針狀焦 EV 選擇權，技術可行——然脫硫 capex 未明，當前不在報表。</p>
+    <p>—— 預言至此而止，餘下者，由 Q2 數字補完。</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     EP 1 ｜油價 ≠ 毛利率
+     ════════════════════════════════════════════════ -->
+<section class="episode" id="ep1">
+  <div class="ep-bar">
+    <span class="ep-num">第壹話</span>
+    <h2 class="ep-title">反直覺<br>油價 ≠ 毛利率</h2>
+  </div>
+  <div class="ep-eyecatch">EPISODE 01 — THE COUNTERINTUITIVE ANCHOR</div>
+
+  <div class="alert">
+    <span class="alert-tag">最關鍵反例</span>
+    <span>Brent 高點時毛利率最低　│　Brent 溫和時毛利率最高</span>
+  </div>
+
+  <p>整個分析的核心前提：<strong>中碳的盈利能力不是油價的線性函數。</strong>歷史資料反複打臉「油價漲 = 毛利揚」這個最常被引用的直覺邏輯。</p>
+
+  <h3>歷史對照｜Brent vs 中碳毛利率</h3>
+
+  <div class="dual">
+    <div class="dual-row">
+      <div class="dual-year">2022</div>
+      <div class="dual-cell">
+        <span class="lab">Brent</span>
+        <div class="trk"><div class="fill brent" style="width:92%"></div></div>
+        <span class="val">$110+</span>
+      </div>
+      <div class="dual-cell">
+        <span class="lab">毛利率</span>
+        <div class="trk"><div class="fill margin" style="width:40%"></div></div>
+        <span class="val">21-24%</span>
+      </div>
+    </div>
+    <div class="dual-row">
+      <div class="dual-year">2023 Q2</div>
+      <div class="dual-cell">
+        <span class="lab">Brent</span>
+        <div class="trk"><div class="fill brent" style="width:67%"></div></div>
+        <span class="val">~$80</span>
+      </div>
+      <div class="dual-cell">
+        <span class="lab">毛利率</span>
+        <div class="trk"><div class="fill margin" style="width:60%"></div></div>
+        <span class="val">29.57%</span>
+      </div>
+    </div>
+    <div class="dual-row">
+      <div class="dual-year">2024</div>
+      <div class="dual-cell">
+        <span class="lab">Brent</span>
+        <div class="trk"><div class="fill brent" style="width:67%"></div></div>
+        <span class="val">~$80</span>
+      </div>
+      <div class="dual-cell">
+        <span class="lab">毛利率</span>
+        <div class="trk"><div class="fill margin" style="width:54%"></div></div>
+        <span class="val">~27%</span>
+      </div>
+    </div>
+    <div class="dual-row">
+      <div class="dual-year">2025 Q3</div>
+      <div class="dual-cell">
+        <span class="lab">Brent</span>
+        <div class="trk"><div class="fill brent" style="width:54%"></div></div>
+        <span class="val">$60-75</span>
+      </div>
+      <div class="dual-cell">
+        <span class="lab">毛利率</span>
+        <div class="trk"><div class="fill margin" style="width:30%"></div></div>
+        <span class="val">17.37%</span>
+      </div>
+    </div>
+    <div class="dual-row">
+      <div class="dual-year">2026 Q1</div>
+      <div class="dual-cell">
+        <span class="lab">Brent</span>
+        <div class="trk"><div class="fill brent" style="width:88%"></div></div>
+        <span class="val">~$105+</span>
+      </div>
+      <div class="dual-cell">
+        <span class="lab">毛利率</span>
+        <div class="trk"><div class="fill margin" style="width:50%"></div></div>
+        <span class="val">25.02%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="strike coal">
+    <p><strong>核心觀察</strong>：油價最高（2022）時毛利率<em>最低</em>；油價溫和（2023）時毛利率反而<em>最高</em>。</p>
+    <p>中碳不是 oil-price beta 股，而是<strong>產品結構（mix） / ASP beta</strong> 股。任何把 Q1 反彈完全歸因於 Brent 上漲的論述，已經被歷史否決。</p>
+  </div>
+
+  <h3>「量縮 mix 升」型反彈的本質</h3>
+
+  <p>2026-Q1 月均營收約 <strong>416M NTD</strong>，比 2024-Q3 的 <strong>708M</strong> 少了整整 <span class="dream-verdict weak" style="display:inline;">41%</span>。按正常循環股邏輯，量縮 41% 而毛利率卻能接近歷史高峰，只有一個解釋：</p>
+
+  <div class="box coal">
+    <div class="box-label">解釋唯一</div>
+    <p><strong>產品組合（mix）或單品售價（ASP）發生了結構性改變。</strong></p>
+    <p>但這種反彈本質上比「量價齊升」更脆弱——<em>mix 可以在下一季因訂單結構變化而回吐，量沒有跟上意味著需求端的全面復甦尚未發生</em>。</p>
+  </div>
+
+  <h3>關鍵財務時序</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>時間點</th>
+        <th>月均營收</th>
+        <th>毛利率</th>
+        <th>營業利益率</th>
+        <th>備註</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>2023-Q2</strong></td>
+        <td>—</td>
+        <td><span class="green">29.57%</span></td>
+        <td>—</td>
+        <td>5 年毛利率歷史高峰（Brent $80 時）</td>
+      </tr>
+      <tr>
+        <td><strong>2024-Q3</strong></td>
+        <td>~708M</td>
+        <td>~27%</td>
+        <td><span class="green">17.08%</span></td>
+        <td>量的高峰</td>
+      </tr>
+      <tr>
+        <td>2024-08</td>
+        <td><span class="green">876M</span></td>
+        <td>—</td>
+        <td>—</td>
+        <td>月營收歷史高峰</td>
+      </tr>
+      <tr>
+        <td><strong>2025-Q3</strong></td>
+        <td>—</td>
+        <td><span class="red">17.37%</span></td>
+        <td><span class="red">6.29%</span></td>
+        <td>毛利率谷底</td>
+      </tr>
+      <tr>
+        <td>2025-12</td>
+        <td><span class="red">380M</span></td>
+        <td>—</td>
+        <td>—</td>
+        <td>月營收谷底</td>
+      </tr>
+      <tr>
+        <td><strong>2026-Q1</strong></td>
+        <td>~416M</td>
+        <td><span class="coal">25.02%</span></td>
+        <td><span class="coal">14.18%</span></td>
+        <td>「量縮 mix 升」反彈</td>
+      </tr>
+      <tr>
+        <td>2026-03</td>
+        <td>528M</td>
+        <td>—</td>
+        <td>—</td>
+        <td>YoY +13.8%，3 月加速</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>MAGI 三票判定 ‧ Q1 反彈本質</h3>
+  <div class="magi">
+    <div class="magi-cell">
+      <div class="magi-name">MELCHIOR-1</div>
+      <div class="magi-target">「油價漲 = 毛利揚」直覺是否成立？</div>
+      <div class="magi-verdict no">否　決</div>
+      <div class="magi-cap">HISTORICAL COUNTEREXAMPLE</div>
+    </div>
+    <div class="magi-cell">
+      <div class="magi-name">BALTHASAR-2</div>
+      <div class="magi-target">Q1 毛利反彈是否為持續性？</div>
+      <div class="magi-verdict hold">保　留</div>
+      <div class="magi-cap">PENDING Q2 VALIDATION</div>
+    </div>
+    <div class="magi-cell">
+      <div class="magi-name">CASPER-3</div>
+      <div class="magi-target">中碳是 cyclical recovery 還是結構性成長？</div>
+      <div class="magi-verdict hold">CYCLICAL</div>
+      <div class="magi-cap">NOT STRUCTURAL GROWTH</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     EP 2 ｜三道傳導摩擦力
+     ════════════════════════════════════════════════ -->
+<section class="episode" id="ep2">
+  <div class="ep-bar">
+    <span class="ep-num">第貳話</span>
+    <h2 class="ep-title">三道<br>傳導摩擦力</h2>
+  </div>
+  <div class="ep-eyecatch">EPISODE 02 — TRANSMISSION FRICTIONS</div>
+
+  <p>直覺路徑：<code>油價漲</code> → <code>石化苯（naphtha 裂解）成本上升</code> → <code>煤焦油苯獲得 cost-curve advantage</code> → <code>中碳受益</code>。</p>
+  <p><em>這個邏輯有根，但有三道摩擦力夾擊傳導效率。</em></p>
+
+  <div class="friction">
+    <div class="fric-card">
+      <div class="fric-tag">FRICTION I</div>
+      <div class="fric-num">01</div>
+      <div class="fric-title">中國苯產能過剩</div>
+      <div class="fric-body">
+        全球苯定價的邊際力量在中國。中國主要苯下游（苯乙烯、苯酚）需求端若持續疲軟，苯-石腦油 spread 的擴張空間有限，油價漲幅<em>無法全額傳導</em>到苯價。
+        <br><br>
+        <strong>歷史對照</strong>：2022 年中國苯乙烯景氣崩潰，當年高油價沒有拯救中碳的毛利率。
+      </div>
+    </div>
+
+    <div class="fric-card">
+      <div class="fric-tag">FRICTION II</div>
+      <div class="fric-num">02</div>
+      <div class="fric-title">中鋼 captive 定價</div>
+      <div class="fric-body">
+        中碳的核心原料（煤焦油）來自母公司中鋼（2002）。若高油價環境下中鋼<strong>調升對中碳的內部計價</strong>，則成本端壓力同步上升，毛利彈性遠低於純受益假設。
+        <br><br>
+        <em>captive 定價的折扣幅度從未公開揭露</em>，是分析最大暗礁。
+      </div>
+    </div>
+
+    <div class="fric-card">
+      <div class="fric-tag">FRICTION III</div>
+      <div class="fric-num">03</div>
+      <div class="fric-title">傳導 lag 方向不確定</div>
+      <div class="fric-body">
+        即使傳導最終發生，苯現貨價的調整可能<strong>快過</strong>煤焦油內部計價調整。
+        <br><br>
+        Q1 的毛利反彈有可能部分是「ASP 漲快過原料計價調整」的<em>短暫套利視窗</em>——Q2 能否延續取決於兩端的調整速度。
+      </div>
+    </div>
+  </div>
+
+  <h3>傳導路徑圖</h3>
+
+<div class="ascii">
+<span class="coa">油價 +87%</span>
+    │
+    ├──→ 石化苯成本上升
+    │         │
+    │         ↓
+    │    苯-石腦油 spread 擴張 <span class="red">←──← [摩擦力 I] 中國苯乙烯/酚需求弱</span>
+    │         │              <span class="red">←──← [摩擦力 I] 中國苯產能持續擴張</span>
+    │         ↓
+    │    煤焦油苯 cost advantage
+    │         │
+    └──→ <span class="coa">中碳毛利</span> <span class="ora">←──← [摩擦力 II] 中鋼轉移定價調升風險</span>
+                  <span class="ora">←──── [摩擦力 III] 傳導 lag 方向不確定</span>
+</div>
+
+  <div class="pattern-orange">
+    <span class="po-tag">PATTERN ORANGE</span>
+    <span class="po-text">中鋼 captive 定價的不透明性是中期最大暗礁</span>
+  </div>
+
+  <p>一個有意思的間接訊號：<em>中鋼（2002）在 Brent +87% 環境下未被市場視為油價受益者</em>。這暗示 captive 定價機制可能存在「滯後調整」特性——短期 Q1 中碳確實可能受惠，但中期中鋼有動機收窄折扣。</p>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     EP 3 ｜供應鏈位置
+     ════════════════════════════════════════════════ -->
+<section class="episode" id="ep3">
+  <div class="ep-bar">
+    <span class="ep-num">第参話</span>
+    <h2 class="ep-title">供應鏈位置<br>上下游圖</h2>
+  </div>
+  <div class="ep-eyecatch">EPISODE 03 — SUPPLY CHAIN POSITION</div>
+
+  <p>中碳位於煤焦油產業鏈中游，<strong>四條產品支線各自連到不同終端市場</strong>，每條的景氣循環不同步。理解中碳的關鍵，是把它當作「四個獨立業務的拼接體」，而不是單一產品的廠。</p>
+
+<div class="ascii">
+<span class="gry">【上游】</span>
+<span class="coa">中鋼（2002）煤焦爐副產品</span>
+    │ <span class="ora">captive 原料（內部計價機制，折扣幅度未公開）</span>
+    ▼
+<span class="gry">【中游】</span>
+<span class="coa">中碳（1723）煤焦油蒸餾分離</span>
+
+    ├──── <span class="yel">苯（benzene）</span>
+    │         ├── 苯乙烯（中國主要買家，<span class="red">需求弱</span>）
+    │         ├── 苯酚（phenol）
+    │         └── 己二酸（adipic acid，尼龍前驅）
+    │
+    ├──── <span class="ora">萘（naphthalene）　※分析盲點，可能是第 2-3 大產品</span>
+    │         ├── 染料中間體
+    │         ├── 農藥中間體
+    │         └── 防腐油（中國建築需求，<span class="red">房地產下行拖累</span>）
+    │
+    ├──── <span class="yel">瀝青（pitch）</span>
+    │         ├── 鋁冶煉陽極碳塊
+    │         └── 碳纖維前驅體（潛在）
+    │
+    └──── <span class="gre">針狀焦（needle coke）</span>
+              ├── 石墨電極（Graftech、東洋炭素、SGL 等）<span class="red">← 目前景氣弱</span>
+              └── EV 鋰電池人造石墨負極 <span class="ora">← 長期 optionality（未確認訂單）</span>
+</div>
+
+  <div class="box coal">
+    <div class="box-label">分析盲點</div>
+    <p><strong>萘（naphthalene）的分析缺席</strong>。煤焦油蒸餾中萘通常是第 2-3 大產品，若佔中碳收入 <strong>15-25%</strong>，萘價因中國建築／染料需求持續疲弱將對整體 ASP 改善形成<em>隱性拖累</em>。</p>
+    <p>本輪調查未取得萘的分項收入比重與價格走勢，這是 Q2 mix 持續性判斷的最大資訊空白。</p>
+  </div>
+
+  <h3>四條產品線的景氣同步性</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>產品</th>
+        <th>主要終端</th>
+        <th>當前景氣</th>
+        <th>對中碳影響</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>苯</strong></td>
+        <td>苯乙烯／苯酚／己二酸</td>
+        <td><span class="red">中國下游疲軟</span></td>
+        <td>spread 傳導受阻</td>
+      </tr>
+      <tr>
+        <td><strong>萘</strong></td>
+        <td>染料／農藥／防腐油</td>
+        <td><span class="red">中國建築疲弱</span></td>
+        <td>盲點，可能對沖 mix 改善</td>
+      </tr>
+      <tr>
+        <td><strong>瀝青</strong></td>
+        <td>鋁陽極／碳纖維前驅</td>
+        <td>中性</td>
+        <td>相對穩定</td>
+      </tr>
+      <tr>
+        <td><strong>針狀焦</strong></td>
+        <td>石墨電極（短期）／EV 負極（長期）</td>
+        <td><span class="red">電極景氣弱</span></td>
+        <td>EV 為長期選擇權</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     EP 4 ｜針狀焦 EV 選擇權
+     ════════════════════════════════════════════════ -->
+<section class="episode" id="ep4">
+  <div class="ep-bar">
+    <span class="ep-num">第肆話</span>
+    <h2 class="ep-title">針狀焦<br>EV 選擇權</h2>
+  </div>
+  <div class="ep-eyecatch">EPISODE 04 — NEEDLE COKE OPTIONALITY</div>
+
+  <p>針狀焦是中碳的策略性產品。全球只有兩條公認可行的合成路線：</p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>路線</th>
+        <th>原料</th>
+        <th>代表玩家</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>石油基</strong></td>
+        <td>FCC decant oil</td>
+        <td>美日大廠主導</td>
+      </tr>
+      <tr>
+        <td><strong>煤基</strong></td>
+        <td>coal tar pitch</td>
+        <td><span class="coal">中碳 1723</span>（屬此路線）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>核心技術爭議</h3>
+
+  <div class="strike coal">
+    <p><strong>煤基針狀焦硫含量（通常 2-3%）是否超過 EV 電池負極材料的採購門檻？</strong></p>
+  </div>
+
+  <p>根據現有技術文獻：</p>
+  <ul>
+    <li><span class="green">技術可行性</span>：煤基針狀焦是業界公認的合法路線，<em>並未被全面排除在 EV 負極材料供應鏈之外</em></li>
+    <li><span class="yellow">關鍵未解</span>：要達到高品質 EV 負極材料的規格，<strong>是否需要脫硫升級設備（capex）</strong>？</li>
+    <li><span class="red">財務含意</span>：若脫硫投資在 <strong>10-30 億 NTD</strong> 量級，EV 夢從「免費期權」變成「有成本的擴張賭注」——時間軸與稀釋效應需重新計算</li>
+  </ul>
+
+  <div class="box warn">
+    <div class="box-label">時間軸判定</div>
+    <p><strong>EV 夢不是 2026 年的故事。</strong></p>
+    <p>需要的催化劑（依序）：</p>
+    <ol>
+      <li>確認脫硫 capex 計畫（量級 + 時程）</li>
+      <li>具名 EV 負極客戶合約出現</li>
+      <li>石墨電極先復甦讓中碳累積議價能力</li>
+    </ol>
+    <p><em>三個條件至少要看到一個訊號，才能把 EV 從 optionality 升級為實質貢獻。</em></p>
+  </div>
+
+  <h3>MAGI 三票判定 ‧ 針狀焦 EV 路徑</h3>
+  <div class="magi">
+    <div class="magi-cell">
+      <div class="magi-name">MELCHIOR-1</div>
+      <div class="magi-target">煤基針狀焦技術可行於 EV 負極？</div>
+      <div class="magi-verdict ok">可　決</div>
+      <div class="magi-cap">TECHNICALLY VIABLE</div>
+    </div>
+    <div class="magi-cell">
+      <div class="magi-name">BALTHASAR-2</div>
+      <div class="magi-target">EV 貢獻是否反映在當前報表？</div>
+      <div class="magi-verdict no">否　決</div>
+      <div class="magi-cap">NOT IN STATEMENTS</div>
+    </div>
+    <div class="magi-cell">
+      <div class="magi-name">CASPER-3</div>
+      <div class="magi-target">行權成本是否已知？</div>
+      <div class="magi-verdict hold">保　留</div>
+      <div class="magi-cap">CAPEX UNDISCLOSED</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     EP 5 ｜Pattern Orange 石墨電極景氣
+     ════════════════════════════════════════════════ -->
+<section class="episode" id="ep5">
+  <div class="ep-bar">
+    <span class="ep-num">第伍話</span>
+    <h2 class="ep-title">Pattern Orange<br>石墨電極景氣</h2>
+  </div>
+  <div class="ep-eyecatch">EPISODE 05 — GRAPHITE ELECTRODE CYCLE</div>
+
+  <div class="pattern-orange">
+    <span class="po-tag">PATTERN ORANGE</span>
+    <span class="po-text">全球石墨電極景氣仍在收縮，針狀焦短期需求未復甦</span>
+  </div>
+
+  <p>針狀焦的近期需求由石墨電極主導。電爐煉鋼景氣決定石墨電極需求，連動中碳此一產品線的議價能力。</p>
+
+  <h3>全球石墨電極大廠的景氣壓力</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>公司</th>
+        <th>所在市場</th>
+        <th>當前景氣訊號</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>EAF（Graftech）</strong></td>
+        <td>美國</td>
+        <td><span class="red">壓力最大，市場視為電極景氣最弱指標</span></td>
+      </tr>
+      <tr>
+        <td><strong>RAIN Industries</strong></td>
+        <td>印度</td>
+        <td><span class="yellow">承壓中</span></td>
+      </tr>
+      <tr>
+        <td><strong>東洋炭素 5310.T</strong></td>
+        <td>日本</td>
+        <td>相對抗跌</td>
+      </tr>
+      <tr>
+        <td><strong>中碳 1723</strong></td>
+        <td>台灣</td>
+        <td>同業中段，沒有特別受傷也沒有特別受益</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="color:#aaa;font-size:15.5px;">說明：本表呈現全球石墨電極上中下游廠商的<strong>景氣壓力相對位置</strong>，作為「針狀焦短期需求未復甦」的市場信號交叉驗證。電爐煉鋼景氣未起，石墨電極現貨價壓力持續，中碳此產品線的議價空間被結構性壓制。</p>
+
+  <div class="strike">
+    <p><strong>針狀焦短期結論</strong>：電極景氣未復甦前，這條產品線無法成為毛利反彈的主要驅動力。Q1 的 mix 改善大概率<em>不是</em>來自針狀焦——更可能是苯 ASP 或瀝青比重變化。</p>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     EP 6 ｜五個夢校驗
+     ════════════════════════════════════════════════ -->
+<section class="episode" id="ep6">
+  <div class="ep-bar">
+    <span class="ep-num">第陸話</span>
+    <h2 class="ep-title">五個夢<br>現實校驗</h2>
+  </div>
+  <div class="ep-eyecatch">EPISODE 06 — FIVE DREAMS, REALITY CHECK</div>
+
+  <p>把市場對中碳的五種敘事各自評分。<em>夢的可信度，取決於是否有資料支撐其前提。</em></p>
+
+  <div class="dream-grid">
+
+    <div class="dream-card">
+      <div class="dream-num">壹</div>
+      <div class="dream-tag">DREAM I — 短夢</div>
+      <div class="dream-title">油價推升苯／瀝青邊際</div>
+      <div class="dream-body">
+        敘事邏輯：Brent +87% → 苯成本曲線上移 → 中碳獲 spread。
+        <br><br>
+        <strong>反例</strong>：2022 Brent $110+ 毛利僅 21-24%。
+        <br>
+        <strong>失敗訊號</strong>：油價跌回 $80-85；亞洲苯-石腦油 spread 無法突破歷史中位。
+      </div>
+      <div class="dream-verdict partial">部分成立 ‧ 重大摩擦</div>
+    </div>
+
+    <div class="dream-card">
+      <div class="dream-num">貳</div>
+      <div class="dream-tag">DREAM II — 長夢</div>
+      <div class="dream-title">針狀焦 EV 負極</div>
+      <div class="dream-body">
+        敘事邏輯：電動車 → 人造石墨 → 針狀焦需求 → 中碳受益。
+        <br><br>
+        <strong>失敗訊號</strong>：未公布脫硫 capex 計畫；未出現具名 EV 負極廠客戶。
+      </div>
+      <div class="dream-verdict condit">技術可行 ‧ 行權成本不明</div>
+    </div>
+
+    <div class="dream-card">
+      <div class="dream-num">参</div>
+      <div class="dream-tag">DREAM III — 輔助夢</div>
+      <div class="dream-title">中鋼集團轉型受益</div>
+      <div class="dream-body">
+        敘事邏輯：中碳依附中鋼集團，集團轉型帶動子公司重評。
+        <br><br>
+        <strong>反例</strong>：中鋼在油價大漲環境下未被市場視為油價受益者。
+        <br>
+        <strong>失敗訊號</strong>：中鋼主動提高對中碳的內部計價。
+      </div>
+      <div class="dream-verdict weak">薄弱</div>
+    </div>
+
+    <div class="dream-card">
+      <div class="dream-num">肆</div>
+      <div class="dream-tag">DREAM IV — 結構性</div>
+      <div class="dream-title">台股唯一煤化工稀缺性</div>
+      <div class="dream-body">
+        敘事邏輯：1712 大連化工公開發行未上市，中碳是台灣證交所唯一純度夠高的煤化工掛牌標的，提供流動性溢價。
+        <br><br>
+        <em>但稀缺性是流動性溢價，不能替代基本面安全邊際。</em>
+      </div>
+      <div class="dream-verdict true">成立 ‧ 有上限</div>
+    </div>
+
+    <div class="dream-card">
+      <div class="dream-num">伍</div>
+      <div class="dream-tag">DREAM V — 均值回歸</div>
+      <div class="dream-title">獲利結構修復</div>
+      <div class="dream-body">
+        敘事邏輯：Q3'25 毛利谷底 17.37% → Q1'26 25.02% 的修復路徑能否延續至 forward EPS 4.5+。
+        <br><br>
+        <strong>關鍵觀測</strong>：2026-Q2 月營收能否突破 600-650M（量的修復訊號）。
+      </div>
+      <div class="dream-verdict condit">條件成立中 ‧ 待 Q2</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     EP 7 ｜EPS 情境試算
+     ════════════════════════════════════════════════ -->
+<section class="episode" id="ep7">
+  <div class="ep-bar">
+    <span class="ep-num">第柒話</span>
+    <h2 class="ep-title">EPS 情境試算</h2>
+  </div>
+  <div class="ep-eyecatch">EPISODE 07 — EPS SCENARIOS</div>
+
+  <p>2026-Q1 EPS 為 <strong>0.755 元</strong>。歷史 Q2-Q4 通常優於 Q1，全年加總取決於 mix 持續性與量的回升程度。<em>三個情境分別對應不同的 Q2 數字假設。</em></p>
+
+  <div class="eps-grid">
+    <div class="eps-card">
+      <span class="eps-tag bear">BEAR ‧ 熊</span>
+      <div class="eps-num bear">2.5-3.0</div>
+      <div class="eps-cond">
+        <strong>條件</strong>：Q1 mix 是一次性出貨，Q2 回吐至 17-19% 毛利。
+        <br><br>
+        對應的 Q2 訊號：月營收回落 450M 以下，毛利率回到 18-20%。
+      </div>
+    </div>
+
+    <div class="eps-card">
+      <span class="eps-tag base">BASE ‧ 基</span>
+      <div class="eps-num base">~4.5</div>
+      <div class="eps-cond">
+        <strong>條件</strong>：mix 維持 23-25% 毛利水位，量小幅回升。
+        <br><br>
+        對應的 Q2 訊號：月營收連續突破 500M+，毛利率守住 23%+。
+      </div>
+    </div>
+
+    <div class="eps-card">
+      <span class="eps-tag bull">BULL ‧ 牛</span>
+      <div class="eps-num bull">5.5-6.0</div>
+      <div class="eps-cond">
+        <strong>條件</strong>：量也跟上，月均接近 2024 水準（700M+），mix 維持。
+        <br><br>
+        對應的 Q2 訊號：月營收破 650M，且 Q3 持續加速。
+      </div>
+    </div>
+  </div>
+
+  <h3>歷史 EPS 對照</h3>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>年度</th>
+        <th>EPS（元）</th>
+        <th>Brent 均價</th>
+        <th>毛利率</th>
+        <th>備註</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>2022</strong></td>
+        <td><span class="green">7.19</span></td>
+        <td>$110+</td>
+        <td>21-24%</td>
+        <td>peak EPS（油價高但毛利率不高）</td>
+      </tr>
+      <tr>
+        <td>2023</td>
+        <td>—</td>
+        <td>~$80</td>
+        <td><span class="green">29.57%</span>（Q2）</td>
+        <td>毛利率 5 年最高</td>
+      </tr>
+      <tr>
+        <td><strong>2024</strong></td>
+        <td>5.09</td>
+        <td>~$80</td>
+        <td>~27%</td>
+        <td>normal year（量的高峰）</td>
+      </tr>
+      <tr>
+        <td><strong>2025</strong></td>
+        <td><span class="red">2.60</span></td>
+        <td>$60-75</td>
+        <td><span class="red">17.37%</span>（Q3 谷底）</td>
+        <td>recession year（量價齊縮）</td>
+      </tr>
+      <tr>
+        <td><strong>2026-Q1</strong></td>
+        <td>0.755</td>
+        <td>~$105+</td>
+        <td><span class="coal">25.02%</span></td>
+        <td>「量縮 mix 升」反彈</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box signal">
+    <div class="box-label">情境定錨關鍵</div>
+    <p>三個情境的分叉點，<strong>幾乎完全壓在 Q2 的兩個數字</strong>：</p>
+    <ul>
+      <li><strong>月營收</strong>：500M（基）／650M（牛）／450M 以下（熊）</li>
+      <li><strong>毛利率</strong>：23%+（基）／維持 25% + 量起來（牛）／18-20%（熊）</li>
+    </ul>
+    <p><em>在 Q2 數字未出之前，三個情境是平行宇宙，不是機率分佈。</em></p>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     終話 ｜情報邊界
+     ════════════════════════════════════════════════ -->
+<section class="episode" id="final">
+  <div class="ep-bar">
+    <span class="ep-num">終話</span>
+    <h2 class="ep-title">情報邊界</h2>
+  </div>
+  <div class="ep-eyecatch">FINAL — KNOWN UNKNOWNS</div>
+
+  <p>誠實標註本報告未能穿透的霧區。<em>結論的可信度受此影響。</em></p>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th style="width:30%">未解項目</th>
+        <th>影響</th>
+        <th style="width:18%">監控方式</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>① Mix 反彈來源無法分項</strong><br><span style="color:#aaa;font-size:14.5px;">優先序最高</span></td>
+        <td>Q1 毛利反彈是「苯 ASP 大漲」、「針狀焦特殊出貨」還是「瀝青比重上升」？三種解釋的 Q2 展望截然不同。<em>若是針狀焦一次性出貨，Q2 有大幅回吐風險。</em></td>
+        <td>法說會逐字稿 / 分項揭露</td>
+      </tr>
+      <tr>
+        <td><strong>② 衰退歸因不完整</strong></td>
+        <td>2025 年衰退根源（苯需求崩 vs 中鋼計價上移 vs 量縮）對應不同的 recovery 條件，目前無公開數據確認。</td>
+        <td>法說會 / 年報附註</td>
+      </tr>
+      <tr>
+        <td><strong>③ 萘的分析缺席</strong></td>
+        <td>萘通常是煤焦油蒸餾第 2-3 大產品。若佔中碳收入 15-25%，萘價因中國建築／染料需求疲弱將對整體 ASP 改善形成<em>隱性拖累</em>。</td>
+        <td>法說會 / 產業訪查</td>
+      </tr>
+      <tr>
+        <td><strong>④ 針狀焦 capex 計畫未公開</strong></td>
+        <td>EV optionality 是否需要脫硫升級投資（10-30 億 NTD 量級）？免費期權 vs 有成本擴張，<strong>風險結構差異大</strong>。</td>
+        <td>重大訊息 / 法說會</td>
+      </tr>
+      <tr>
+        <td><strong>⑤ 中國苯擴產時程</strong></td>
+        <td>無法量化 2025-2027 中國新增產能對 spread 的壓制上限。</td>
+        <td>產業報告 / 第三方供應鏈訪查</td>
+      </tr>
+      <tr>
+        <td><strong>⑥ 中鋼 captive 計價機制</strong></td>
+        <td>折扣幅度從未公開。若中鋼動態調整內部計價，毛利彈性的成本端風險完全不透明。<em>是分析最大暗礁。</em></td>
+        <td>長期觀察中鋼／中碳毛利同步性</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     附錄 ｜關鍵基本面索引
+     ════════════════════════════════════════════════ -->
+<section class="episode" id="appendix">
+  <div class="ep-bar">
+    <span class="ep-num">附錄</span>
+    <h2 class="ep-title">關鍵基本面索引</h2>
+  </div>
+  <div class="ep-eyecatch">APPENDIX — FUNDAMENTALS QUICK REFERENCE</div>
+
+  <h3>EPS 歷史</h3>
+  <div class="bars">
+    <div class="bar-row">
+      <span class="bar-label">2022（peak）</span>
+      <div class="bar-track"><div class="bar-fill up" style="width:100%"></div></div>
+      <span class="bar-val up">7.19 元</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">2024（normal）</span>
+      <div class="bar-track"><div class="bar-fill coal" style="width:71%"></div></div>
+      <span class="bar-val coal">5.09 元</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">2025（recession）</span>
+      <div class="bar-track"><div class="bar-fill down" style="width:36%"></div></div>
+      <span class="bar-val down">2.60 元</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">2026-Q1（單季）</span>
+      <div class="bar-track"><div class="bar-fill coal" style="width:11%"></div></div>
+      <span class="bar-val coal">0.755 元</span>
+    </div>
+  </div>
+
+  <h3>月營收高低點</h3>
+  <div class="bars">
+    <div class="bar-row">
+      <span class="bar-label">2024-08（peak）</span>
+      <div class="bar-track"><div class="bar-fill up" style="width:100%"></div></div>
+      <span class="bar-val up">876M</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">2024-Q3 月均</span>
+      <div class="bar-track"><div class="bar-fill up" style="width:81%"></div></div>
+      <span class="bar-val up">708M</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">2026-03</span>
+      <div class="bar-track"><div class="bar-fill coal" style="width:60%"></div></div>
+      <span class="bar-val coal">528M</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">2026-Q1 月均</span>
+      <div class="bar-track"><div class="bar-fill coal" style="width:47%"></div></div>
+      <span class="bar-val coal">416M</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">2025-12（trough）</span>
+      <div class="bar-track"><div class="bar-fill down" style="width:43%"></div></div>
+      <span class="bar-val down">380M</span>
+    </div>
+  </div>
+
+  <h3>核心交叉驗證</h3>
+  <ul>
+    <li><strong>Brent 走勢</strong>：2025-12 $60.85 → 2026-05 ~$112，<span class="coal">+87%</span></li>
+    <li><strong>5 年毛利率區間</strong>：谷底 17.37%（2025-Q3）／ 高峰 29.57%（2023-Q2）</li>
+    <li><strong>5 年營業利益率區間</strong>：谷底 6.29%（2025-Q3）／ 高峰 17.08%（2024-Q3）</li>
+    <li><strong>稀缺性比較</strong>：1712 大連化工未上市，中碳是台灣證交所唯一純度夠高的煤化工掛牌標的</li>
+  </ul>
+
+  <p style="color:#888;font-size:15.5px;margin-top:24px;">
+    註：本附錄僅標示產業／公司基本面數據，<strong>不含任何投資操作建議</strong>。三個 EPS 情境的判定，必須等到 Q2 月營收與毛利率出爐，才能從「平行宇宙」收斂為機率分佈。
+  </p>
+</section>
+
+
+<!-- ════════════════════════════════════════════════
+     SEELE Footer
+     ════════════════════════════════════════════════ -->
+<section class="seele" id="seele">
+  <div class="seele-title">— SEELE COUNCIL ／ SOUND ONLY —</div>
+  <div class="monoliths">
+    <div class="monolith"><span class="num">01</span><span class="tag">中鋼<br>captive 上游</span></div>
+    <div class="monolith"><span class="num">02</span><span class="tag">苯<br>中國需求弱</span></div>
+    <div class="monolith"><span class="num">03</span><span class="tag">萘<br>分析盲點</span></div>
+    <div class="monolith"><span class="num">04</span><span class="tag">瀝青<br>鋁陽極</span></div>
+    <div class="monolith"><span class="num">05</span><span class="tag">針狀焦<br>EV 選擇權</span></div>
+    <div class="monolith"><span class="num">06</span><span class="tag">石墨電極<br>景氣弱</span></div>
+    <div class="monolith"><span class="num">07</span><span class="tag">脫硫 capex<br>未公開</span></div>
+    <div class="monolith"><span class="num">08</span><span class="tag">油價<br>≠ 毛利</span></div>
+    <div class="monolith"><span class="num">09</span><span class="tag">量 ≠ 率<br>分歧</span></div>
+    <div class="monolith"><span class="num">10</span><span class="tag">Q2 mix<br>驗證點</span></div>
+    <div class="monolith"><span class="num">11</span><span class="tag">forward EPS<br>~4.5 base</span></div>
+    <div class="monolith"><span class="num">12</span><span class="tag">29.57%<br>5 年毛利峰</span></div>
+    <div class="monolith"><span class="num">13</span><span class="tag">死海文書<br>第参拾貳章</span></div>
+    <div class="monolith"><span class="num">14</span><span class="tag">人類<br>補完計畫</span></div>
+  </div>
+</section>
+
+<footer>
+  Generated 2026-05-05　│　Source: 1341 中碳 1723 轉機調查（Brent +87% 環境）　│　排除：股價・操作建議　│　NERV INTERNAL ／ HANDLE WITH CARE
+</footer>
+
+</body>
+</html>
