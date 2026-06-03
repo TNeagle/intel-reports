@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CPO × CoWoS × Advanced Packaging｜供應鏈情報簡報</title>
+  <style>
+    :root{
+      --bg:#061018; --panel:#0b1722; --panel2:#101f2c; --line:rgba(170,220,255,.18);
+      --text:#e9f7ff; --muted:#95a9b8; --cyan:#27e8ff; --green:#58ff95; --orange:#ffb34f; --red:#ff5f6d;
+      --violet:#a98bff; --shadow:0 22px 80px rgba(0,0,0,.38); --radius:22px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;background:
+      radial-gradient(circle at 16% 8%, rgba(39,232,255,.18), transparent 28%),
+      radial-gradient(circle at 78% 10%, rgba(169,139,255,.14), transparent 26%),
+      linear-gradient(180deg,#03070c 0%,var(--bg) 48%,#05080c 100%);
+      color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.65;}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px);background-size:100% 4px;mix-blend-mode:overlay;opacity:.55}
+    a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
+    .wrap{max-width:1180px;margin:auto;padding:28px 22px 80px}.nav{position:sticky;top:0;z-index:5;backdrop-filter:blur(18px);background:rgba(3,7,12,.72);border-bottom:1px solid var(--line)}
+    .nav .inner{max-width:1180px;margin:auto;padding:12px 22px;display:flex;gap:14px;align-items:center;justify-content:space-between}.brand{font-weight:900;letter-spacing:.04em}.links{display:flex;gap:10px;flex-wrap:wrap}.links a{font-size:13px;color:#ccefff;border:1px solid var(--line);padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.04)}
+    .hero{padding:66px 0 34px;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:stretch}.kicker{display:inline-flex;gap:8px;align-items:center;color:var(--green);font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:12px;border:1px solid rgba(88,255,149,.28);background:rgba(88,255,149,.08);padding:6px 12px;border-radius:999px}
+    h1{font-size:clamp(34px,6vw,74px);line-height:.94;margin:18px 0 20px;letter-spacing:-.06em}.lead{font-size:20px;color:#c9dbe8;max-width:780px}.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.chip{border:1px solid var(--line);background:rgba(255,255,255,.055);border-radius:999px;padding:7px 12px;color:#d9f5ff;font-size:13px}.heroCard{background:linear-gradient(180deg,rgba(16,31,44,.9),rgba(7,15,22,.92));border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+    .metric{display:grid;grid-template-columns:1fr auto;gap:8px;padding:14px 0;border-bottom:1px solid var(--line)}.metric:last-child{border-bottom:0}.metric b{font-size:24px;color:var(--green)}.metric span{color:var(--muted);font-size:13px}.section{margin:28px 0;padding:26px;background:rgba(11,23,34,.76);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    h2{font-size:30px;margin:0 0 16px;letter-spacing:-.02em}h3{font-size:20px;margin:22px 0 8px;color:#f4fbff}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:18px;padding:18px}.card strong{color:#fff}.tag{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--orange)}
+    .verdict{border-left:5px solid var(--green);background:linear-gradient(90deg,rgba(88,255,149,.12),rgba(88,255,149,.03));padding:18px;border-radius:16px}.warn{border-left-color:var(--orange);background:linear-gradient(90deg,rgba(255,179,79,.13),rgba(255,179,79,.03))}.danger{border-left-color:var(--red);background:linear-gradient(90deg,rgba(255,95,109,.12),rgba(255,95,109,.03))}
+    table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:14px}th,td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{text-align:left;color:#c7f7ff;background:rgba(39,232,255,.08)}td{color:#d7e9f2}.score{font-variant-numeric:tabular-nums;color:var(--green);font-weight:800}.muted{color:var(--muted)}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px}.node{min-height:112px;background:linear-gradient(180deg,rgba(39,232,255,.09),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:16px;padding:14px;position:relative}.node:after{content:"→";position:absolute;right:-12px;top:40%;color:var(--cyan);font-weight:900}.node:last-child:after{display:none}.node b{display:block;color:#fff;margin-bottom:6px}.node span{font-size:13px;color:#b8cbd8}
+    .sources li{margin:10px 0}.footer{margin-top:34px;color:var(--muted);font-size:13px;text-align:center}.pill{display:inline-block;border-radius:8px;padding:2px 8px;font-weight:800}.p-high{background:rgba(88,255,149,.14);color:var(--green)}.p-mid{background:rgba(255,179,79,.14);color:var(--orange)}.p-low{background:rgba(255,95,109,.14);color:var(--red)}
+    @media (max-width:900px){.hero,.grid,.flow{grid-template-columns:1fr}.node:after{display:none}.links{display:none}}
+  </style>
+</head>
+<body>
+<nav class="nav" aria-label="頁面導覽"><div class="inner"><div class="brand">CELESTE / SUPPLY-CHAIN BRIEF</div><div class="links"><a href="#conclusion">結論</a><a href="#map">鏈條</a><a href="#spof">SPOF</a><a href="#watch">監控</a><a href="#sources">來源</a></div></div></nav>
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="kicker">CPO × CoWoS × Advanced Packaging</div>
+      <h1>AI 資料中心下一個瓶頸：不是單一晶片，而是「封裝 × 光互連」交界面</h1>
+      <p class="lead">本簡報把 CPO（Co-Packaged Optics）、TSMC CoWoS/SoIC、HBM 與先進封裝供應鏈串成一張風險地圖：短期 bottleneck 仍偏 CoWoS/HBM/基板/設備；中期 CPO 會把供應鏈焦點推向矽光子、雷射、光學組裝與封裝共設計。</p>
+      <div class="meta"><span class="chip">產出時間：2026-06-03 15:29 CST</span><span class="chip">版本：public-safe briefing</span><span class="chip">方法：Web sources + local osint-kg SPOF</span></div>
+    </div>
+    <aside class="heroCard" aria-label="重點數字">
+      <div class="metric"><span>NVIDIA 公告 CPO switch 指標</span><b>3.5×</b><span>power efficiency claim</span></div>
+      <div class="metric"><span>Optica 摘要：AI factory optical transceiver power</span><b>24MW</b><span>up to, per NVIDIA framing</span></div>
+      <div class="metric"><span>36Kr/Morgan Stanley 轉述：2026 CoWoS demand</span><b>1M</b><span>wafers, 非官方估算</span></div>
+      <div class="metric"><span>Local KG SPOF：TSMC betweenness</span><b>0.2345</b><span>情報線索，需人工複核</span></div>
+    </aside>
+  </section>
+
+  <section id="conclusion" class="section">
+    <h2>一頁結論</h2>
+    <div class="verdict"><strong>判斷：</strong>若把 CPO 視為「光模組替代品」會低估它；它更像是 AI scale-out 網路、先進封裝、矽光子、雷射供應與系統散熱共同綁定的架構轉折。短期投資與供應鏈壓力仍在 CoWoS/HBM/封裝設備；中期真正稀缺資產會變成可量產、可測試、可靠度過關的「光電共封裝能力」。</div>
+    <div class="grid" style="margin-top:16px">
+      <div class="card"><div class="tag">Now</div><strong>CoWoS 是 AI accelerator 供給閘門</strong><p class="muted">高階 GPU/ASIC 需要 logic die + HBM + interposer/substrate，TSMC CoWoS-S/R/L 是核心選項。</p></div>
+      <div class="card"><div class="tag">Next</div><strong>CPO 把瓶頸從 compute package 延伸到 network package</strong><p class="muted">NVIDIA Spectrum-X/Quantum-X Photonics 把矽光子直接放入 switch，供應鏈不只看 pluggable optics。</p></div>
+      <div class="card"><div class="tag">Risk</div><strong>單點風險集中在 TSMC、ASML、NVIDIA demand pull</strong><p class="muted">本地圖譜 SPOF 線索顯示 TSMC/ASML/NVIDIA 仍是高連通節點；CPO 生態尚未完全多源化。</p></div>
+    </div>
+  </section>
+
+  <section id="map" class="section">
+    <h2>供應鏈主線：從 AI 晶片到光互連</h2>
+    <div class="flow">
+      <div class="node"><b>需求端</b><span>NVIDIA、Broadcom/ASIC、AMD、雲端 CSP 對 AI accelerator 與網路 fabric 的需求。</span></div>
+      <div class="node"><b>晶圓/邏輯</b><span>TSMC 先進製程、SoIC/3DFabric；依賴 EUV、材料、檢測與良率控制。</span></div>
+      <div class="node"><b>HBM/Memory</b><span>SK hynix、Samsung、Micron 等 HBM stack；與 CoWoS package 緊密耦合。</span></div>
+      <div class="node"><b>CoWoS / AP</b><span>CoWoS-S/R/L、interposer、substrate、OSAT second-source；KLA/AMAT/Lam 等設備與 metrology。</span></div>
+      <div class="node"><b>CPO / Optical I/O</b><span>矽光子、雷射、光引擎、光纖/connector、Fabrinet/Foxconn/Coherent/Lumentum 等組裝與元件。</span></div>
+    </div>
+    <p class="muted">小吐槽：這條鏈不像普通 BOM，倒比較像「晶片、封裝、網通、光學」四個部門被迫一起交作業；任何一邊遲到，AI factory 就一起卡住。</p>
+  </section>
+
+  <section class="section">
+    <h2>已確認事實 vs 判斷</h2>
+    <table><thead><tr><th>項目</th><th>來源等級</th><th>內容</th><th>信心</th></tr></thead><tbody>
+      <tr><td>CoWoS 技術族</td><td>官方：TSMC</td><td>TSMC 公開列出 CoWoS-S、CoWoS-R、CoWoS-L；CoWoS-S 使用 silicon interposer，支援 logic chiplets 與 HBM；CoWoS-L/R 適合更大或不同架構需求。</td><td><span class="pill p-high">高</span></td></tr>
+      <tr><td>NVIDIA CPO switch</td><td>官方：NVIDIA</td><td>NVIDIA 於 GTC 2025 宣布 Spectrum-X Photonics Ethernet 與 Quantum-X Photonics InfiniBand switch，主張 3.5× power efficiency、63× signal integrity、10× resiliency 等效益。</td><td><span class="pill p-high">高：公告存在；效益待實測</span></td></tr>
+      <tr><td>CPO 生態夥伴</td><td>官方：NVIDIA</td><td>NVIDIA 公告列出 TSMC、Browave、Coherent、Corning、Fabrinet、Foxconn、Lumentum、SENKO、SPIL、Sumitomo Electric、TFC Communication 等。</td><td><span class="pill p-high">高</span></td></tr>
+      <tr><td>CoWoS 需求 2026 約 1M wafers、NVIDIA 約 60%</td><td>第三方/轉述：36Kr 引 Morgan Stanley</td><td>可作市場情境，不宜當作官方產能承諾；用於方向性判斷。</td><td><span class="pill p-mid">中</span></td></tr>
+      <tr><td>TSMC/ASML/NVIDIA 是 SPOF</td><td>本地 osint-kg 分析</td><td>kg_spof 回傳 TSMC bc=0.2345、ASML bc=0.1277、NVIDIA bc=0.0169；圖譜為情報線索，非完整世界模型。</td><td><span class="pill p-mid">中：需人工複核</span></td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="spof" class="section">
+    <h2>SPOF 與瓶頸判斷</h2>
+    <div class="grid">
+      <div class="card danger"><h3>1. TSMC advanced packaging</h3><p>若 CoWoS/SoIC 產能、良率或排程不足，AI accelerator 與 CPO switch ramp 都會受影響。尤其 CoWoS-L/R/S 的技術路線切換會改變材料、基板、設備需求。</p></div>
+      <div class="card warn"><h3>2. EUV / metrology / process control</h3><p>CoWoS 不是只缺「封裝線」，還缺檢測、量測、良率穩定與前段先進製程協同。ASML/KLA/AMAT/Lam 類設備節點要同步監控。</p></div>
+      <div class="card warn"><h3>3. Optical supply chain</h3><p>CPO 會把風險推向雷射、矽光子、光引擎、connector、光纖陣列與精密組裝。傳統 pluggable optics 廠商不一定都能平順轉成 CPO 供應商。</p></div>
+    </div>
+  </section>
+
+  <section id="watch" class="section">
+    <h2>建議監控清單</h2>
+    <table><thead><tr><th>監控題目</th><th>看什麼訊號</th><th>為什麼重要</th></tr></thead><tbody>
+      <tr><td>TSMC CoWoS-L / CoWoS-S 產能 mix</td><td>月產能、客戶 allocation、CoWoS-L adoption、interposer size roadmap</td><td>決定 Blackwell/Rubin、ASIC 與 CPO switch 封裝可用量。</td></tr>
+      <tr><td>HBM 供給與 package attach 良率</td><td>HBM3E/HBM4 qualification、KGD yield、thermal stack constraints</td><td>HBM 與 CoWoS 是共同瓶頸，不是二選一。</td></tr>
+      <tr><td>NVIDIA CPO 出貨節奏</td><td>Quantum-X 2025 availability、Spectrum-X 2026 availability、客戶 deployment case</td><td>確認 CPO 是 demo、pilot，還是進入量產採購週期。</td></tr>
+      <tr><td>Laser / optical engine supply</td><td>Coherent/Lumentum/Fabrinet/Foxconn/SENKO 等產能與合作</td><td>CPO 轉折後，雷射與組裝可能變成比 switch ASIC 更難擴的環節。</td></tr>
+      <tr><td>OSAT second-source</td><td>ASE/SPIL、Amkor、Samsung/Intel alternatives</td><td>若 TSMC CoWoS 排滿，替代封裝路線會決定二線 AI ASIC 誰能出貨。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section">
+    <h2>Celeste 的操作建議</h2>
+    <ol>
+      <li><strong>把 CPO 拆成兩張表：</strong>一張是「CPO 光電元件供應鏈」，一張是「CoWoS/Advanced Packaging 封裝供應鏈」，不要混成單一概念。</li>
+      <li><strong>用時間軸看：</strong>2025–2026 先追 NVIDIA switch availability 與 TSMC CoWoS allocation；2026 之後追 CPO 量產良率與 laser capacity。</li>
+      <li><strong>建立 KG 擴充任務：</strong>把 NVIDIA CPO ecosystem 逐家公司 ingest 進 osint-kg，後續才能跑更可靠的 SPOF 與替代來源分析。</li>
+      <li><strong>不要只盯 HBM：</strong>市場很愛喊 HBM，但真正卡住交付的常常是封裝、基板、測試與良率這些「比較不性感但會咬人」的環節。</li>
+    </ol>
+  </section>
+
+  <section id="sources" class="section sources">
+    <h2>來源與證據</h2>
+    <ul>
+      <li><strong>TSMC 官方：</strong><a href="https://3dfabric.tsmc.com/english/dedicatedFoundry/technology/cowos.htm">CoWoS® technology page</a> — CoWoS-S/R/L 定義與用途。</li>
+      <li><strong>NVIDIA 官方：</strong><a href="https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-Announces-Spectrum-X-Photonics-Co-Packaged-Optics-Networking-Switches-to-Scale-AI-Factories-to-Millions-of-GPUs/default.aspx">Spectrum-X / Quantum-X Photonics announcement</a> — CPO switch、效益 claim、生態夥伴。</li>
+      <li><strong>Optica / OPN：</strong><a href="https://www.optica-opn.org/home/industry/2025/march/nvidia_looks_to_co-packaged_optics_for_ai_factories">NVIDIA Looks to Co-Packaged Optics for AI “Factories”</a> — AI factory optical power 與 CPO 技術脈絡。</li>
+      <li><strong>36Kr / Semiconductor Industry Insights：</strong><a href="https://eu.36kr.com/en/p/3580962946874242">Who Will Divide Up the CoWoS Production Capacity in 2026?</a> — 轉述 Morgan Stanley demand allocation 情境。</li>
+      <li><strong>Local osint-kg：</strong>kg_neighbors(TSMC) 與 kg_spof(top_k=10)；結果為情報線索，不等於完整供應鏈定論。</li>
+    </ul>
+  </section>
+  <div class="footer">Prepared by Celeste for TNeagle｜No private trading instruction included｜GitHub Pages review artifact</div>
+</main>
+</body>
+</html>
